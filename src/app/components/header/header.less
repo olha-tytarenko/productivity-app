@@ -1,0 +1,8 @@
+/* example of using mixins */
+@import ( reference ) '~@less-helpers-module/_mixins.less'; // ~@less-helpers-module - is a path to less helpers folder
+
+h1.test {
+ .opacity(0.5);
+  text-align: center;
+  //background: url('~@images-root-path/test.jpg') no-repeat; // ~@images-root-path - is a path to images folder
+}

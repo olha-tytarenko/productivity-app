@@ -1,0 +1,30 @@
+.opacity (@opacity: 0.5) {
+  -webkit-opacity: @opacity;
+  -moz-opacity: @opacity;
+  opacity: @opacity;
+}
+
+.settings-criteria(@list) {
+  .iter(length(@list));
+  .iter(@i) when (@i > 0) {
+    .iter(@i - 1);
+    @pair:  extract(@list, @i);
+    @key:   extract(@pair, 1);
+    @value: extract(@pair, 2);
+    .@{key}:before {
+      background-color: @value;
+    }
+  }
+}
+
+.categories-list-li(@list) {
+  .iter(length(@list));
+  .iter(@i) when (@i > 0) {
+    .iter(@i - 1);
+    @value: extract(@list, @i);
+    .categories-list li:nth-child(@{i}):before {
+      background-color: @value;
+    }
+  }
+}
+

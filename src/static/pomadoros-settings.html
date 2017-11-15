@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Settings</title>
+</head>
+<body>
+<div class="wrapper">
+  <header class="header">
+    <nav class="navigation">
+      <ul>
+        <li><a href="" class="icon-list"></a></li>
+        <li><a href="" class="icon-statistics"></a></li>
+        <li><a href="" class="icon-settings"></a></li>
+      </ul>
+    </nav>
+  </header>
+  <section class="settings">
+    <h1 class="page-heading">Settings</h1>
+    <h2 class="sub-heading">Pomadoros settings</h2>
+    <ul class="tabs">
+      <li><a href="#">Pomadoros</a></li>
+      <li><a href="/settings-categories.html">Categories</a></li>
+    </ul>
+    <ul class="settings-criteria">
+      <li><span class="criteria-name work-time">work time</span>
+        <button class="decrease icon-minus"></button>
+        <input type="text" class="criteria-value" value="25" disabled>
+        <button class="increase icon-add"></button>
+        <p class="time-description">Please select a value between 15 and 25 <strong>minutes</strong></p>
+      </li>
+      <li><span class="criteria-name work-iteration">work iteration</span>
+        <button class="decrease icon-minus"></button>
+        <input type="text" class="criteria-value" value="5" disabled>
+        <button class="increase icon-add"></button>
+        <p class="time-description">Please select a value between 2 and 5 <strong>iterations</strong></p>
+      </li>
+      <li><span class="criteria-name short-break">short break</span>
+        <button class="decrease icon-minus"></button>
+        <input type="text" class="criteria-value" value="5" disabled>
+        <button class="increase icon-add"></button>
+        <p class="time-description">Please select a value between 3 and 5 <strong>minutes</strong></p>
+      </li>
+      <li><span class="criteria-name long-break">long break</span>
+        <button class="decrease icon-minus"></button>
+        <input type="text" class="criteria-value" value="30" disabled>
+        <button class="increase icon-add"></button>
+        <p class="time-description">Please select a value between 15 and 30 <strong>minutes</strong></p>
+      </li>
+    </ul>
+  </section>
+  <section class="your-cycle">
+    <h2 class="your-cycle-heading">Your cycle</h2>
+    <img src="/cycle.png" alt="">
+  </section>
+  <a href="" class="go-to-task">Go to Task</a>
+  <button class="save-settings">Save</button>
+</div>
+<script src="/bundle.js"></script>
+</body>
+</html>
