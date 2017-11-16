@@ -16,6 +16,13 @@ a {
   text-decoration: none;
 }
 
+button {
+  border: none;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
+}
+
 .wrapper {
   max-width: 1186px;
   padding: 0 7.6%;
@@ -25,6 +32,10 @@ a {
 
 .header {
   padding-top: 56px;
+}
+
+.active {
+  color: white;
 }
 
 .navigation ul {
@@ -88,9 +99,14 @@ a {
   display: flex;
   flex-wrap: wrap;
   text-align: left;
+  justify-content: space-around;
 
   li {
-    flex: 1 0 50%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 37.8%;
+    //padding: 0 0 56px 84px;
     padding-bottom: 56px;
   }
 }
@@ -120,21 +136,11 @@ a {
 
 .increase,
 .decrease,
-.criteria-value,
 .save-settings {
   border: none;
   background: transparent;
   outline: none;
   color: @nepal;
-}
-
-.decrease {
-  margin-right: -17px;
-  position: relative;
-}
-
-.increase {
-  margin-left: -18px;
 }
 
 .increase,
@@ -150,12 +156,18 @@ a {
 }
 
 .criteria-value {
-  font-family: "Roboto-Regular", sans-serif;
-  width: 100px;
   padding-bottom: 5px;
   border-bottom: 1px solid @nepal;
-  text-align: center;
-  cursor: default;
+  display: flex;
+  justify-content: space-between;
+  width: 100px;
+  margin-right: 100px;
+  p {
+    font-family: "Roboto-Regular", sans-serif;
+    text-align: center;
+    cursor: default;
+    color: @nepal;
+  }
 
   &:active {
     border-color: @spray;
@@ -245,6 +257,148 @@ a {
     }
   }
 }
+
+// task-list
+
+.daily-tasks {
+  position: relative;
+}
+
+.task-list {
+  padding-top: 67px;
+
+  .task {
+    width: 100%;
+    background-color: @white;
+    margin-bottom: 9px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 20px 2px rgba(0, 0, 0, 0.4);
+
+    .task-description {
+      min-height: 90px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+      padding-left: 35px;
+
+      h2 {
+        font-family: "Roboto-Medium", sans-serif;
+        font-size: 19px;
+        padding-bottom: 13px;
+      }
+
+      p {
+        font-family: "Roboto-Regular", sans-serif
+      }
+
+    }
+
+    .edit-task {
+      color: @silver;
+      border: none;
+      background: transparent;
+      outline: none;
+      padding-right: 30px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .border {
+      align-self: stretch;
+      width: 10px;
+
+      .remove-button {
+        font-size: 50px;
+        padding: 0 27px;
+      }
+    }
+
+    .icon-tomato,
+    .icon-trash {
+      display: block;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: @white;
+    }
+
+    .icon-edit {
+      font-size: 20px;
+    }
+
+    .go-to-timer {
+      align-self: stretch;
+      display: block;
+      width: 89px;
+      font-size: 50px;
+      position: relative;
+
+      .estimation {
+        font-family:"PTSans-Regular", sans-serif;
+        font-size: 24px;
+        position: absolute;
+        color: @white;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+      }
+
+
+      }
+
+    span {
+      font-family: "Roboto-Bold", sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      padding-left: 25px;
+      color: @dark-grey;
+    }
+  }
+
+  .create-classes-for-priority(@priority, @priority-active);
+  .create-classes-for-categories(@categoties, @categories-active);
+}
+
+
+.page-heading-container {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+
+  .add-new-task {
+    color: white;
+    font-size: 35px;
+    padding-left: 20px;
+  }
+}
+
+.global-list {
+  font-family: "PTSans-Regular", sans-serif;
+  font-size: 20px;
+  display: block;
+  padding-top: 50px;
+  text-align: left;
+
+  &:hover {
+    color: @spray;
+  }
+
+  span {
+    font-size: 11px;
+    padding-left: 5px;
+  }
+}
+
+
+
 
 
 

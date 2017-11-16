@@ -8,8 +8,8 @@
   .iter(length(@list));
   .iter(@i) when (@i > 0) {
     .iter(@i - 1);
-    @pair:  extract(@list, @i);
-    @key:   extract(@pair, 1);
+    @pair: extract(@list, @i);
+    @key: extract(@pair, 1);
     @value: extract(@pair, 2);
     .@{key}:before {
       background-color: @value;
@@ -24,6 +24,62 @@
     @value: extract(@list, @i);
     .categories-list li:nth-child(@{i}):before {
       background-color: @value;
+    }
+  }
+}
+
+.create-classes-for-categories(@list, @list-active) {
+  .iter(length(@list));
+  .iter(@i) when (@i > 0) {
+    .iter(@i - 1);
+    @pair: extract(@list, @i);
+    @key: extract(@pair, 1);
+    @value: extract(@pair, 2);
+    .@{key} {
+      .border {
+        background-color: @value;
+      }
+    }
+  }
+}
+
+.create-classes-for-priority(@list, @list-active) {
+  .iter(length(@list));
+  .iter(@i) when (@i > 0) {
+    .iter(@i - 1);
+    @pair: extract(@list, @i);
+    @key: extract(@pair, 1);
+    @value: extract(@pair, 2);
+    @value-active: extract(@list-active, @i);
+    .@{key} {
+      .go-to-timer {
+        background-color: @value;
+        color: @white;
+
+        &:active {
+          background-color: @value-active;
+        }
+
+        &:hover {
+          background-color: @value-active;
+        }
+        a:hover {
+
+          &:before {
+            content: "\e90e";
+          }
+
+          span {
+            display: none;
+          }
+
+        }
+
+      }
+
+      h2 {
+        color: @value;
+      }
     }
   }
 }
