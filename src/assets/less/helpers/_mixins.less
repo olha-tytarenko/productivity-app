@@ -36,6 +36,8 @@
     @key: extract(@pair, 1);
     @value: extract(@pair, 2);
     .@{key} {
+      color: @value;
+
       .border {
         background-color: @value;
       }
