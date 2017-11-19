@@ -74,13 +74,54 @@
           span {
             display: none;
           }
-
         }
-
       }
 
       h2 {
         color: @value;
+      }
+    }
+  }
+}
+
+.placeholder(@color) {
+  &::-webkit-input-placeholder { 
+    color: @color;
+  }
+  &::-moz-placeholder { 
+    color: @color;
+  }
+  &:-ms-input-placeholder {
+    color: @color;
+  }
+  &:-moz-placeholder {
+    color: @color;
+  }
+}
+
+.radio-buttons(@colors) {
+  .iter(length(@colors));
+  .iter(@i) when (@i > 0) {
+    .iter(@i - 1);
+    @pair: extract(@colors, @i);
+    @key: extract(@pair, 1);
+    @value: extract(@pair, 2);
+    .@{key} {
+
+      input[type="radio"] {
+        background: @nepal;
+
+        &:checked {
+          border: 3px solid @value;
+
+          &:before {
+            background-color: @value;
+          }
+        }
+
+        &:hover {
+          background-color: @value;
+        }
       }
     }
   }

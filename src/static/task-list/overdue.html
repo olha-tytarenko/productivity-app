@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/styles.css">
+  <title>Global list</title>
+</head>
+<body>
+<div class="wrapper">
+  <header class="header">
+    <nav class="navigation">
+      <ul>
+        <li><a href="" class="icon-trash"></a></li>
+        <li><a href="" class="icon-list active"></a></li>
+        <li><a href="" class="icon-statistics"></a></li>
+        <li><a href="" class="icon-settings"></a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="daily-tasks">
+    <div class="page-heading-container">
+      <h1 class="page-heading">Daily Task List</h1>
+      <button class="add-new-task">+</button>
+    </div>
+
+    <ul class="tabs">
+      <li><a href="#" class="active">To Do</a></li>
+      <li><a href="">Done</a></li>
+    </ul>
+
+    <ul class="task-list">
+      <li class="task urgent hobby">
+        <div class="border">
+          <input type="checkbox" class="checkbox-none">
+        </div>
+        <span>Today</span>
+        <div class="task-description">
+          <h2>Lorem ipsum sit amet</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore</p>
+        </div>
+        <button class="edit-task icon-edit"></button>
+        <div class="go-to-timer"><a class="icon-tomato" href=""><span class="estimation">3</span></a></div>
+      </li>
+    </ul>
+  </section>
+  <ul class="tabs">
+    <li><a href="#" class="active">All</a></li>
+    <li><a href="">Urgent</a></li>
+    <li><a href="">High</a></li>
+    <li><a href="">Middle</a></li>
+    <li><a href="">Low</a></li>
+  </ul>
+
+  <section class="global-tasks">
+    <div class="work-group">
+      <h2 class="category-heading work">work</h2>
+      <ul class="task-list">
+        <li class="task urgent work">
+          <div class="border">
+            <input type="checkbox" class="checkbox-none">
+          </div>
+          <span class="date-day overdue">23<span class="date-month">May</span></span>
+          <div class="task-description">
+            <h2>Lorem ipsum sit amet</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore</p>
+          </div>
+          <div class="task-controls">
+            <button class="edit-task icon-arrows-up"></button>
+            <button class="edit-task icon-edit"></button>
+          </div>
+          <div class="go-to-timer"><a class="icon-tomato" href=""><span class="estimation">3</span></a></div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="education-group">
+      <h2 class="category-heading education">education</h2>
+      <ul class="task-list">
+        <li class="task urgent education">
+          <div class="border">
+            <input type="checkbox" class="checkbox-none">
+          </div>
+          <span class="date-day overdue">23<span class="date-month">May</span></span>
+          <div class="task-description">
+            <h2>Lorem ipsum sit amet</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore</p>
+          </div>
+          <div class="task-controls">
+            <button class="edit-task icon-arrows-up"></button>
+            <button class="edit-task icon-edit"></button>
+          </div>
+
+          <div class="go-to-timer"><a class="icon-tomato" href=""><span class="estimation">3</span></a></div>
+        </li>
+
+        <li class="task low education">
+          <div class="border">
+            <input type="checkbox" class="checkbox-none">
+          </div>
+          <span class="date-day overdue">23<span class="date-month">May</span></span>
+          <div class="task-description">
+            <h2>Lorem ipsum sit amet</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore</p>
+          </div>
+          <div class="task-controls">
+            <button class="edit-task icon-arrows-up"></button>
+            <button class="edit-task icon-edit"></button>
+          </div>
+          <div class="go-to-timer"><a class="icon-tomato" href=""><span class="estimation">3</span></a></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+  </div>
+<script src="/bundle.js"></script>
+</body>
+</html>
