@@ -718,15 +718,7 @@ img {
         display: flex;
 
         input[type="checkbox"] {
-          background: url(/empty-tomato.svg) center center no-repeat;
-          display: inline-block;
-          width: 21px;
-          height: 19px;
-          margin-right: 8px;
-
-          &:checked {
-            background: url("/fill tomato.svg") center center no-repeat;
-          }
+          .checkbox-settings();
         }
       }
 
@@ -775,8 +767,256 @@ img {
 }
 
 .timer-section {
+  color: @white;
+  font-weight: normal;
+
   .task-name {
     font-family: @roboto-medium;
+    padding-bottom: 25px;
+    font-size: 28px;
+    font-weight: normal;
+  }
+
+  .task-description {
+    font-family: @roboto-regular;
+    font-size: 17px;
+    padding-bottom: 35px;
+  }
+
+  .attempts {
+    padding-bottom: 55px;
+    display: flex;
+    justify-content: center;
+
+    input[type="checkbox"]:checked.failed {
+      background: url(/tomato-failed.svg) center center no-repeat;
+    }
+
+    input[type="checkbox"] {
+      .checkbox-settings();
+      cursor: default;
+      margin-right: 10px;
+    }
+
+    .add {
+      color: @nepal;
+      font-weight: normal;
+      font-size: 12px;
+
+      &:hover {
+        color: @spray;
+      }
+    }
+  }
+
+  .timer {
+    box-sizing: border-box;
+    width: 265px;
+    height: 265px;
+    border: 7px solid @yellow-orange;
+    margin: 0 auto 69px;
+    border-radius: 50%;
+
+
+    &:after {
+      content: "Let's do it!";
+      font-family: @ptsans;
+      font-size: 26px;
+      line-height: 245px;
+    }
+
+    .process {
+      border-radius: 50%;
+      width: 70%;
+      height: 70%;
+      border: 35px solid transparent;
+      border-right: 35px solid @nepal;
+      transform: rotate(-45deg);
+      margin-top: 5px;
+    }
+
+    .break {
+      border-radius: 50%;
+      width: 65%;
+      height: 65%;
+      margin: 8px auto 0;
+      border: 35px solid @nepal;
+    }
+  }
+
+  .in-process {
+    position: relative;
+
+    &:after {
+      content: "6";
+      line-height: 0;
+      font-family: @roboto-regular;
+      font-size: 100px;
+      position: absolute;
+      font-weight: normal;
+      top: 45%;
+      transform: translate(-50%, -50%);
+    }
+
+    &:before {
+      content: "min";
+      position: absolute;
+      font-family: @roboto-regular;
+      top: 65%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .in-process-break {
+    position: relative;
+
+    &:after {
+      content: "3";
+      line-height: 0;
+      font-family: @roboto-regular;
+      font-size: 100px;
+      position: absolute;
+      font-weight: normal;
+      top: 45%;
+      transform: translate(-50%, -50%);
+    }
+
+    &:before {
+      content: "min";
+      position: absolute;
+      font-family: @roboto-regular;
+      font-size: 24px;
+      top: 65%;
+      transform: translate(-50%, -50%);
+    }
+
+    span {
+      position: absolute;
+      font-family: @roboto-regular;
+      font-size: 15px;
+      text-transform: uppercase;
+      top: 25%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .break-is-over {
+    position: relative;
+
+    &:after {
+      content: "Break is over";
+      white-space: pre; 
+      line-height: 0;
+      font-family: @roboto-regular;
+      font-size: 24px;
+      position: absolute;
+      font-weight: normal;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .start {
+    padding: 10px 45px;
+    background-color: @mountain-meadow;
+    color: @white;
+    font-family: @ptsans;
+    font-weight: bold;
+
+    &:hover {
+      background-color: @dark-mountain-meadow;
+    }
+  }
+
+  .go-back,
+  .go-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 40px;
+
+    &:hover {
+      color: @spray;
+    }
+  }
+
+  .go-back{
+    left: 30px;
+  }
+
+  .go-next {
+    right: 30px;
+  }
+
+  .fail,
+  .finish,
+  .finish-task,
+  .start-pomodoro {
+    color: @white;
+    font-family: @ptsans;
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .btn-group {
+    max-width: 360px;
+
+    .fail {
+      background-color: @tomato;
+      padding: 10px 28px;
+
+      &:hover {
+        background-color: @dark-coral;
+      }
+    }
+
+    .finish {
+      background-color: @mountain-meadow;
+      padding: 10px 23px;
+
+      &:hover {
+        background-color: @dark-mountain-meadow;
+      }
+    }
+
+    .finish-task {
+      background-color: @malibu;
+      padding: 10px 40px;
+
+      &:hover {
+        background-color: @curious-blue;
+      }
+    }
+  }
+
+  .completed {
+    position: relative;
+    
+      span {
+        position: absolute;
+        font-family: @roboto-regular;
+        font-size: 24px;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+    
+      &:after {
+        content: "";
+      }
+    }
+}
+
+.start-pomodoro {
+  background-color: @mountain-meadow;
+  padding: 10px 24px;
+
+  &:hover {
+    background-color: @dark-mountain-meadow;
   }
 }
+
+.no-visibility {
+  visibility: hidden;
+}
+
 
