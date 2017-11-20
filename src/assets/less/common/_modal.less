@@ -1,0 +1,183 @@
+.modal-overlay {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, .5);
+  top: 0;
+  z-index: 2;
+}
+
+.modal {
+  position: relative;
+  top: 50px;
+  bottom: 50px;
+  width: 500px;
+  margin: 0 auto;
+  background-color: @madison;
+  padding: 15px 40px 50px;
+  box-sizing: border-box;
+
+  .modal-btn-group {
+    position: relative;
+    text-align: right;
+    right: -25px;
+
+    button {
+      margin-left: 15px;
+      color: @nepal;
+      font-size: 1.25rem;
+
+      &:hover {
+        color: @spray;
+      }
+    }
+
+    .trash {
+      position: absolute;
+      left: -50px;
+      margin-left: 0;
+    }
+  }
+
+  .modal-heading {
+    font-family: @roboto-bold;
+    font-size: 1.75rem;
+    text-align: center;
+    color: @white;
+    padding-bottom: 20px;
+  }
+
+  .task-settings {
+
+    .item {
+      padding-bottom: 5px;
+      border-bottom: 1px solid @nepal;
+      margin-bottom: 34px;
+      font-family: @roboto-regular;
+      font-weight: normal;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .heading {
+        font-size: 0.875rem;
+        color: @white;
+        text-transform: uppercase;
+        font-weight: normal;
+        padding-bottom: 12px;
+      }
+
+      .radio-group {
+        display: flex;
+        flex-wrap: wrap;
+
+        li {
+          padding-right: 10px;
+          position: relative;
+          &:last-child {
+            padding: 0;
+          }
+        }
+
+
+        input[type="radio"] {
+          display: none;
+
+          &:checked + label {
+            color: @white;
+          }
+
+          &:hover + label {
+            color: @spray;
+          }
+
+          &+label {
+            padding-left: 24px;
+          }
+
+          &+label:before {
+            content: "";
+            position: absolute;
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            background-color: @nepal;
+            border-radius: 50%;
+            border: 2px solid @nepal;
+            box-shadow: 0 0 0 4px @nepal;
+            left: 4px;
+            bottom: 5px;
+          }
+        }
+
+        .radio-buttons(@priority-and-categories);
+
+        label:hover {
+          cursor: pointer;
+        }
+
+        label {
+          color: @nepal;
+        }
+      }
+
+      input[type="text"] {
+        border: none;
+        background: transparent;
+        padding: 0;
+        color: @white;
+
+        .placeholder(@nepal);
+      }
+
+      .checkbox-group {
+        display: flex;
+
+        .checkbox {
+          display: none;
+          .checkbox-settings();
+        }
+      }
+
+      p {
+        color: @nepal;
+      }
+    }
+  }
+
+  .btn-group {
+    padding-bottom: 0;
+
+    .cancel,
+    .remove {
+      font-family: @ptsans;
+      font-size: 1.125rem;
+      color: @white;
+    }
+
+    .cancel {
+      background-color: @malibu;
+      padding: 10px 37px;
+
+      &:hover {
+        background-color: @pelorous;
+      }
+    }
+
+    .remove {
+      background-color: @tomato;
+      padding: 10px 32px;
+
+      &:hover {
+        background-color: @dark-coral;
+      }
+    }
+  }
+
+  .message {
+    padding: 130px 0 240px;
+  }
+}
+

@@ -107,20 +107,18 @@
     @key: extract(@pair, 1);
     @value: extract(@pair, 2);
     .@{key} {
-
       input[type="radio"] {
-        background: @nepal;
 
-        &:checked {
-          border: 3px solid @value;
-
-          &:before {
-            background-color: @value;
-          }
+        &+label:hover:before {
+          background-color: @value;
+          box-shadow: 0 0 0 4px @value;
+          border: 2px solid @value;
         }
 
-        &:hover {
+        &:checked+label:before {
           background-color: @value;
+          border: 2px solid @madison;
+          box-shadow: 0 0 0 4px @value;
         }
       }
     }
@@ -128,14 +126,86 @@
 }
 
 .checkbox-settings() {
-  background: url(/empty-tomato.svg) center center no-repeat;
-  display: inline-block;
-  width: 21px;
-  height: 19px;
-  margin-right: 8px;
 
-  &:checked {
+  &+label{
+    background: url(/empty-tomato.svg) center center no-repeat;
+    display: inline-block;
+    width: 21px;
+    height: 19px;
+    margin-right: 8px;
+  }
+
+
+  &:checked+label {
     background: url("/fill tomato.svg") center center no-repeat;
+  }
+}
+
+.notification(@list) {
+  .iter(length(@list));
+  .iter(@i) when (@i > 0) {
+    .iter(@i - 1);
+    @pair: extract(@list, @i);
+    @key: extract(@pair, 1);
+    @value: extract(@pair, 2);
+    .@{key} {
+      background-color: @value;
+
+      .icon-wrapper {
+        background-color: lighten(@value, 10%);
+
+        span:before {
+          content: @@key;
+        }
+      }
+    }
+  }
+}
+
+.category-decoration(@list) {
+  .iter(length(@list));
+  .iter(@i) when (@i > 0) {
+    .iter(@i - 1);
+    @pair: extract(@list, @i);
+    @key: extract(@pair, 1);
+    @value: extract(@pair, 2);
+    .@{key}-group {
+      padding-bottom: 23px;
+
+      .task-list {
+        position: relative;
+      }
+      .task-list:before {
+        content: "";
+        display: block;
+        width: 9px;
+        height: 100%;
+        background-color: @value;
+        position: absolute;
+        bottom: 3px;
+        z-index: 1;
+      }
+
+      .category-heading {
+        position: relative;
+
+        &:before {
+          content: "";
+          position: absolute;
+          display: inline-block;
+          width: 5px;
+          height: 5px;
+          background-color: @value;
+          border-radius: 50%;
+          border: 2px solid @madison;
+          -webkit-box-shadow: 0 0 0 4px @value;
+          -moz-box-shadow: 0 0 0 4px @value;
+          box-shadow: 0 0 0 4px @value;
+          left: 0;
+          bottom: 5px;
+        }
+      }
+    }
   }
 }
 

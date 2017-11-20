@@ -1,0 +1,219 @@
+.daily-tasks {
+  position: relative;
+}
+
+.task-list {
+  padding-top: 20px;
+
+  .task {
+    width: 100%;
+    background-color: @white;
+    margin-bottom: 9px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 5px 20px 2px rgba(0, 0, 0, 0.4);
+    position: relative;
+
+    .task-description {
+      min-height: 90px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+      padding-left: 35px;
+
+      h2 {
+        font-family: @roboto-medium;
+        font-size: 19px;
+        padding-bottom: 13px;
+      }
+
+      p {
+        font-family: @roboto-regular;
+        color: @grey;
+      }
+
+    }
+
+    .edit-task {
+      color: @silver;
+      border: none;
+      background: transparent;
+      outline: none;
+      padding-right: 30px;
+
+      &:hover {
+        cursor: pointer;
+        color: @nepal;
+      }
+    }
+
+    .border {
+      align-self: stretch;
+
+      .checkbox-none {
+        visibility: hidden;
+        width: 9px;
+      }
+
+      .checkbox-move-to-trash {
+        display: none;
+
+        &:hover {
+          cursor: pointer;
+        }
+
+        &+label {
+          font-size: 2.5rem;
+          padding: 0 25px;
+        }
+
+        &[checked]+label:before {
+          content: "\e906";
+        }
+
+      }
+    }
+
+    .icon-tomato,
+    .icon-trash {
+      display: block;
+      position: relative;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: @white;
+    }
+
+    .icon-edit,
+    .icon-arrows-up {
+      font-size: 1.25rem;
+    }
+
+    .go-to-timer {
+      align-self: stretch;
+      display: block;
+      width: 89px;
+      font-size: 3.125rem;
+      position: relative;
+
+      .estimation {
+        font-family: @ptsans;
+        font-size: 1.5rem;
+        position: absolute;
+        color: @white;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 0;
+      }
+
+    }
+
+    span {
+      font-family: @roboto-bold;
+      font-size: 0.6875rem;
+      text-transform: uppercase;
+      padding-left: 25px;
+      color: @dark-grey;
+    }
+
+    .date-day {
+      font-size: 1.6875rem;
+      font-family: @ptsans;
+
+      .date-month {
+        display: block;
+        padding-left: 0;
+      }
+    }
+
+    .overdue {
+      color: @tomato;
+      font-weight: bold;
+
+      .date-month {
+        color: @tomato;
+      }
+    }
+  }
+}
+
+.create-classes-for-priority(@priority, @priority-active);
+.create-classes-for-categories(@categoties, @categories-active);
+
+.page-heading-container {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  padding-bottom: 35px;
+
+  .add-new-task {
+    color: white;
+    font-size: 2.1875rem;
+    padding-left: 20px;
+  }
+}
+
+.links-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-bottom: 25px;
+
+  .global-list-link {
+    padding: 40px 0 0;
+  }
+}
+
+.global-list-link {
+  font-family: @ptsans;
+  font-size: 1.25rem;
+  display: block;
+  padding: 30px 0 50px;
+  text-align: left;
+
+  &:hover {
+    color: @spray;
+  }
+
+  span {
+    font-size: 0.6875rem;
+    padding-left: 5px;
+  }
+}
+
+.task-controls {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  align-self: stretch;
+  justify-content: space-around;
+}
+
+.category-heading {
+  font-family: @roboto-bold;
+  text-transform: uppercase;
+  font-size: 1rem;
+  text-align: left;
+  padding-top: 25px;
+  padding-left: 22px;
+}
+
+.category-decoration(@categoties);
+
+.tomato {
+  max-width: 165px;
+  margin: 0 auto;
+  padding: 100px 0 90px;
+}
+
+.done {
+  .opacity(0.7);
+
+  h2 {
+    text-decoration: line-through;
+  }
+}

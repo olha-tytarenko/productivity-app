@@ -1,0 +1,238 @@
+.hide-element {
+  display: none;
+}
+
+.timer-section {
+  color: @white;
+  font-weight: normal;
+
+  .task-name {
+    font-family: @roboto-medium;
+    padding-bottom: 25px;
+    font-size: 1.75rem;
+    font-weight: normal;
+  }
+
+  .task-description {
+    font-family: @roboto-regular;
+    font-size: 1.0625rem;
+    padding-bottom: 35px;
+  }
+
+  .attempts {
+    padding-bottom: 55px;
+    display: flex;
+    justify-content: center;
+
+    .checkbox:checked.failed+label {
+      background: url(/tomato-failed.svg) center center no-repeat;
+    }
+
+    input[type="checkbox"] {
+      .checkbox-settings();
+      cursor: default;
+      display: none;
+    }
+
+    .add {
+      color: @nepal;
+      font-weight: normal;
+      font-size: 0.75rem;
+
+      &:hover {
+        color: @spray;
+      }
+    }
+  }
+
+  .timer {
+    box-sizing: border-box;
+    width: 265px;
+    height: 265px;
+    border: 7px solid @yellow-orange;
+    margin: 0 auto 69px;
+    border-radius: 50%;
+
+    &:after {
+      content: "Let's do it!";
+      font-family: @ptsans;
+      font-size: 1.625rem;
+      line-height: 245px;
+    }
+
+    .process {
+      border-radius: 50%;
+      width: 70%;
+      height: 70%;
+      border: 35px solid transparent;
+      border-right: 35px solid @nepal;
+      transform: rotate(-45deg);
+      margin-top: 5px;
+    }
+
+    .break {
+      border-radius: 50%;
+      width: 65%;
+      height: 65%;
+      margin: 8px auto 0;
+      border: 35px solid @nepal;
+    }
+  }
+
+  .in-process {
+    position: relative;
+
+    &:after {
+      content: "6";
+      line-height: 0;
+      font-family: @roboto-regular;
+      font-size: 6.25rem;
+      position: absolute;
+      font-weight: normal;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &:before {
+      content: "min";
+      position: absolute;
+      font-family: @roboto-regular;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .in-process-break {
+    position: relative;
+
+    &:after {
+      content: "3";
+      line-height: 0;
+      font-family: @roboto-regular;
+      font-size: 6.25rem;
+      position: absolute;
+      font-weight: normal;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &:before {
+      content: "min";
+      position: absolute;
+      font-family: @roboto-regular;
+      font-size: 1.5rem;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    span {
+      position: absolute;
+      font-family: @roboto-regular;
+      font-size: 0.9375rem;
+      text-transform: uppercase;
+      top: 25%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .break-is-over {
+    position: relative;
+
+    &:after {
+      content: "Break is over";
+      white-space: pre;
+      line-height: 0;
+      font-family: @roboto-regular;
+      font-size: 1.5rem;
+      position: absolute;
+      font-weight: normal;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .start {
+    padding: 10px 45px;
+    background-color: @mountain-meadow;
+    color: @white;
+    font-family: @ptsans;
+    font-weight: bold;
+
+    &:hover {
+      background-color: @dark-mountain-meadow;
+    }
+  }
+
+  .fail,
+  .finish,
+  .finish-task,
+  .start-pomodoro {
+    color: @white;
+    font-family: @ptsans;
+    font-weight: bold;
+    font-size: 1.125rem;
+  }
+
+  .btn-group {
+    max-width: 360px;
+
+    .fail {
+      background-color: @tomato;
+      padding: 10px 28px;
+
+      &:hover {
+        background-color: @dark-coral;
+      }
+    }
+
+    .finish {
+      background-color: @mountain-meadow;
+      padding: 10px 23px;
+
+      &:hover {
+        background-color: @dark-mountain-meadow;
+      }
+    }
+
+    .finish-task {
+      background-color: @malibu;
+      padding: 10px 40px;
+
+      &:hover {
+        background-color: @curious-blue;
+      }
+    }
+  }
+
+  .completed {
+    position: relative;
+
+    span {
+      position: absolute;
+      font-family: @roboto-regular;
+      font-size: 1.5rem;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    &:after {
+      content: "";
+    }
+  }
+}
+
+.start-pomodoro {
+  background-color: @mountain-meadow;
+  padding: 10px 24px;
+
+  &:hover {
+    background-color: @dark-mountain-meadow;
+  }
+}
