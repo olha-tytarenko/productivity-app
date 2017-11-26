@@ -113,3 +113,51 @@
     }
   }
 }
+
+.your-cycle-graph {
+  display: flex;
+  height: 10px;
+  position: relative;
+
+  .iteration {
+
+    flex-grow: 1;
+    background-color: red;
+
+    display: flex;
+
+    .work-time-div {
+      background-color: yellow;
+      flex-grow: 3;
+    }
+
+    .short-break-div {
+      background-color: crimson;
+      flex-grow: 1;
+      position: relative;
+    }
+  }
+
+  .long-break-div {
+    width: 10%;
+    background-color: green;
+  }
+}
+
+.dot {
+  position: absolute;
+  display: block;
+  font-family: @ptsans;
+  font-size: 0.75rem;
+  color: @nepal;
+
+  &:before {
+    content: "";
+    display: block;
+    width: 3px;
+    height: 3px;
+    background-color: @dark-turquoise;
+    border-radius: 50%;
+    position: absolute;
+  }
+}

@@ -31,10 +31,10 @@
       <li>
         <div class="inline">
           <span class="criteria-name work-time">work time</span>
-          <div class="criteria-value">
-            <button class="decrease icon-minus"></button>
-            <p>5</p>
-            <button class="increase icon-add"></button>
+          <div id="workTime" class="criteria-value">
+            <button id="workTimeDecrease" class="decrease icon-minus"></button>
+            <p class="value">15</p>
+            <button id="workTimeIncrease" class="increase icon-add"></button>
           </div>
         </div>
         <p class="time-description">Please select a value between 15 and 25 <strong>minutes</strong></p>
@@ -42,10 +42,10 @@
       <li>
         <div class="inline">
           <span class="criteria-name work-iteration">work iteration</span>
-          <div class="criteria-value">
-            <button class="decrease icon-minus"></button>
-            <p>5</p>
-            <button class="increase icon-add"></button>
+          <div id="workIteration" class="criteria-value">
+            <button id="workIterationDecrease" class="decrease icon-minus"></button>
+            <p class="value">5</p>
+            <button id="workIterationIncrease" class="increase icon-add"></button>
           </div>
         </div>
         <p class="time-description">Please select a value between 2 and 5 <strong>iterations</strong></p>
@@ -53,10 +53,10 @@
       <li>
         <div class="inline">
           <span class="criteria-name short-break">short break</span>
-          <div class="criteria-value">
-            <button class="decrease icon-minus"></button>
-            <p>5</p>
-            <button class="increase icon-add"></button>
+          <div id="shortBreak" class="criteria-value">
+            <button id="shortBreakDecrease" class="decrease icon-minus"></button>
+            <p class="value">5</p>
+            <button id="shortBreakIncrease" class="increase icon-add"></button>
           </div>
         </div>
         <p class="time-description">Please select a value between 3 and 5 <strong>minutes</strong></p>
@@ -64,10 +64,10 @@
       <li>
         <div class="inline">
           <span class="criteria-name long-break">long break</span>
-          <div class="criteria-value">
-            <button class="decrease icon-minus"></button>
-            <p>5</p>
-            <button class="increase icon-add"></button>
+          <div id="longBreak" class="criteria-value">
+            <button id="longBreakDecrease" class="decrease icon-minus"></button>
+            <p class="value">30</p>
+            <button id="longBreakIncrease" class="increase icon-add"></button>
           </div>
         </div>
         <p class="time-description">Please select a value between 15 and 30 <strong>minutes</strong></p>
@@ -77,6 +77,33 @@
   <section class="your-cycle">
     <h2 class="your-cycle-heading">Your cycle</h2>
     <img src="/cycle.png" alt="">
+    <div class="your-cycle-graph">
+      <span class="dot">0m</span>
+      <div class="iteration">
+        <div class="work-time-div"></div>
+        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="work-time-div"></div>
+        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="work-time-div"></div>
+        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="work-time-div"></div>
+        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="work-time-div"></div>
+      </div>
+      <div class="long-break-div"><span class="dot"></span></div>
+      <div class="iteration">
+        <div class="work-time-div"></div>
+        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="work-time-div"></div>
+        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="work-time-div"></div>
+        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="work-time-div"></div>
+        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="work-time-div"></div>
+      </div>
+      <span class="dot"></span>
+    </div>
   </section>
   <div class="btn-group">
     <a class="btn go-to-task btn-malibu">Go to Task</a>
