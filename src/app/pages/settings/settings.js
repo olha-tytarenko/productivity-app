@@ -1,4 +1,4 @@
-class Vouter {
+class Voter {
   constructor(options) {
     this.minValue = options.minValue;
     this.maxValue = options.maxValue;
@@ -31,28 +31,75 @@ class Vouter {
   }
 }
 
-const workTimeRender = (action) => {
-  const workTimeDivs = Array.from(document.getElementsByClassName('work-time-div'));
-  
-  workTimeDivs.forEach((div) => {
-      const flexGrowValue = +window.getComputedStyle(div).flexGrow;
-      div.style.flexGrow = (action === 'decrease') ? flexGrowValue - 0.5 : flexGrowValue + 0.5;
-    });
+// VARIABLES
 
+const workTime = document.getElementById('workTimeValue');
+const workIteration = document.getElementById('workIterationValue');
+const shortBreak = document.getElementById('shortBreakValue');
+const longBreak = document.getElementById('longBreakValue');
 
+const workTimeDivs = Array.from(document.getElementsByClassName('work-time-div'));
+const longBreakDiv = document.getElementsByClassName('long-break-div')[0];
+const shortBreakDivs = Array.from(document.getElementsByClassName('short-break-div'));
+
+// FUNCTIONS
+
+const getPercentage = () => {
+  const totalTime = (+workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1)) * 2 + +longBreak.innerText;
+
+  return (100 /  totalTime);
 };
 
+const renderScale = () => {
+  const scaleItems = Array.from(document.getElementsByClassName('scale-item'));
+  const totalTime = +workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1);
+
+  const endCycleTime = document.getElementsByClassName('end-cycle')[0];
+  const hours = `${Math.floor((totalTime * 2 + +longBreak.innerText) / 60)}h`;
+  const minutes = ` ${(totalTime * 2 + +longBreak.innerText) % 60}m`;
+  endCycleTime.innerText = hours + minutes;
+
+  scaleItems.forEach( (item, index) => {
+    if ((index+1)*30 < (totalTime * 2 + +longBreak.innerText)) {
+      item.style.left = `calc(${((index+1)*30) * getPercentage()}% - ${parseInt(window.getComputedStyle(item).width) - 5}px)`;
+    } else {
+      item.classList.add('display-none');
+    }
+  });
+};
+
+const firstCycle = () => {
+  const firstCycleElem = document.getElementsByClassName('first-cycle')[0];
+  const firstCycleMin = (+workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1)) * 2 + +longBreak.innerText;
+  firstCycleElem.innerText = `First cycle: ${Math.floor(firstCycleMin / 60)}h ${firstCycleMin % 60}m`;
+};
+
+const workTimeRender = (action) => {
+  workTimeDivs.forEach((div) => {
+    div.style.width = `${+workTime.innerText * getPercentage()}%`;
+  });
+};
+
+
 const longBreakRender = (action) => {
-  console.log('longBreakRender');
-  const longBreakDiv = document.getElementsByClassName('long-break-div')[0];
-  const widthValue = parseInt(window.getComputedStyle(longBreakDiv).width);
-  longBreakDiv.style.width = (action === 'decrease') ? `${widthValue - 7}px` : `${widthValue + 7}px`;
+  longBreakDiv.style.width = `${+longBreak.innerText * getPercentage()}%`;
+};
+
+const shortBreakRender = (action) => {
+  shortBreakDivs.forEach((div) => {
+    div.style.width = `${+shortBreak.innerText * getPercentage()}%`;
+  });
+};
+
+const renderAll = (action) => {
+  workTimeRender(action);
+  shortBreakRender(action);
+  longBreakRender(action);
+  firstCycle();
+  renderScale();
 };
 
 const workIterationRender = (action) => {
-
-  const workTimeDivs = Array.from(document.getElementsByClassName('work-time-div'));
-  const shortBreakDivs = Array.from(document.getElementsByClassName('short-break-div'));
   let workTimeDivsFiltered = [];
   let shortBreakDivsFiltered = [];
 
@@ -64,6 +111,7 @@ const workIterationRender = (action) => {
     shortBreakDivsFiltered = shortBreakDivs.filter((div) => {
       return !div.classList.contains('display-none');
     });
+
   } else {
     workTimeDivsFiltered = workTimeDivs.filter((div) => {
       return div.classList.contains('display-none');
@@ -78,50 +126,49 @@ const workIterationRender = (action) => {
   workTimeDivsFiltered[workTimeDivsFiltered.length - 1].classList.toggle('display-none');
   shortBreakDivsFiltered[0].classList.toggle('display-none');
   shortBreakDivsFiltered[shortBreakDivsFiltered.length - 1].classList.toggle('display-none');
+
+
+  renderAll(action);
+  renderScale();
 };
 
-const shortBreakRender = (action) => {
-  const shortBreakDivs = Array.from(document.getElementsByClassName('short-break-div'));
+// VOTER OBJECTS
 
-  shortBreakDivs.forEach((div) => {
-    const flexGrowValue = +window.getComputedStyle(div).flexGrow;
-    div.style.flexGrow = (action === 'decrease') ? flexGrowValue - 0.1 : flexGrowValue + 0.1;
-  });
-};
-
-const workTimeVouterOptions = {
+const workTimeVoterOptions = {
   minValue: 15,
   maxValue: 25,
   step: 5,
   element: document.getElementById('workTime'),
-  render: workTimeRender
+  render: renderAll
 };
-const workTimeVouter = new Vouter(workTimeVouterOptions);
+const workTimeVoter = new Voter(workTimeVoterOptions);
 
-const longBreakVouterOptions = {
+const longBreakVoterOptions = {
   minValue: 15,
   maxValue: 30,
   step: 5,
   element: document.getElementById('longBreak'),
-  render: longBreakRender
+  render: renderAll
 };
-const longBreakVouter = new Vouter(longBreakVouterOptions);
+const longBreakVoter = new Voter(longBreakVoterOptions);
 
 
-const workIterationVouterOptions = {
+const workIterationVoterOptions = {
   minValue: 2,
   maxValue: 5,
   step: 1,
   element: document.getElementById('workIteration'),
   render: workIterationRender
 };
-const workIterationVouter = new Vouter(workIterationVouterOptions);
+const workIterationVoter = new Voter(workIterationVoterOptions);
 
-const shortBreakVouterOptions = {
+const shortBreakVoterOptions = {
   minValue: 3,
   maxValue: 5,
   step: 1,
   element: document.getElementById('shortBreak'),
-  render: shortBreakRender
+  render: renderAll
 };
-const shortBreakVouter = new Vouter(shortBreakVouterOptions);
+const shortBreakVoter = new Voter(shortBreakVoterOptions);
+
+renderScale();

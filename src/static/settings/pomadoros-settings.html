@@ -10,14 +10,19 @@
 <body>
 <div class="wrapper">
   <header class="header">
-    <nav class="navigation">
-      <ul>
-        <li><a href="" class="icon-list"></a></li>
-        <li><a href="" class="icon-statistics"></a></li>
-        <li><a href="" class="icon-settings active"></a></li>
-      </ul>
-    </nav>
+    <div class="header-container">
+      <div class="logo display-none"><img src="/Logo.svg" alt=""> </div>
+      <nav class="navigation">
+        <ul>
+          <li><a href="" class="icon-trash display-none"></a></li>
+          <li><a href="" class="icon-list active"></a></li>
+          <li><a href="" class="icon-statistics"></a></li>
+          <li><a href="" class="icon-settings"></a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
+
   <section class="settings">
     <h1 class="page-heading">Settings</h1>
     <div class="tab-wrapper">
@@ -33,7 +38,7 @@
           <span class="criteria-name work-time">work time</span>
           <div id="workTime" class="criteria-value">
             <button id="workTimeDecrease" class="decrease icon-minus"></button>
-            <p class="value">15</p>
+            <p class="value" id="workTimeValue">25</p>
             <button id="workTimeIncrease" class="increase icon-add"></button>
           </div>
         </div>
@@ -44,7 +49,7 @@
           <span class="criteria-name work-iteration">work iteration</span>
           <div id="workIteration" class="criteria-value">
             <button id="workIterationDecrease" class="decrease icon-minus"></button>
-            <p class="value">5</p>
+            <p class="value" id="workIterationValue">5</p>
             <button id="workIterationIncrease" class="increase icon-add"></button>
           </div>
         </div>
@@ -55,7 +60,7 @@
           <span class="criteria-name short-break">short break</span>
           <div id="shortBreak" class="criteria-value">
             <button id="shortBreakDecrease" class="decrease icon-minus"></button>
-            <p class="value">5</p>
+            <p class="value" id="shortBreakValue">5</p>
             <button id="shortBreakIncrease" class="increase icon-add"></button>
           </div>
         </div>
@@ -66,7 +71,7 @@
           <span class="criteria-name long-break">long break</span>
           <div id="longBreak" class="criteria-value">
             <button id="longBreakDecrease" class="decrease icon-minus"></button>
-            <p class="value">30</p>
+            <p class="value" id="longBreakValue">30</p>
             <button id="longBreakIncrease" class="increase icon-add"></button>
           </div>
         </div>
@@ -76,33 +81,43 @@
   </section>
   <section class="your-cycle">
     <h2 class="your-cycle-heading">Your cycle</h2>
-    <img src="/cycle.png" alt="">
     <div class="your-cycle-graph">
-      <span class="dot">0m</span>
-      <div class="iteration">
+      <span class="start-cycle">0m</span>
         <div class="work-time-div"></div>
-        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="short-break-div"></div>
         <div class="work-time-div"></div>
-        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="short-break-div"></div>
         <div class="work-time-div"></div>
-        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="short-break-div"></div>
         <div class="work-time-div"></div>
-        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="short-break-div"></div>
         <div class="work-time-div"></div>
+      <div class="long-break-div">
+        <span class="first-cycle">First cycle: 2h 55m</span>
+        <span class=""></span>
       </div>
-      <div class="long-break-div"><span class="dot"></span></div>
-      <div class="iteration">
         <div class="work-time-div"></div>
-        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="short-break-div"></div>
         <div class="work-time-div"></div>
-        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="short-break-div"></div>
         <div class="work-time-div"></div>
-        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="short-break-div"></div>
         <div class="work-time-div"></div>
-        <div class="short-break-div"><span class="dot"></span></div>
+        <div class="short-break-div"></div>
         <div class="work-time-div"></div>
-      </div>
-      <span class="dot"></span>
+      <span class="end-cycle">5h 30m</span>
+    </div>
+    <div class="scale">
+      <span class="scale-item">30m</span>
+      <span class="scale-item">1h</span>
+      <span class="scale-item">1h 30m</span>
+      <span class="scale-item">2h</span>
+      <span class="scale-item">2h 30m</span>
+      <span class="scale-item">3h</span>
+      <span class="scale-item">3h 30m</span>
+      <span class="scale-item">4h</span>
+      <span class="scale-item">4h 30m</span>
+      <span class="scale-item">5h</span>
     </div>
   </section>
   <div class="btn-group">
