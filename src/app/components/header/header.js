@@ -1,4 +1,5 @@
 require('./header.less'); // example of including component's styles
+const template = require('./header.hbs');
 
 const header = document.getElementsByClassName('header')[0];
 const logo = document.getElementsByClassName('logo')[0];

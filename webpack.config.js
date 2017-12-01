@@ -36,7 +36,21 @@ module.exports = {
             name: 'images/[name].[ext]'
           }
         }]
-      }
+      },
+	  {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      },
+	  { 
+		test: /\.hbs$/, 
+		loader: "handlebars-template-loader" 
+	  }
     ]
   },
   plugins: [
