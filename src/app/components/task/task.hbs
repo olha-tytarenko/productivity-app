@@ -1,0 +1,17 @@
+{{#each this}}
+<li class="task {{priority}} {{category}} {{done}}">
+  <div class="border">
+    <input type="checkbox" class="{{#unless remove}}checkbox-none{{/unless}}{{#if remove}}checkbox-move-to-trash{{/if}}">
+      {{#if remove}}
+        <label class="icon-trash"></label>
+      {{/if}}
+  </div>
+  <span>Today</span>
+  <div class="task-description">
+    <h2>{{heading}} </h2>
+    <p>{{taskDescription}}</p>
+  </div>
+  <button class="edit-task icon-edit"></button>
+  <div class="go-to-timer"><a class="icon-tomato" href=""><span class="estimation">3</span></a></div>
+</li>
+{{/each}}

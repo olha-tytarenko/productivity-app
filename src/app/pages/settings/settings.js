@@ -1,3 +1,51 @@
+import { Router } from '../../router';
+
+const pomodorosSettingsTemplate = require('./pomodoros-settings.hbs');
+const settingsCategoriesTemplate = require('./settings-categories.hbs');
+const router = new Router();
+
+export class Settings {
+  constructor(element) {
+    this.element = element;
+
+    this.router = router;
+    router.add('settings', this.renderSettings.bind(this));
+  }
+
+  renderSettings() {
+    document.title = 'Settings';
+    this.element.innerHTML = pomodorosSettingsTemplate();
+    renderGraph();
+    this.addListeners();
+  }
+
+  renderCategories() {
+    this.element.innerHTML = settingsCategoriesTemplate();
+    this.addListeners();
+  }
+
+  addListeners() {
+    const pomodorosTab = document.getElementById('pomodorosTab');
+    const categoriesTab = document.getElementById('categoriesTab');
+    const goToTask = document.getElementsByClassName('go-to-task')[0];
+
+    pomodorosTab.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.renderSettings();
+    });
+
+    categoriesTab.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.renderCategories();
+    });
+
+    goToTask.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.router.navigate('/task-list');
+    });
+  }
+}
+
 class Voter {
   constructor(options) {
     this.minValue = options.minValue;
@@ -33,142 +81,146 @@ class Voter {
 
 // VARIABLES
 
-const workTime = document.getElementById('workTimeValue');
-const workIteration = document.getElementById('workIterationValue');
-const shortBreak = document.getElementById('shortBreakValue');
-const longBreak = document.getElementById('longBreakValue');
+function renderGraph() {
 
-const workTimeDivs = Array.from(document.getElementsByClassName('work-time-div'));
-const longBreakDiv = document.getElementsByClassName('long-break-div')[0];
-const shortBreakDivs = Array.from(document.getElementsByClassName('short-break-div'));
+  const workTime = document.getElementById('workTimeValue');
+  const workIteration = document.getElementById('workIterationValue');
+  const shortBreak = document.getElementById('shortBreakValue');
+  const longBreak = document.getElementById('longBreakValue');
 
-// FUNCTIONS
+  const workTimeDivs = Array.from(document.getElementsByClassName('work-time-div'));
+  const longBreakDiv = document.getElementsByClassName('long-break-div')[0];
+  const shortBreakDivs = Array.from(document.getElementsByClassName('short-break-div'));
 
-const getPercentage = () => {
-  const totalTime = (+workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1)) * 2 + +longBreak.innerText;
+  // FUNCTIONS
 
-  return (100 /  totalTime);
-};
+  const getPercentage = () => {
+    const totalTime = (+workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1)) * 2 + +longBreak.innerText;
 
-const renderScale = () => {
-  const scaleItems = Array.from(document.getElementsByClassName('scale-item'));
-  const totalTime = +workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1);
+    return (100 / totalTime);
+  };
 
-  const endCycleTime = document.getElementsByClassName('end-cycle')[0];
-  const hours = `${Math.floor((totalTime * 2 + +longBreak.innerText) / 60)}h`;
-  const minutes = ` ${(totalTime * 2 + +longBreak.innerText) % 60}m`;
-  endCycleTime.innerText = hours + minutes;
+  const renderScale = () => {
+    const scaleItems = Array.from(document.getElementsByClassName('scale-item'));
+    const totalTime = +workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1);
 
-  scaleItems.forEach( (item, index) => {
-    if ((index+1)*30 < (totalTime * 2 + +longBreak.innerText)) {
-      item.style.left = `calc(${((index+1)*30) * getPercentage()}% - ${parseInt(window.getComputedStyle(item).width) - 5}px)`;
+    const endCycleTime = document.getElementsByClassName('end-cycle')[0];
+    const hours = `${Math.floor((totalTime * 2 + +longBreak.innerText) / 60)}h`;
+    const minutes = ` ${(totalTime * 2 + +longBreak.innerText) % 60}m`;
+    endCycleTime.innerText = hours + minutes;
+
+    scaleItems.forEach((item, index) => {
+      if ((index + 1) * 30 < (totalTime * 2 + +longBreak.innerText)) {
+        item.style.left = `calc(${((index + 1) * 30) * getPercentage()}% - ${parseInt(window.getComputedStyle(item).width) - 5}px)`;
+      } else {
+        item.classList.add('display-none');
+      }
+    });
+  };
+
+  const firstCycle = () => {
+    const firstCycleElem = document.getElementsByClassName('first-cycle')[0];
+    const firstCycleMin = (+workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1)) * 2 + +longBreak.innerText;
+    firstCycleElem.innerText = `First cycle: ${Math.floor(firstCycleMin / 60)}h ${firstCycleMin % 60}m`;
+  };
+
+  const workTimeRender = (action) => {
+    workTimeDivs.forEach((div) => {
+      div.style.width = `${+workTime.innerText * getPercentage()}%`;
+    });
+  };
+
+
+  const longBreakRender = (action) => {
+    longBreakDiv.style.width = `${+longBreak.innerText * getPercentage()}%`;
+  };
+
+  const shortBreakRender = (action) => {
+    shortBreakDivs.forEach((div) => {
+      div.style.width = `${+shortBreak.innerText * getPercentage()}%`;
+    });
+  };
+
+  const renderAll = (action) => {
+    workTimeRender(action);
+    shortBreakRender(action);
+    longBreakRender(action);
+    firstCycle();
+    renderScale();
+  };
+
+  const workIterationRender = (action) => {
+    let workTimeDivsFiltered = [];
+    let shortBreakDivsFiltered = [];
+
+    if (action === 'decrease') {
+      workTimeDivsFiltered = workTimeDivs.filter((div) => {
+        return !div.classList.contains('display-none');
+      });
+
+      shortBreakDivsFiltered = shortBreakDivs.filter((div) => {
+        return !div.classList.contains('display-none');
+      });
+
     } else {
-      item.classList.add('display-none');
+      workTimeDivsFiltered = workTimeDivs.filter((div) => {
+        return div.classList.contains('display-none');
+      });
+
+      shortBreakDivsFiltered = shortBreakDivs.filter((div) => {
+        return div.classList.contains('display-none');
+      });
     }
-  });
-};
 
-const firstCycle = () => {
-  const firstCycleElem = document.getElementsByClassName('first-cycle')[0];
-  const firstCycleMin = (+workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1)) * 2 + +longBreak.innerText;
-  firstCycleElem.innerText = `First cycle: ${Math.floor(firstCycleMin / 60)}h ${firstCycleMin % 60}m`;
-};
-
-const workTimeRender = (action) => {
-  workTimeDivs.forEach((div) => {
-    div.style.width = `${+workTime.innerText * getPercentage()}%`;
-  });
-};
+    workTimeDivsFiltered[0].classList.toggle('display-none');
+    workTimeDivsFiltered[workTimeDivsFiltered.length - 1].classList.toggle('display-none');
+    shortBreakDivsFiltered[0].classList.toggle('display-none');
+    shortBreakDivsFiltered[shortBreakDivsFiltered.length - 1].classList.toggle('display-none');
 
 
-const longBreakRender = (action) => {
-  longBreakDiv.style.width = `${+longBreak.innerText * getPercentage()}%`;
-};
+    renderAll(action);
+    renderScale();
+  };
 
-const shortBreakRender = (action) => {
-  shortBreakDivs.forEach((div) => {
-    div.style.width = `${+shortBreak.innerText * getPercentage()}%`;
-  });
-};
+  // VOTER OBJECTS
 
-const renderAll = (action) => {
-  workTimeRender(action);
-  shortBreakRender(action);
-  longBreakRender(action);
-  firstCycle();
+  const workTimeVoterOptions = {
+    minValue: 15,
+    maxValue: 25,
+    step: 5,
+    element: document.getElementById('workTime'),
+    render: renderAll
+  };
+  const workTimeVoter = new Voter(workTimeVoterOptions);
+
+  const longBreakVoterOptions = {
+    minValue: 15,
+    maxValue: 30,
+    step: 5,
+    element: document.getElementById('longBreak'),
+    render: renderAll
+  };
+  const longBreakVoter = new Voter(longBreakVoterOptions);
+
+
+  const workIterationVoterOptions = {
+    minValue: 2,
+    maxValue: 5,
+    step: 1,
+    element: document.getElementById('workIteration'),
+    render: workIterationRender
+  };
+  const workIterationVoter = new Voter(workIterationVoterOptions);
+
+  const shortBreakVoterOptions = {
+    minValue: 3,
+    maxValue: 5,
+    step: 1,
+    element: document.getElementById('shortBreak'),
+    render: renderAll
+  };
+  const shortBreakVoter = new Voter(shortBreakVoterOptions);
+
   renderScale();
+
 };
-
-const workIterationRender = (action) => {
-  let workTimeDivsFiltered = [];
-  let shortBreakDivsFiltered = [];
-
-  if (action === 'decrease') {
-    workTimeDivsFiltered = workTimeDivs.filter((div) => {
-      return !div.classList.contains('display-none');
-    });
-
-    shortBreakDivsFiltered = shortBreakDivs.filter((div) => {
-      return !div.classList.contains('display-none');
-    });
-
-  } else {
-    workTimeDivsFiltered = workTimeDivs.filter((div) => {
-      return div.classList.contains('display-none');
-    });
-
-    shortBreakDivsFiltered = shortBreakDivs.filter((div) => {
-      return div.classList.contains('display-none');
-    });
-  }
-
-  workTimeDivsFiltered[0].classList.toggle('display-none');
-  workTimeDivsFiltered[workTimeDivsFiltered.length - 1].classList.toggle('display-none');
-  shortBreakDivsFiltered[0].classList.toggle('display-none');
-  shortBreakDivsFiltered[shortBreakDivsFiltered.length - 1].classList.toggle('display-none');
-
-
-  renderAll(action);
-  renderScale();
-};
-
-// VOTER OBJECTS
-
-const workTimeVoterOptions = {
-  minValue: 15,
-  maxValue: 25,
-  step: 5,
-  element: document.getElementById('workTime'),
-  render: renderAll
-};
-const workTimeVoter = new Voter(workTimeVoterOptions);
-
-const longBreakVoterOptions = {
-  minValue: 15,
-  maxValue: 30,
-  step: 5,
-  element: document.getElementById('longBreak'),
-  render: renderAll
-};
-const longBreakVoter = new Voter(longBreakVoterOptions);
-
-
-const workIterationVoterOptions = {
-  minValue: 2,
-  maxValue: 5,
-  step: 1,
-  element: document.getElementById('workIteration'),
-  render: workIterationRender
-};
-const workIterationVoter = new Voter(workIterationVoterOptions);
-
-const shortBreakVoterOptions = {
-  minValue: 3,
-  maxValue: 5,
-  step: 1,
-  element: document.getElementById('shortBreak'),
-  render: renderAll
-};
-const shortBreakVoter = new Voter(shortBreakVoterOptions);
-
-renderScale();

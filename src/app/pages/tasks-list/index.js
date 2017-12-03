@@ -1,2 +1,1 @@
-//export { TaskList } from './task-list';
-
+export * from './tasks-list';
