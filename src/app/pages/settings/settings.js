@@ -9,7 +9,7 @@ export class Settings {
     this.element = element;
 
     this.router = router;
-    router.add('settings', this.renderSettings.bind(this));
+    router.add('#settings', this.renderSettings.bind(this));
   }
 
   renderSettings() {
@@ -41,7 +41,7 @@ export class Settings {
 
     goToTask.addEventListener('click', (event) => {
       event.preventDefault();
-      this.router.navigate('/task-list');
+      this.router.navigate('#task-list');
     });
   }
 }
@@ -223,4 +223,4 @@ function renderGraph() {
 
   renderScale();
 
-};
+}

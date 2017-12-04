@@ -1,81 +1,50 @@
 import { Router } from '../../router';
-import { GlobalTaskListLink } from '../../components/global-task-list-link/global-task-list-link'; 
+import { GlobalTaskListLink } from '../../components/global-task-list-link/global-task-list-link';
+import { DailyTaskListHeading } from '../../components/daily-task-list-heading/daily-task-list-heading';
 import { Task } from '../../components/task/task';
+import { tasksToDo, tasksDone, tasksRemove } from './data';
 
 const router = new Router();
 const taskListTemplate = require('./tasks-list.hbs');
-const taskListDone = require('./tasks-list-done.hbs');
 
 export class TasksList {
   constructor(element) {
     this.element = element;
     this.router = router;
     this.globalTaskListLink = new GlobalTaskListLink(this.element);
-    this.router.add('task-list', this.renderToDo.bind(this));
+    this.dailyTaskListHeading = new DailyTaskListHeading(this.element);
+    this.router.add('#task-list', this.render.bind(this));
+    this.router.add('#remove-tasks', this.renderRemoveMode.bind(this));
     this.task = new Task();
   }
 
-  renderToDo() {
+  render() {
     document.title = 'Task list';
-    const tasks = [
-      {
-        priority: 'urgent',
-        category: 'work',
-        heading: 'Heading',
-        taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
-      },
-      {
-        priority: 'middle',
-        category: 'other',
-        heading: 'Heading2',
-        taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
-      },
-      {
-        priority: 'urgent',
-        category: 'education',
-        heading: 'Heading3',
-        taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
-      },
-      {
-        priority: 'low',
-        category: 'sport',
-        heading: 'Heading4',
-        taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
-      },
-      {
-        priority: 'high',
-        category: 'hobby',
-        heading: 'Heading',
-        taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
-      }
-    ];
-
-    this.element.innerHTML = taskListTemplate({tasks : this.task.getTasksHTML(tasks)});
-
+    this.globalTaskListLink.removeMode = false;
+    this.globalTaskListLink.isGlobalTaskListOpen = false;
+    this.element.innerHTML = taskListTemplate({removeMode:false, heading: this.dailyTaskListHeading.getHTML(), tasks : this.task.getTasksHTML(tasksToDo)});
     this.globalTaskListLink.render();
     this.addListeners();
   }
 
-  renderDone() {
-    const tasks = [
-      {
-        priority: 'urgent',
-        category: 'work',
-        heading: 'Heading dsd',
-        taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
-        done: 'done'
-      },
-      {
-        priority: 'middle',
-        category: 'other',
-        heading: 'Heading420',
-        taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
-        done: 'done'
-      }
-    ];
+  renderToDo() {
+    const dailyTasksList = document.getElementsByClassName('daily-tasks')[0];
+    dailyTasksList.innerHTML = taskListTemplate({removeMode:false, heading: this.dailyTaskListHeading.getHTML(), tasks : this.task.getTasksHTML(tasksToDo)});
+    this.addListeners();
+  }
 
-    this.element.innerHTML = taskListTemplate({tasks : this.task.getTasksHTML(tasks)});
+  renderDone() {
+    const dailyTasksList = document.getElementsByClassName('daily-tasks')[0];
+    dailyTasksList.innerHTML = taskListTemplate({removeMode:false, heading: this.dailyTaskListHeading.getHTML(), tasks : this.task.getTasksHTML(tasksDone)});
+    this.addListeners();
+  }
+
+  renderRemoveMode() {
+    this.element.innerHTML = taskListTemplate({removeMode: true, heading: this.dailyTaskListHeading.getHTML(), tasks : this.task.getTasksHTML(tasksRemove)});
+    this.globalTaskListLink.isGlobalTaskListOpen = false;
+    this.globalTaskListLink.removeMode = true;
     this.globalTaskListLink.render();
+
     this.addListeners();
   }
 

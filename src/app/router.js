@@ -7,13 +7,16 @@ export class Router {
       return instance;
     }
     instance = this;
+    this.defaultRoute = '';
+    this.routes[this.defaultRoute] = null;
   }
 
-  init() {
+  init(defaultRoute) {
+    this.defaultRoute = defaultRoute;
+
     window.addEventListener('hashchange', (event) => {
-      event.preventDefault();
-      // const url = location.hash;
-      // console.log(url);
+      const hash = location.hash;
+      this.navigate(hash);
     });
   }
 
@@ -27,8 +30,11 @@ export class Router {
 
   navigate(route) {
     if (route in this.routes) {
-      history.pushState(null, null, `/#${route}`);
+      location.hash = route;
       this.routes[route].call(null);
+    } else {
+      location.hash = this.defaultRoute;
+      this.routes[this.defaultRoute].call(null);
     }
   }
 }

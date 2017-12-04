@@ -7,7 +7,7 @@ export class Reports {
   constructor(element) {
     this.element = element;
 
-    router.add('reports', this.render.bind(this));
+    router.add('#reports', this.render.bind(this));
   }
 
   render() {

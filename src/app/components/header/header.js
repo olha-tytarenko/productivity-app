@@ -1,7 +1,13 @@
-require('./header.less'); // example of including component's styles
 import { Router } from '../../router';
+
 const headerTemplate = require('./header.hbs');
 const router = new Router();
+
+const removeClasses = (elements, styleClass) => {
+  elements.forEach((element) => {
+    element.classList.remove(styleClass);
+  });
+};
 
 
 export class Header {
@@ -24,20 +30,27 @@ export class Header {
 
     removeBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      console.log('remove');
-      router.navigate('remove-tasks');
+      removeClasses([goToTaskListBtn, goToReportsBtn, goToSettingsBtn], 'active');
+      removeBtn.classList.add('active');
+      router.navigate('#remove-tasks');
     });
     goToTaskListBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      router.navigate('task-list');
+      removeClasses([removeBtn, goToReportsBtn, goToSettingsBtn], 'active');
+      goToTaskListBtn.classList.add('active');
+      router.navigate('#task-list');
     });
     goToReportsBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      router.navigate('reports');
+      removeClasses([goToTaskListBtn, removeBtn, goToSettingsBtn], 'active');
+      goToReportsBtn.classList.add('active');
+      router.navigate('#reports');
     });
     goToSettingsBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      router.navigate('settings');
+      removeClasses([goToTaskListBtn, goToReportsBtn, removeBtn], 'active');
+      goToSettingsBtn.classList.add('active');
+      router.navigate('#settings');
     });
   }
 }
@@ -58,4 +71,4 @@ window.addEventListener('load', () => {
       logo.classList.add('display-none');
     }
   });
-})
+});
