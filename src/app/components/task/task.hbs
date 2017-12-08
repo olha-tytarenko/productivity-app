@@ -11,7 +11,7 @@
       <h2>{{heading}} </h2>
       <p>{{taskDescription}}</p>
     </div>
-    <button class="edit-task icon-edit"></button>
+    {{#unless done}}<button class="edit-task icon-edit"></button>{{/unless}}
     <div class="go-to-timer"><a class="icon-tomato" href=""><span class="estimation">{{estimation}}</span></a></div>
   </li>
 {{/each}}

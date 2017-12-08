@@ -1,7 +1,5 @@
 <ul class="tabs">
-  <li><a href="#" class="active">Pomadoros</a></li>
-  <li><a href="">Categories</a></li>
-  {{#each tabs}}
-  <li><a href="{{href}}">{{tabName}}</a></li>
+  {{#each this}}
+  <li><a href="" id="{{id}}" class="{{active}}">{{name}}</a></li>
   {{/each}}
 </ul>

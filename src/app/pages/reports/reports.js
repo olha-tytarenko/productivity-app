@@ -1,13 +1,10 @@
-import { Router } from '../../router';
-
 const reportsTemplate = require('./reports.hbs');
-const router = new Router();
 
 export class Reports {
-  constructor(element) {
+  constructor(element, router) {
     this.element = element;
-
-    router.add('#reports', this.render.bind(this));
+    this.router = router;
+    this.router.add('#reports', this.render.bind(this));
   }
 
   render() {

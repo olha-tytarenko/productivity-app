@@ -7,22 +7,27 @@ import { TasksList } from './pages/tasks-list/tasks-list';
 import { Reports } from './pages/reports/reports';
 import { FirstEntrance } from './pages/first-entrance/first-entrance';
 import { Header } from './components/header/header';
+// import { ModalAdd } from './components/modal-add/modal-add';
 import { Router } from './router';
 import { GlobalTaskList } from './pages/global-task-list/global-task-list';
+import { EventBus } from './event-bus';
 import { FirebaseManager } from './firebase-service';
 
 
 const initApp = () => {
   const router = new Router();
+  const eventBus = new EventBus();
   const wrapper = document.getElementsByClassName('header')[0];
-  const header = new Header(wrapper);
-  header.render();
+
   const contentWrapper = document.getElementsByClassName('main-container')[0];
-  const settings = new Settings(contentWrapper);
-  const taskList = new TasksList(contentWrapper);
-  const reports = new Reports(contentWrapper);
+  const settings = new Settings(contentWrapper, router);
+  const taskList = new TasksList(contentWrapper, router, eventBus);
+  const reports = new Reports(contentWrapper, router);
   const firstEntrance = new FirstEntrance(contentWrapper);
   const globalTaskList = new GlobalTaskList(contentWrapper);
+  const header = new Header(wrapper, router, eventBus);
+  header.render();
+
 
   router.init('#task-list');
 

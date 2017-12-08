@@ -1,26 +1,32 @@
+<div class="modal-overlay">
+  <div class="modal">
     <div class="modal-btn-group">
-      <button class="icon-close"></button>
-      <button class="icon-check"></button>
+      {{#if edit}}<button class="icon-trash trash"></button>{{/if}}
+      <button class="icon-close" id="closeModal"></button>
+      <button class="icon-check" id="save"></button>
     </div>
+  {{#if edit}}
+    <h2 class="modal-heading">Edit Task</h2>
+  {{else}}
     <h2 class="modal-heading">Add Task</h2>
+  {{/if}}
     <ul class="task-settings">
       <li class="item">
         <h3 class="heading">Title</h3>
-        <input type="text" placeholder="Add title here">
+        <input type="text" placeholder="Add title here" value="{{title}}">
       </li>
       <li class="item">
         <h3 class="heading">Description</h3>
-        <input type="text" placeholder="Add description here">
+        <input type="text" placeholder="Add description here" value="{{description}}">
       </li>
       <li class="item">
         <h3 class="heading">Category</h3>
         <ul class="radio-group">
-          <li class="work"><input type="radio" id="work" name="category"><label for="work">Work</label></li>
-          <li class="education"><input type="radio" id="education" name="category"><label
-              for="education">Education</label></li>
-          <li class="hobby"><input type="radio" id="hobby" name="category"><label for="hobby">Hobby</label></li>
-          <li class="sport"><input type="radio" id="sport" name="category"><label for="sport">Sport</label></li>
-          <li class="other"><input type="radio" id="other" name="category"><label for="other">Other</label></li>
+          <li class="work"><input type="radio" id="work" name="category" {{#unless edit}}checked{{/unless}} {{#if category.work}}checked{{/if}}><label for="work">Work</label></li>
+          <li class="education"><input type="radio" id="education" name="category" {{#if category.education}}checked{{/if}}><label for="education">Education</label></li>
+          <li class="hobby"><input type="radio" id="hobby" name="category" {{#if category.hobby}}checked{{/if}}><label for="hobby">Hobby</label></li>
+          <li class="sport"><input type="radio" id="sport" name="category" {{#if category.sport}}checked{{/if}}><label for="sport">Sport</label></li>
+          <li class="other"><input type="radio" id="other" name="category" {{#if category.other}}checked{{/if}}><label for="other">Other</label></li>
         </ul>
       </li>
       <li class="item">
@@ -30,20 +36,22 @@
       <li class="item">
         <h3 class="heading">estimation</h3>
         <div class="checkbox-group">
-          <input type="checkbox" class="checkbox" checked><label></label>
-          <input type="checkbox" class="checkbox" checked><label></label>
-          <input type="checkbox" class="checkbox" checked><label></label>
-          <input type="checkbox" class="checkbox"><label></label>
-          <input type="checkbox" class="checkbox"><label></label>
+          <input type="checkbox" class="checkbox"><label class="estimation"></label>
+          <input type="checkbox" class="checkbox"><label class="estimation"></label>
+          <input type="checkbox" class="checkbox"><label class="estimation"></label>
+          <input type="checkbox" class="checkbox"><label class="estimation"></label>
+          <input type="checkbox" class="checkbox"><label class="estimation"></label>
         </div>
       </li>
       <li class="item">
         <h3 class="heading">Priority</h3>
         <ul class="radio-group">
-          <li class="urgent"><input type="radio" id="urgent" name="priority"><label for="urgent">Urgent</label></li>
-          <li class="high"><input type="radio" id="high" name="priority"><label for="high">High</label></li>
-          <li class="middle"><input type="radio" id="middle" name="priority"><label for="middle">Middle</label></li>
-          <li class="low"><input type="radio" id="low" name="priority"><label for="low">Low</label></li>
+          <li class="urgent"><input type="radio" id="urgent" name="priority" {{#unless edit}}checked{{/unless}} {{#if priority.hobby}}urgent{{/if}}><label for="urgent">Urgent</label></li>
+          <li class="high"><input type="radio" id="high" name="priority" {{#if priority.high}}checked{{/if}}><label for="high">High</label></li>
+          <li class="middle"><input type="radio" id="middle" name="priority" {{#if priority.middle}}checked{{/if}}><label for="middle">Middle</label></li>
+          <li class="low"><input type="radio" id="low" name="priority" {{#if priority.low}}checked{{/if}}><label for="low">Low</label></li>
         </ul>
       </li>
     </ul>
+  </div>
+</div>

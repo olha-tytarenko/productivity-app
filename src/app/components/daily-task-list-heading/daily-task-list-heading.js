@@ -1,5 +1,8 @@
-// import { GlobalTaskList } from '../../pages/global-task-list/global-task-list';
+import { ModalAdd } from '../modal-add/modal-add';
+
 const dailyTaskListHeading = require('./daily-task-list-heading.hbs');
+
+
 
 export class DailyTaskListHeading {
   constructor(element) {
@@ -16,5 +19,11 @@ export class DailyTaskListHeading {
   }
 
   addListeners() {
+    const addTaskBtn = document.getElementById('addNewTask');
+
+    addTaskBtn.addEventListener('click', () => {
+      const modalAdd = new ModalAdd(document.getElementsByClassName('wrapper')[0]);
+      modalAdd.render();
+    });
   }
 }

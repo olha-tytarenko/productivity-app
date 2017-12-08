@@ -97,3 +97,24 @@ export const tasksRemove = [
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   }
 ];
+
+export const tasksDoneRemove = [
+  {
+    priority: 'urgent',
+    category: 'work',
+    heading: 'Heading dsd',
+    estimation: '2',
+    taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
+    done: 'done',
+    remove: true
+  },
+  {
+    priority: 'middle',
+    category: 'other',
+    heading: 'Heading420',
+    estimation: '3',
+    taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
+    remove: true,
+    done: 'done'
+  }
+];
