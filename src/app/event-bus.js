@@ -1,6 +1,12 @@
+let instance = null;
+
 export class EventBus {
   constructor() {
     this.eventHandlers = {};
+    if (instance) {
+      return instance;
+    }
+    instance = this;
   }
 
   registerEventHandler(name, callback) {
@@ -13,10 +19,9 @@ export class EventBus {
   }
 
   dispatch(eventName, payload) {
-    console.log(this.eventHandlers);
     if (eventName in this.eventHandlers) {
       this.eventHandlers[eventName].forEach( (event) => {
-        event();
+        event(payload);
       });
     }
   }

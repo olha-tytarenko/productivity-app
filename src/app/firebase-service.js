@@ -14,12 +14,32 @@ export class FirebaseManager {
   }
 
   show() {
-    this.dbRef.ref().child('task').on('value', snapshot => {
+    this.dbRef.ref().child('tasks').once('value').then((snapshot) => {
+      // event for rendering
       console.log(snapshot.val());
     });
+
   }
 
-  save(val) {
-    this.dbRef.ref().child('task').set(val);
+  saveNewTask(task) {
+    const tasksRef = this.dbRef.ref().child("tasks");
+    tasksRef.push().set(
+      {
+        priority: 'urgent',
+        category: 'education',
+        heading: 'Heading3',
+        estimation: '4',
+        isActive: true,
+        taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
+      }
+    );
+  }
+
+  getTaskById(id) {
+
+  }
+
+  getTaskList() {
+
   }
 }

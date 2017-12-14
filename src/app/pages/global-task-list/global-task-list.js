@@ -1,6 +1,7 @@
 import { Tasks } from '../../components/tasks/tasks';
 import { GlobalTask } from '../../components/global-task/global-task';
 import { workGroup, educationGroup, hobbyGroup, sportGroup, otherGroup } from './data';
+import { EventBus } from '../../event-bus';
 
 const globalTaskListTemplate = require('./global-task-list.hbs');
 
@@ -9,6 +10,9 @@ export class GlobalTaskList {
     this.element = element;
     this.task = new Tasks();
     this.globalTask = new GlobalTask();
+    this.eventBus = new EventBus();
+    this.eventBus.registerEventHandler('showGlobalTaskList', this.render.bind(this));
+    this.eventBus.registerEventHandler('hideGlobalTaskList', this.remove.bind(this));
   }
 
   render(removeMode) {
@@ -37,6 +41,10 @@ export class GlobalTaskList {
     };
 
     this.element.insertAdjacentHTML('beforeEnd', globalTaskListTemplate(globalTask));
+
+    if(removeMode) {
+      this.addListeners();
+    }
   }
 
   renderRemoveMode() {
@@ -55,5 +63,20 @@ export class GlobalTaskList {
     const globalTaskList = document.getElementsByClassName('global-tasks')[0];
     const parentGlobalTaskList = globalTaskList.parentNode;
     parentGlobalTaskList.removeChild(globalTaskList);
+  }
+
+  addListeners() {
+    const labelsMoveToTrash = Array.from(document.getElementsByClassName('label-move-to-trash'));
+    labelsMoveToTrash.forEach((label) => {
+      label.addEventListener('click', (event) => {
+        const currentCheckbox = event.target.previousElementSibling;
+        currentCheckbox.checked = !currentCheckbox.checked;
+        if (currentCheckbox.checked) {
+          this.eventBus.dispatch('incrementRemoveTaskQuantity');
+        } else {
+          this.eventBus.dispatch('decrementRemoveTaskQuantity');
+        }
+      });
+    });
   }
 }

@@ -1,14 +1,14 @@
 import { GlobalTaskList } from '../../pages/global-task-list/global-task-list';
-import { Router } from '../../router';
+import { EventBus } from '../../event-bus';
 
 const globalTaskListLinkTemplate = require('./global-task-list-link.hbs');
-const router = new Router();
 
 export class GlobalTaskListLink {
   constructor(element) {
     this.element = element;
     this.isGlobalTaskListOpen = false;
     this.removeMode = false;
+    this.eventBus = new EventBus();
   }
 
   render() {
@@ -23,11 +23,13 @@ export class GlobalTaskListLink {
       event.preventDefault();
       const globalTaskList = new GlobalTaskList(this.element);
       if (this.isGlobalTaskListOpen) {
-        globalTaskList.remove();
+        // globalTaskList.remove();
+        this.eventBus.dispatch('hideGlobalTaskList');
         arrowSpan.className = 'icon-global-list-arrow-right';
         this.isGlobalTaskListOpen = false;
       } else {
-        globalTaskList.render(this.removeMode);
+        // globalTaskList.render(this.removeMode);
+        this.eventBus.dispatch('showGlobalTaskList', this.removeMode);
         this.isGlobalTaskListOpen = true;
         arrowSpan.className = 'icon-global-list-arrow-down';
       }

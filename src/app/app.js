@@ -26,6 +26,9 @@ const initApp = () => {
   const firstEntrance = new FirstEntrance(contentWrapper);
   const globalTaskList = new GlobalTaskList(contentWrapper);
   const header = new Header(wrapper, router, eventBus);
+  // const firebaseManager = new FirebaseManager();
+  // firebaseManager.saveNewTask();
+  // firebaseManager.show();
   header.render();
 
 
