@@ -1,4 +1,4 @@
-import { Task } from '../../components/task/task';
+import { Tasks } from '../../components/tasks/tasks';
 import { GlobalTask } from '../../components/global-task/global-task';
 import { workGroup, educationGroup, hobbyGroup, sportGroup, otherGroup } from './data';
 
@@ -7,34 +7,33 @@ const globalTaskListTemplate = require('./global-task-list.hbs');
 export class GlobalTaskList {
   constructor(element) {
     this.element = element;
-    this.task = new Task();
+    this.task = new Tasks();
     this.globalTask = new GlobalTask();
-
   }
 
   render(removeMode) {
     workGroup.forEach((elem) => {
-      elem.removeMode = removeMode
+      elem.remove = removeMode;
     });
     educationGroup.forEach((elem) => {
-      elem.removeMode = removeMode
+      elem.remove = removeMode;
     });
     hobbyGroup.forEach((elem) => {
-      elem.removeMode = removeMode
+      elem.remove = removeMode;
     });
     sportGroup.forEach((elem) => {
-      elem.removeMode = removeMode
+      elem.remove = removeMode;
     });
     otherGroup.forEach((elem) => {
-      elem.removeMode = removeMode
+      elem.remove = removeMode;
     });
 
     const globalTask = {
-      workGroup: this.globalTask.getTasksHTML(workGroup),
-      educationGroup: this.globalTask.getTasksHTML(educationGroup),
-      hobbyGroup: this.globalTask.getTasksHTML(hobbyGroup),
-      sportGroup: this.globalTask.getTasksHTML(sportGroup),
-      otherGroup: this.globalTask.getTasksHTML(otherGroup)
+      workGroup: this.task.getTasksHTML(workGroup),
+      educationGroup: this.task.getTasksHTML(educationGroup),
+      hobbyGroup: this.task.getTasksHTML(hobbyGroup),
+      sportGroup: this.task.getTasksHTML(sportGroup),
+      otherGroup: this.task.getTasksHTML(otherGroup)
     };
 
     this.element.insertAdjacentHTML('beforeEnd', globalTaskListTemplate(globalTask));

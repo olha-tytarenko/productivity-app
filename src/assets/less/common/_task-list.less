@@ -74,11 +74,9 @@
           }
         }
 
-        &[checked]+label:before {
+        &:checked+label:before {
           content: "\e906";
         }
-
-
       }
     }
 
@@ -90,6 +88,10 @@
       left: 50%;
       transform: translate(-50%, -50%);
       color: @white;
+    }
+
+    .icon-trash.display-none {
+      display: none;
     }
 
     .icon-edit,

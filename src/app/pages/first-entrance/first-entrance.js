@@ -24,7 +24,7 @@ export class FirstEntrance {
 
     skipBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      router.navigate('#task-list');
+      router.navigate('#tasks-list');
     });
 
     goToSettingsBtn.addEventListener('click', (event) => {

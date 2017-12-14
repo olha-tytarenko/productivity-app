@@ -3,15 +3,21 @@
     <div class="border">
       <input type="checkbox" class="{{#unless remove}}checkbox-none{{/unless}}{{#if remove}}checkbox-move-to-trash{{/if}}">
       {{#if remove}}
-        <label class="icon-trash"></label>
+        <label class="icon-trash label-move-to-trash"></label>
       {{/if}}
     </div>
-    {{#unless remove}}<span>Today</span>{{/unless}}
+    {{#unless remove}}{{#if isActive}}<span>Today</span>{{else}}<span class="date-day">{{day}}<span class="date-month">{{month}}</span></span>{{/if}}{{/unless}}
     <div class="task-description">
       <h2>{{heading}} </h2>
       <p>{{taskDescription}}</p>
     </div>
     {{#unless done}}<button class="edit-task icon-edit"></button>{{/unless}}
+    {{#unless isActive}}
+    <div class="task-controls">
+      <button class="edit-task icon-arrows-up"></button>
+      <button class="edit-task icon-edit"></button>
+    </div>
+    {{/unless}}
     <div class="go-to-timer"><a class="icon-tomato" href=""><span class="estimation">{{estimation}}</span></a></div>
   </li>
 {{/each}}

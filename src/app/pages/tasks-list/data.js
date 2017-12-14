@@ -4,6 +4,7 @@ export const tasksToDo = [
     category: 'work',
     heading: 'Heading',
     estimation: '3',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   },
   {
@@ -11,6 +12,7 @@ export const tasksToDo = [
     category: 'other',
     heading: 'Heading2',
     estimation: '5',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   },
   {
@@ -18,6 +20,7 @@ export const tasksToDo = [
     category: 'education',
     heading: 'Heading3',
     estimation: '4',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   },
   {
@@ -25,6 +28,7 @@ export const tasksToDo = [
     category: 'sport',
     heading: 'Heading4',
     estimation: '2',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   },
   {
@@ -32,6 +36,7 @@ export const tasksToDo = [
     category: 'hobby',
     heading: 'Heading',
     estimation: '5',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   }
 ];
@@ -42,6 +47,8 @@ export const tasksDone = [
     category: 'work',
     heading: 'Heading dsd',
     estimation: '2',
+    day: 20,
+    month: 'May',
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
     done: 'done'
   },
@@ -50,6 +57,8 @@ export const tasksDone = [
     category: 'other',
     heading: 'Heading420',
     estimation: '3',
+    day: 20,
+    month: 'May',
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
     done: 'done'
   }
@@ -62,6 +71,7 @@ export const tasksRemove = [
     heading: 'Heading',
     remove: true,
     estimation: '3',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   },
   {
@@ -70,6 +80,7 @@ export const tasksRemove = [
     heading: 'Heading2',
     remove: true,
     estimation: '5',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   },
   {
@@ -78,6 +89,7 @@ export const tasksRemove = [
     heading: 'Heading3',
     remove: true,
     estimation: '4',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   },
   {
@@ -86,6 +98,7 @@ export const tasksRemove = [
     heading: 'Heading4',
     remove: true,
     estimation: '2',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   },
   {
@@ -94,6 +107,7 @@ export const tasksRemove = [
     heading: 'Heading',
     remove: true,
     estimation: '5',
+    isActive: true,
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
   }
 ];
@@ -106,6 +120,8 @@ export const tasksDoneRemove = [
     estimation: '2',
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
     done: 'done',
+    day: 20,
+    month: 'May',
     remove: true
   },
   {
@@ -115,6 +131,8 @@ export const tasksDoneRemove = [
     estimation: '3',
     taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore',
     remove: true,
+    day: 20,
+    month: 'May',
     done: 'done'
   }
 ];

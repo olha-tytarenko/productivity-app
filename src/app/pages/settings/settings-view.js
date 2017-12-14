@@ -48,7 +48,7 @@ export class SettingsView {
     const goToTask = document.getElementsByClassName('go-to-task')[0];
     goToTask.addEventListener('click', (event) => {
       event.preventDefault();
-      this.router.navigate('#task-list');
+      this.router.navigate('#tasks-list');
     });
   }
 }
@@ -231,5 +231,4 @@ function renderGraph() {
   const shortBreakVoter = new Voter(shortBreakVoterOptions);
 
   renderScale();
-
 }

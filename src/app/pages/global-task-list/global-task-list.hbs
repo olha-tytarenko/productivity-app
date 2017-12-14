@@ -1,38 +1,47 @@
   <section class="global-tasks">
 
+    {{#if workGroup}}
     <div class="work-group">
       <h2 class="category-heading work">work</h2>
       <ul class="task-list">
         {{{workGroup}}}
       </ul>
     </div>
+    {{/if}}
 
+    {{#if educationGroup}}
     <div class="education-group">
       <h2 class="category-heading education">education</h2>
       <ul class="task-list">
         {{{educationGroup}}}
       </ul>
     </div>
+    {{/if}}
 
-
+    {{#if hobbyGroup}}
     <div class="hobby-group">
       <h2 class="category-heading hobby">hobby</h2>
       <ul class="task-list">
         {{{hobbyGroup}}}
       </ul>
     </div>
+    {{/if}}
 
+    {{#if sportGroup}}
     <div class="sport-group">
       <h2 class="category-heading sport">sport</h2>
       <ul class="task-list">
         {{{sportGroup}}}
       </ul>
     </div>
+    {{/if}}
 
+    {{#if otherGroup}}
     <div class="other-group">
       <h2 class="category-heading other">other</h2>
       <ul class="task-list">
         {{{otherGroup}}}
       </ul>
     </div>
+    {{/if}}
   </section>

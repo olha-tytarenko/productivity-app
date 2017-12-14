@@ -13,6 +13,8 @@ export class Header {
     this.element = element;
     this.router = router;
     this.eventBus = eventBus;
+    this.eventBus.registerEventHandler('incrementRemoveTaskQuantity', this.incrementRemoveTaskQuantity.bind(this));
+    this.eventBus.registerEventHandler('decrementRemoveTaskQuantity', this.decrementRemoveTaskQuantity.bind(this));
   }
 
   render() {
@@ -30,6 +32,8 @@ export class Header {
 
     removeBtn.addEventListener('click', (event) => {
       event.preventDefault();
+      removeClasses([goToTaskListBtn, goToReportsBtn, goToSettingsBtn], 'active');
+      removeBtn.classList.add('active');
       this.eventBus.dispatch('showRemoveTasksMode');
     });
 
@@ -37,7 +41,7 @@ export class Header {
       event.preventDefault();
       removeClasses([removeBtn, goToReportsBtn, goToSettingsBtn], 'active');
       goToTaskListBtn.classList.add('active');
-      this.router.navigate('#task-list');
+      this.router.navigate('#tasks-list');
     });
     goToReportsBtn.addEventListener('click', (event) => {
       event.preventDefault();
@@ -51,6 +55,28 @@ export class Header {
       goToSettingsBtn.classList.add('active');
       this.router.navigate('#settings');
     });
+  }
+
+  incrementRemoveTaskQuantity() {
+    const countSpan = document.getElementsByClassName('checked-tasks')[0];
+    if(countSpan.innerText) {
+      countSpan.innerText = +countSpan.innerText + 1;
+    } else {
+      const trashIconElement = document.getElementById('goToRemove');
+      trashIconElement.classList.add('trash');
+      countSpan.innerText = 1;
+    }
+  }
+
+  decrementRemoveTaskQuantity() {
+    const countSpan = document.getElementsByClassName('checked-tasks')[0];
+    if(+countSpan.innerText > 1) {
+      countSpan.innerText = +countSpan.innerText - 1;
+    } else {
+      const trashIconElement = document.getElementById('goToRemove');
+      trashIconElement.classList.remove('trash');
+      countSpan.innerText = '';
+    }
   }
 }
 

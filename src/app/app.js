@@ -2,7 +2,7 @@
 require('assets/less/main.less'); // include general styles
 
 /* example of including header component */
-import { Settings } from './pages/settings/settings';
+import { Settings } from './pages/settings/settings-controller';
 import { TasksList } from './pages/tasks-list/tasks-list';
 import { Reports } from './pages/reports/reports';
 import { FirstEntrance } from './pages/first-entrance/first-entrance';
@@ -29,10 +29,10 @@ const initApp = () => {
   header.render();
 
 
-  router.init('#task-list');
+  router.init('#tasks-list');
 
   if (window.sessionStorage.getItem('isUserExist')) {
-    router.navigate('#task-list');
+    router.navigate('#tasks-list');
   } else {
     firstEntrance.render();
     window.sessionStorage.setItem('isUserExist', true);

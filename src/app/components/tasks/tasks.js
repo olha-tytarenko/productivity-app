@@ -1,6 +1,6 @@
-const taskTemplate = require('./task.hbs');
+const taskTemplate = require('./tasks.hbs');
 
-export class Task {
+export class Tasks {
   constructor() { }
 
   getTasksHTML(tasks) {

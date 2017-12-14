@@ -8,5 +8,6 @@ export class GlobalTask {
   }
 
   addListeners() {
+
   }
 }
