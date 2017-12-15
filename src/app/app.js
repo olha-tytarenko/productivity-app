@@ -9,26 +9,30 @@ import { FirstEntrance } from './pages/first-entrance/first-entrance';
 import { Header } from './components/header/header';
 // import { ModalAdd } from './components/modal-add/modal-add';
 import { Router } from './router';
-import { GlobalTaskList } from './pages/global-task-list/global-task-list';
+
 import { EventBus } from './event-bus';
 import { FirebaseManager } from './firebase-service';
+import { TasksListView } from './pages/tasks-list/tasks-list-view';
+import { GlobalTaskList } from './pages/global-task-list/global-task-list';
+import { GlobalTaskListView } from './pages/global-task-list/global-task-list-view';
 
 
 const initApp = () => {
   const router = new Router();
   const eventBus = new EventBus();
   const wrapper = document.getElementsByClassName('header')[0];
-
+  const firebaseManager = new FirebaseManager();
   const contentWrapper = document.getElementsByClassName('main-container')[0];
   const settings = new Settings(contentWrapper, router);
-  const taskList = new TasksList(contentWrapper, router, eventBus);
+  const taskListView = new TasksListView(contentWrapper, firebaseManager);
+  const taskList = new TasksList(taskListView, firebaseManager, router);
   const reports = new Reports(contentWrapper, router);
   const firstEntrance = new FirstEntrance(contentWrapper);
-  const globalTaskList = new GlobalTaskList(contentWrapper);
   const header = new Header(wrapper, router, eventBus);
-  // const firebaseManager = new FirebaseManager();
+
   // firebaseManager.saveNewTask();
-  // firebaseManager.show();
+  // firebaseManager.removeTask('-L0LibgbotwJuj0MRpo-');
+  // firebaseManager.getAllTasks().then((data) => console.log('data', data));
   header.render();
 
 
