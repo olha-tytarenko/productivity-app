@@ -8,7 +8,7 @@ const globalTaskListTemplate = require('./global-task-list.hbs');
 
 export class GlobalTaskList {
   constructor(view, model) {
-    console.log(view);
+    // console.log(view);
     this.model = model;
     this.view = view;
     this.view.renderEvent.attach((sender, data) => {
@@ -20,7 +20,7 @@ export class GlobalTaskList {
     this.globalTask = new GlobalTask();
     this.removeMode = false;
     this.eventBus = new EventBus();
-}
+  }
 
 
   renderGlobalList(removeMode) {
@@ -34,17 +34,17 @@ export class GlobalTaskList {
         otherGroup: []
       };
       for (const key in data) {
-        if(!data[key].isActive && !data[key].done) {
+        if (!data[key].isActive && !data[key].done) {
+          data[key].id = key;
           switch (data[key].category) {
-            case 'work': globalTasks.workGroup.push(data[key]); break;
-            case 'education': globalTasks.educationGroup.push(data[key]); break;
-            case 'hobby': globalTasks.hobbyGroup.push(data[key]); break;
-            case 'sport': globalTasks.sportGroup.push(data[key]); break;
-            case 'other': globalTasks.otherGroup.push(data[key]); break;
+          case 'work': globalTasks.workGroup.push(data[key]); break;
+          case 'education': globalTasks.educationGroup.push(data[key]); break;
+          case 'hobby': globalTasks.hobbyGroup.push(data[key]); break;
+          case 'sport': globalTasks.sportGroup.push(data[key]); break;
+          case 'other': globalTasks.otherGroup.push(data[key]); break;
           }
         }
       }
-      console.log('call render in controller');
       this.view.render(removeMode, globalTasks);
     });
   }

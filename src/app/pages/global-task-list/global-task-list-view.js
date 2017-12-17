@@ -1,4 +1,4 @@
-import  { Observer } from '../../observer';
+import { Observer } from '../../observer';
 import { Tasks } from '../../components/tasks/tasks';
 import { workGroup, educationGroup, hobbyGroup, sportGroup, otherGroup } from './data';
 import { EventBus } from '../../event-bus';
@@ -11,18 +11,25 @@ export class GlobalTaskListView {
     this.renderEvent = new Observer(this);
     this.isGlobalListOpened = false;
     this.eventBus = new EventBus();
+    this.taskHandlers = {
+      checkToRemove: this.checkToRemove,
+      edit: this.edit,
+      moveToToDo: this.moveToToDo,
+      goToTimer: this.goToTimer
+    };
+
+    this.eventBus = new EventBus();
+    this.eventBus.registerEventHandler('render', this.render.bind(this));
+    this.eventBus.registerEventHandler('hideEmptyGroup', this.hideEmptyGroup.bind(this));
   }
 
   render(removeMode, data) {
-
-    console.log('render');
-
     const globalTask = {
-      workGroup: this.task.getTasksHTML({removeMode:removeMode, tasksList: data.workGroup}),
-      educationGroup: this.task.getTasksHTML({removeMode:removeMode, tasksList: data.educationGroup}),
-      hobbyGroup: this.task.getTasksHTML({removeMode:removeMode, tasksList: data.hobbyGroup}),
-      sportGroup: this.task.getTasksHTML({removeMode:removeMode, tasksList: data.sportGroup}),
-      otherGroup: this.task.getTasksHTML({removeMode:removeMode, tasksList: data.otherGroup})
+      workGroup: this.task.getTasksHTML({ removeMode: removeMode, tasksList: data.workGroup }),
+      educationGroup: this.task.getTasksHTML({ removeMode: removeMode, tasksList: data.educationGroup }),
+      hobbyGroup: this.task.getTasksHTML({ removeMode: removeMode, tasksList: data.hobbyGroup }),
+      sportGroup: this.task.getTasksHTML({ removeMode: removeMode, tasksList: data.sportGroup }),
+      otherGroup: this.task.getTasksHTML({ removeMode: removeMode, tasksList: data.otherGroup })
     };
 
     this.element.insertAdjacentHTML('beforeEnd', globalTaskListTemplate(globalTask));
@@ -49,5 +56,84 @@ export class GlobalTaskListView {
         document.getElementsByClassName('global-tasks')[0].classList.remove('display-none');
       }
     });
+    this.addListenersForTasks();
+
+  }
+
+  addListenersForTasks() {
+    const tasksLi = Array.from(document.getElementsByClassName('task'));
+    tasksLi.forEach((task) => {
+      task.addEventListener('click', (e) => {
+        e.preventDefault();
+        const action = e.target.dataset.action;
+        if (action in this.taskHandlers) {
+          this.taskHandlers[action].call(this, e.currentTarget.dataset.id, e.target);
+        } else {
+          return;
+        }
+      });
+    });
+  }
+
+  hideEmptyGroup() {
+    const workGroupTasks = Array.from(document.querySelectorAll('.work-group ul li'));
+    const hobbyGroupTasks = Array.from(document.querySelectorAll('.hobby-group ul li'));
+    const educationGroupTasks = Array.from(document.querySelectorAll('.education-group ul li'));
+    const sportGroupTasks = Array.from(document.querySelectorAll('.sport-group ul li'));
+    const otherGroupTasks = Array.from(document.querySelectorAll('.other-group ul li'));
+    
+
+    if(workGroupTasks.length !== 0 &&
+      workGroupTasks.every( task => task.classList.contains('display-none'))) {
+      document.getElementsByClassName('work-group')[0].classList.add('display-none');
+    }
+    if(hobbyGroupTasks.length !== 0 &&
+      hobbyGroupTasks.every( task => task.classList.contains('display-none'))) {
+      document.getElementsByClassName('hobbt-group')[0].classList.add('display-none');
+    }
+    if(educationGroupTasks.length !== 0 &&
+      educationGroupTasks.every( task => task.classList.contains('display-none'))) {
+      document.getElementsByClassName('education-group')[0].classList.add('display-none');
+    }
+    if(sportGroupTasks.length !== 0 &&
+      sportGroupTasks.every( task => task.classList.contains('display-none'))) {
+      document.getElementsByClassName('sport-group')[0].classList.add('display-none');
+    }
+    if(otherGroupTasks.length !== 0 &&
+      otherGroupTasks.every( task => task.classList.contains('display-none'))) {
+      document.getElementsByClassName('other-group')[0].classList.add('display-none');
+    }
+  }
+
+  checkToRemove(id, label) {
+    const currentCheckbox = label.previousElementSibling;
+    currentCheckbox.checked = !currentCheckbox.checked;
+    if (currentCheckbox.checked) {
+      this.eventBus.dispatch('incrementRemoveTaskQuantity');
+      this.eventBus.dispatch('saveCheckedTasks', id);
+    } else {
+      this.eventBus.dispatch('decrementRemoveTaskQuantity');
+      this.eventBus.dispatch('removeCheckedTask', id);
+    }
+  }
+
+  // renderNewTask(task) {
+  //   const taskGroup = document.querySelector(`.${task.category}-group ul`);
+  //   const taskHTML = this.task.getTasksHTML([task]);
+  //   taskGroup.insertAdjacentHTML('afterbegin', taskHTML);
+  //   this.addListenersForTasks();
+  // }
+
+  edit() {
+
+  }
+
+  moveToToDo(id) {
+    this.eventBus.dispatch('hideRemovedTasks', [id]);
+    this.eventBus.dispatch('changeTaskStateToActive', id);
+  }
+
+  goToTimer() {
+
   }
 }

@@ -15,6 +15,7 @@ export class Header {
     this.eventBus = eventBus;
     this.eventBus.registerEventHandler('incrementRemoveTaskQuantity', this.incrementRemoveTaskQuantity.bind(this));
     this.eventBus.registerEventHandler('decrementRemoveTaskQuantity', this.decrementRemoveTaskQuantity.bind(this));
+    this.eventBus.registerEventHandler('clearCheckedTasksQuantity', this.clearCheckedTasksQuantity.bind(this));
   }
 
   render() {
@@ -24,7 +25,6 @@ export class Header {
 
   addListeners() {
     const removeBtn = document.getElementById('goToRemove');
-    console.log(this.router);
     const goToTaskListBtn = document.getElementById('goToTaskList');
     const goToReportsBtn = document.getElementById('goToReports');
     const goToSettingsBtn = document.getElementById('goToSettings');
@@ -32,9 +32,13 @@ export class Header {
 
     removeBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      removeClasses([goToTaskListBtn, goToReportsBtn, goToSettingsBtn], 'active');
-      removeBtn.classList.add('active');
-      this.eventBus.dispatch('showRemoveTasksMode');
+      if (removeBtn.classList.contains('trash')) {
+        this.eventBus.dispatch('renderModalRemove');
+      } else {
+        removeClasses([goToTaskListBtn, goToReportsBtn, goToSettingsBtn], 'active');
+        removeBtn.classList.add('active');
+        this.eventBus.dispatch('showRemoveTasksMode');
+      }
     });
 
     goToTaskListBtn.addEventListener('click', (event) => {
@@ -77,6 +81,13 @@ export class Header {
       trashIconElement.classList.remove('trash');
       countSpan.innerText = '';
     }
+  }
+
+  clearCheckedTasksQuantity() {
+    const countSpan = document.getElementsByClassName('checked-tasks')[0];
+    const trashIconElement = document.getElementById('goToRemove');
+    trashIconElement.classList.remove('trash');
+    countSpan.innerText = '';
   }
 }
 

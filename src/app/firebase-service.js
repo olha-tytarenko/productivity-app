@@ -31,4 +31,10 @@ export class FirebaseManager {
   removeTask(id) {
     this.dbRef.ref(`tasks/${id}`).remove();
   }
+
+  getTaskById(id) {
+    return this.dbRef.ref().child(`tasks/${id}`).once('value').then((snapshot) => {
+      return snapshot.val();
+    });
+  }
 }

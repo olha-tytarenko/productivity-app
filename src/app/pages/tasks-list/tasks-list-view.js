@@ -5,8 +5,8 @@ import { GlobalTaskListView } from '../../pages/global-task-list/global-task-lis
 import { DailyTaskListHeading } from '../../components/daily-task-list-heading/daily-task-list-heading';
 import { Tasks } from '../../components/tasks/tasks';
 import { Tabs } from '../../components/tabs/tabs';
-import  { EventBus } from '../../event-bus';
-import  { Observer } from '../../observer';
+import { EventBus } from '../../event-bus';
+import { Observer } from '../../observer';
 import { tasksToDo, tasksDone, tasksRemove, tasksDoneRemove } from './data';
 
 const taskListTemplate = require('./tasks-list.hbs');
@@ -20,49 +20,89 @@ export class TasksListView {
     this.dailyTaskListHeading = new DailyTaskListHeading(this.element);
     this.globalTaskList = new GlobalTaskList(new GlobalTaskListView(element), model);
     this.task = new Tasks();
+    this.isToDoRendered = false;
+    this.removeMode = false;
 
 
     this.renderDoneEvent = new Observer(this);
     this.renderToDoEvent = new Observer(this);
-    this.eventBus.registerEventHandler('showRemoveTasksMode', this.renderToDoEvent.notify.bind(this.renderToDoEvent, true));
+    this.eventBus.registerEventHandler('showRemoveTasksMode', this.showRemoveMode.bind(this));
+    this.eventBus.registerEventHandler('hideRemovedTasks', this.hideRemovedTasks.bind(this));
+    this.eventBus.registerEventHandler('renderOneTask', this.renderOneTask.bind(this));
   }
 
   renderToDo(tasks) {
-    console.log(this.globalTaskList);
-    this.addTabs(tasks.removeMode);
-    this.element.innerHTML = taskListTemplate({heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML()});
-    this.globalTaskList.renderGlobalList(tasks.removeMode);
-    this.addListeners(tasks.removeMode);
+    if (this.isToDoRendered) {
+      if (tasks.removeMode) {
+        this.showRemoveMode();
+      } else {
+        this.hideRemoveMode();
+      }
+    } else {
+      this.addTabs(tasks.removeMode);
+      this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML() });
+      this.globalTaskList.renderGlobalList.call(this.globalTaskList, tasks.removeMode);
+      this.addListeners();
+      this.isToDoRendered = true;
+    }
   }
 
   renderDone(tasks) {
     this.addTabs(tasks.removeMode);
-    this.element.innerHTML = taskListTemplate({heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML()});
-    this.addListeners(tasks.removeMode);
+    this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML() });
+    this.addListeners();
   }
 
-  addListeners(removeMode) {
+  hideRemoveMode() {
+    const checkboxes = Array.from(document.getElementsByClassName('checkbox-move-to-trash'));
+    const trashLabels = Array.from(document.getElementsByClassName('label-move-to-trash'));
+    const dateLabels = Array.from(document.getElementsByClassName('date'));
+    checkboxes.forEach((checkbox) => {
+      checkbox.classList.remove('checkbox-move-to-trash');
+      checkbox.classList.add('checkbox-none');
+    });
+
+    dateLabels.forEach(label => label.classList.remove('display-none'));
+    trashLabels.forEach(label => label.classList.add('display-none'));
+    this.removeMode = false;
+  }
+
+  showRemoveMode() {
+    const checkboxes = Array.from(document.getElementsByClassName('checkbox-none'));
+    const trashLabels = Array.from(document.getElementsByClassName('label-move-to-trash'));
+    const dateLabels = Array.from(document.getElementsByClassName('date'));
+    checkboxes.forEach((checkbox) => {
+      checkbox.classList.add('checkbox-move-to-trash');
+      checkbox.classList.remove('checkbox-none');
+    });
+
+    trashLabels.forEach(label => label.classList.remove('display-none'));
+    dateLabels.forEach(label => label.classList.add('display-none'));
+    this.removeMode = true;
+  }
+
+  addListeners() {
     this.dailyTaskListHeading.addListeners();
-    this.tabs.addListeners(removeMode);
-
-    if(removeMode) {
-      const labelsMoveToTrash = Array.from(document.getElementsByClassName('label-move-to-trash'));
-      console.log(labelsMoveToTrash);
-      labelsMoveToTrash.forEach((label) => {
-        label.addEventListener('click', (event) => {
-          const currentCheckbox = event.target.previousElementSibling;
-          currentCheckbox.checked = !currentCheckbox.checked;
-          if (currentCheckbox.checked) {
-            this.eventBus.dispatch('incrementRemoveTaskQuantity');
-          } else {
-            this.eventBus.dispatch('decrementRemoveTaskQuantity');
-          }
-        });
-      });
-    }
+    this.tabs.addListeners();
   }
 
-  addTabs(removeMode) {
+  hideRemovedTasks(ids) {
+    const tasks = Array.from(document.getElementsByClassName('task'));
+    const tasksForHiding = tasks.filter(task => ~ids.indexOf(task.dataset.id));
+    tasksForHiding.forEach(task => task.classList.add('display-none'));
+    this.eventBus.dispatch('clearCheckedTasksQuantity');
+    this.eventBus.dispatch('hideEmptyGroup');
+  }
+
+  renderOneTask(task) {
+    const tasks = new Tasks();
+    const tasksHTML = tasks.getTasksHTML({tasksList: [task]});
+    console.log(tasksHTML);
+    document.getElementsByClassName('task-list')[0].insertAdjacentHTML('beforeend', tasksHTML);
+  }
+
+
+  addTabs() {
     this.tabs = new Tabs(
       [
         {
@@ -70,7 +110,7 @@ export class TasksListView {
           id: 'toDo',
           handler: (e) => {
             e.preventDefault();
-            this.renderToDoEvent.notify(removeMode);
+            this.renderToDoEvent.notify(this.removeMode);
           }
         },
         {
@@ -78,7 +118,8 @@ export class TasksListView {
           id: 'done',
           handler: (e) => {
             e.preventDefault();
-            this.renderDoneEvent.notify(removeMode);
+            this.isToDoRendered = false;
+            this.renderDoneEvent.notify(this.removeMode);
           }
         }
       ]

@@ -1,4 +1,5 @@
 import { ModalAdd } from '../modal-add/modal-add';
+import { EventBus } from '../../event-bus';
 
 const dailyTaskListHeading = require('./daily-task-list-heading.hbs');
 
@@ -7,6 +8,7 @@ const dailyTaskListHeading = require('./daily-task-list-heading.hbs');
 export class DailyTaskListHeading {
   constructor(element) {
     this.element = element;
+    this.eventBus = new EventBus();
   }
 
   render() {
@@ -22,8 +24,7 @@ export class DailyTaskListHeading {
     const addTaskBtn = document.getElementById('addNewTask');
 
     addTaskBtn.addEventListener('click', () => {
-      const modalAdd = new ModalAdd(document.getElementsByClassName('wrapper')[0]);
-      modalAdd.render();
+      this.eventBus.dispatch('renderModalAdd');
     });
   }
 }

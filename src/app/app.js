@@ -7,7 +7,9 @@ import { TasksList } from './pages/tasks-list/tasks-list';
 import { Reports } from './pages/reports/reports';
 import { FirstEntrance } from './pages/first-entrance/first-entrance';
 import { Header } from './components/header/header';
-// import { ModalAdd } from './components/modal-add/modal-add';
+import { ModalAdd } from './components/modal-add/modal-add';
+import { ModalEdit } from './components/modal-edit/modal-edit';
+import { ModalRemove } from './components/modal-remove/modal-remove';
 import { Router } from './router';
 
 import { EventBus } from './event-bus';
@@ -29,8 +31,21 @@ const initApp = () => {
   const reports = new Reports(contentWrapper, router);
   const firstEntrance = new FirstEntrance(contentWrapper);
   const header = new Header(wrapper, router, eventBus);
+  const modalWrapper = document.getElementsByClassName('wrapper')[0];
+  const modalAdd = new ModalAdd(modalWrapper, firebaseManager);
+  const modalEdit = new ModalEdit(modalWrapper);
+  const modalRemove = new ModalRemove(modalWrapper);
 
-  // firebaseManager.saveNewTask();
+  // firebaseManager.saveNewTask({
+  //   priority: 'urgent',
+  //   category: 'work',
+  //   heading: 'Heading2',
+  //   estimation: '3',
+  //   day: 20,
+  //   month: 'May',
+  //   taskDescription: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore'
+  // });
+  
   // firebaseManager.removeTask('-L0LibgbotwJuj0MRpo-');
   // firebaseManager.getAllTasks().then((data) => console.log('data', data));
   header.render();
