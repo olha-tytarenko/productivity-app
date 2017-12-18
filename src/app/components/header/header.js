@@ -28,6 +28,11 @@ export class Header {
     const goToTaskListBtn = document.getElementById('goToTaskList');
     const goToReportsBtn = document.getElementById('goToReports');
     const goToSettingsBtn = document.getElementById('goToSettings');
+    const addNewTask = document.getElementsByClassName('add-new-task')[0];
+
+    addNewTask.addEventListener('click', () => {
+      this.eventBus.dispatch('renderModalAdd');
+    });
 
 
     removeBtn.addEventListener('click', (event) => {
@@ -45,18 +50,23 @@ export class Header {
       event.preventDefault();
       removeClasses([removeBtn, goToReportsBtn, goToSettingsBtn], 'active');
       goToTaskListBtn.classList.add('active');
+      this.showTrashButton();
       this.router.navigate('#tasks-list');
     });
     goToReportsBtn.addEventListener('click', (event) => {
       event.preventDefault();
       removeClasses([goToTaskListBtn, removeBtn, goToSettingsBtn], 'active');
       goToReportsBtn.classList.add('active');
+      this.eventBus.dispatch('setToDoRenderedState', false);
+      this.hideTrashButton();
       this.router.navigate('#reports');
     });
     goToSettingsBtn.addEventListener('click', (event) => {
       event.preventDefault();
       removeClasses([goToTaskListBtn, goToReportsBtn, removeBtn], 'active');
       goToSettingsBtn.classList.add('active');
+      this.eventBus.dispatch('setToDoRenderedState', false);
+      this.hideTrashButton();
       this.router.navigate('#settings');
     });
   }
@@ -89,6 +99,14 @@ export class Header {
     trashIconElement.classList.remove('trash');
     countSpan.innerText = '';
   }
+
+  hideTrashButton() {
+    document.getElementById('goToRemove').classList.add('display-none');
+  }
+
+  showTrashButton() {
+    document.getElementById('goToRemove').classList.remove('display-none');
+  }
 }
 
 window.addEventListener('load', () => {
@@ -100,11 +118,13 @@ window.addEventListener('load', () => {
     const scrolled = window.pageYOffset || document.documentElement.scrollTop;
     if (scrolled > 50) {
       header.classList.add('fixed-header');
+      document.getElementsByClassName('add-new-task')[0].classList.remove('display-none');
       logo.classList.remove('display-none');
     }
     if (scrolled <= 50) {
       header.classList.remove('fixed-header');
       logo.classList.add('display-none');
+      document.getElementsByClassName('add-new-task')[0].classList.add('display-none');
     }
   });
 });

@@ -38,7 +38,7 @@ export class GlobalTaskListView {
 
     if (!this.isGlobalListOpened) {
       document.getElementsByClassName('global-tasks')[0].classList.add('display-none');
-    }
+    } 
 
     this.addListeners(removeMode);
   }
@@ -52,18 +52,75 @@ export class GlobalTaskListView {
         arrowSpan.className = 'icon-global-list-arrow-right';
         this.isGlobalListOpened = false;
         document.getElementsByClassName('global-tasks')[0].classList.add('display-none');
-        document.getElementById('categoryFilter').classList.add('display-none');
+        document.getElementById('priorityFilter').classList.add('display-none');
         document.getElementById('selectGlobalList').classList.add('display-none');
       } else {
         this.isGlobalListOpened = true;
         arrowSpan.className = 'icon-global-list-arrow-down';
         document.getElementsByClassName('global-tasks')[0].classList.remove('display-none');
-        document.getElementById('categoryFilter').classList.remove('display-none');
-        document.getElementById('selectGlobalList').classList.remove('display-none');
+        document.getElementById('priorityFilter').classList.remove('display-none');
+        if (removeMode) {
+          document.getElementById('selectGlobalList').classList.remove('display-none');
+        }
       }
     });
-    this.addListenersForTasks();
 
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const deselectAllBtn = document.getElementById('deselectAllBtn');
+
+    selectAllBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.selectDeselectCheckboxes(true);
+    });
+
+    deselectAllBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.selectDeselectCheckboxes(false);
+    });
+
+    this.addListenersForTasks();
+    this.addListenersForFilter();
+
+  }
+
+  selectDeselectCheckboxes(state) {
+    const allTasks = this.getAllTasks();
+    
+    allTasks.forEach((task) => {
+      task.querySelector('.checkbox-move-to-trash').checked = state;
+      if (state) {
+        this.eventBus.dispatch('incrementRemoveTaskQuantity');
+        this.eventBus.dispatch('saveCheckedTasks', task.dataset.id);
+      } else {
+        this.eventBus.dispatch('decrementRemoveTaskQuantity');
+        this.eventBus.dispatch('removeCheckedTask', task.dataset.id);
+      }
+    });     
+  }
+
+  addListenersForFilter() {
+    const allTasks = this.getAllTasks();
+
+    const filter = document.getElementById('priorityFilter');
+
+    filter.addEventListener('click', (event) => {
+      event.preventDefault();
+      if (event.target.id === 'allFilter') {
+        allTasks.forEach(task => task.classList.remove('display-none'));
+        event.target.classList.add('active');
+        this.showGroup();
+        this.hideEmptyGroup();
+      } else if (event.target.tagName === 'A') {
+        allTasks.forEach(task => task.classList.remove('display-none'));
+        allTasks.filter(task => !task.classList.contains(event.target.dataset.priority)).forEach(task => task.classList.add('display-none'));
+        Array.from(filter.getElementsByTagName('a')).forEach(a => a.classList.remove('active'));
+        event.target.classList.add('active');
+        this.showGroup();
+        this.hideEmptyGroup();
+      } else {
+        return;
+      }
+    });
   }
 
   addListenersForTasks() {
@@ -79,6 +136,14 @@ export class GlobalTaskListView {
         }
       });
     });
+  }
+
+  showGroup() {
+    document.getElementsByClassName('work-group')[0].classList.remove('display-none');
+    document.getElementsByClassName('education-group')[0].classList.remove('display-none');
+    document.getElementsByClassName('sport-group')[0].classList.remove('display-none');
+    document.getElementsByClassName('hobby-group')[0].classList.remove('display-none');
+    document.getElementsByClassName('other-group')[0].classList.remove('display-none');
   }
 
   addListenerForNewTask(id) {
@@ -98,26 +163,26 @@ export class GlobalTaskListView {
     const hobbyGroupTasks = Array.from(document.querySelectorAll('.hobby-group ul li'));
     const educationGroupTasks = Array.from(document.querySelectorAll('.education-group ul li'));
     const sportGroupTasks = Array.from(document.querySelectorAll('.sport-group ul li'));
-    const otherGroupTasks = Array.from(document.querySelectorAll('.other-group ul li'));
-    
+    const otherGroupTasks = Array.from(document.querySelectorAll('.other-group ul li'));    
 
-    if(workGroupTasks.length !== 0 &&
+    if(workGroupTasks.length === 0 ||
       workGroupTasks.every( task => task.classList.contains('display-none'))) {
       document.getElementsByClassName('work-group')[0].classList.add('display-none');
     }
-    if(hobbyGroupTasks.length !== 0 &&
+    if(hobbyGroupTasks.length === 0 ||
       hobbyGroupTasks.every( task => task.classList.contains('display-none'))) {
-      document.getElementsByClassName('hobbt-group')[0].classList.add('display-none');
+      document.getElementsByClassName('hobby-group')[0].classList.add('display-none');
     }
-    if(educationGroupTasks.length !== 0 &&
+    if(educationGroupTasks.length === 0 ||
       educationGroupTasks.every( task => task.classList.contains('display-none'))) {
       document.getElementsByClassName('education-group')[0].classList.add('display-none');
     }
-    if(sportGroupTasks.length !== 0 &&
+    if(sportGroupTasks.length === 0 ||
       sportGroupTasks.every( task => task.classList.contains('display-none'))) {
+        
       document.getElementsByClassName('sport-group')[0].classList.add('display-none');
     }
-    if(otherGroupTasks.length !== 0 &&
+    if(otherGroupTasks.length === 0 ||
       otherGroupTasks.every( task => task.classList.contains('display-none'))) {
       document.getElementsByClassName('other-group')[0].classList.add('display-none');
     }
@@ -140,6 +205,9 @@ export class GlobalTaskListView {
     const taskHTML = this.task.getTasksHTML({tasksList: [task]});
     taskGroup.insertAdjacentHTML('afterbegin', taskHTML);
     this.addListenerForNewTask(task.id);
+
+    this.showGroup();
+    this.hideEmptyGroup();
   }
 
   edit(id) {
@@ -147,12 +215,21 @@ export class GlobalTaskListView {
   }
 
   moveToToDo(id) {
-    this.eventBus.dispatch('hideRemovedTasks', [id]);
-    this.eventBus.dispatch('changeTaskStateToActive', id);
     this.eventBus.dispatch('renderOneTask', id);
+    this.eventBus.dispatch('changeTaskStateToActive', id);
+    this.eventBus.dispatch('hideRemovedTasks', [id]);
   }
 
   goToTimer() {
 
+  }
+
+  getAllTasks() {
+    const workGroup = Array.from(document.querySelectorAll('.work-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));
+    const educationGroup = Array.from(document.querySelectorAll('.education-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));
+    const hobbyGroup = Array.from(document.querySelectorAll('.hobby-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));
+    const otherGroup = Array.from(document.querySelectorAll('.other-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));
+    const sportGroup = Array.from(document.querySelectorAll('.sport-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));   
+    return workGroup.concat(educationGroup, hobbyGroup, otherGroup, sportGroup);
   }
 }

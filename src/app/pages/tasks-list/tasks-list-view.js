@@ -1,13 +1,11 @@
 
 import { GlobalTaskList } from '../../pages/global-task-list/global-task-list';
 import { GlobalTaskListView } from '../../pages/global-task-list/global-task-list-view';
-
 import { DailyTaskListHeading } from '../../components/daily-task-list-heading/daily-task-list-heading';
 import { Tasks } from '../../components/tasks/tasks';
 import { Tabs } from '../../components/tabs/tabs';
 import { EventBus } from '../../event-bus';
 import { Observer } from '../../observer';
-import { tasksToDo, tasksDone, tasksRemove, tasksDoneRemove } from './data';
 
 const taskListTemplate = require('./tasks-list.hbs');
 
@@ -30,6 +28,7 @@ export class TasksListView {
     this.eventBus.registerEventHandler('hideRemovedTasks', this.hideRemovedTasks.bind(this));
     this.eventBus.registerEventHandler('renderOneTask', this.renderOneTask.bind(this));
     this.eventBus.registerEventHandler('renderEditedTask', this.renderEditedTask.bind(this));
+    this.eventBus.registerEventHandler('setToDoRenderedState', this.setToDoRenderedState.bind(this));
   }
 
   renderToDo(tasks) {
@@ -41,9 +40,8 @@ export class TasksListView {
       }
     } else {
       this.addTabs(tasks.removeMode);
-      console.log(this);
-      this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML(), selectAllTabs: this.selectAllTabs.getTabsHTML() });
-      this.globalTaskList.renderGlobalList.call(this.globalTaskList, tasks.removeMode);
+      this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML(), selectAllTabs: this.selectAllTabs.getTabsHTML()});
+      this.globalTaskList.renderGlobalList.call(this.globalTaskList, this.removeMode);
       this.addListeners();
       this.isToDoRendered = true;
     }
@@ -66,6 +64,9 @@ export class TasksListView {
 
     dateLabels.forEach(label => label.classList.remove('display-none'));
     trashLabels.forEach(label => label.classList.add('display-none'));
+    document.getElementsByClassName('links-container')[0].classList.add('right-alignment');
+    document.getElementById('selectDailyTasks').classList.add('display-none');
+    document.getElementById('selectGlobalList').classList.add('display-none');
     this.removeMode = false;
   }
 
@@ -81,6 +82,12 @@ export class TasksListView {
     trashLabels.forEach(label => label.classList.remove('display-none'));
     dateLabels.forEach(label => label.classList.add('display-none'));
     this.removeMode = true;
+
+    document.getElementById('selectDailyTasks').classList.remove('display-none');
+    document.getElementsByClassName('links-container')[0].classList.remove('right-alignment');
+
+    document.getElementById('selectGlobalList').classList.remove('display-none');
+    
   }
 
   addListeners() {
@@ -92,23 +99,28 @@ export class TasksListView {
   hideRemovedTasks(ids) {
     const tasks = Array.from(document.getElementsByClassName('task'));
     const tasksForHiding = tasks.filter(task => ~ids.indexOf(task.dataset.id));
-    tasksForHiding.forEach(task => task.classList.add('display-none'));
+    tasksForHiding.forEach(task => {
+      const taskParent = task.closest('ul');
+      taskParent.removeChild(task);
+    });
     this.eventBus.dispatch('clearCheckedTasksQuantity');
     this.eventBus.dispatch('hideEmptyGroup');
   }
 
   renderOneTask(id) {
-    const taskLi = Array.from(document.getElementsByClassName('task')).find((li) => li.dataset.id === id);
+    const taskLi = Array.from(document.getElementsByClassName('task')).filter(li => li.dataset.id === id);
     const newLi = taskLi.cloneNode(true);
     newLi.classList.remove('display-none');
     newLi.getElementsByClassName('icon-arrows-up')[0].classList.add('display-none');
+    const date = newLi.getElementsByClassName('date')[0];
+    date.classList.remove('date-day');
+    date.innerText = 'Today';
     document.getElementsByClassName('task-list')[0].insertAdjacentElement('beforeend', newLi);
     taskLi.closest('ul').removeChild(taskLi);
     this.eventBus.dispatch('addListenerForNewTask', id);
   }
 
   renderEditedTask(task) {
-    console.log(task);
     const taskLi = Array.from(document.getElementsByClassName('task')).find((li) => li.dataset.id === task.id);
     taskLi.className = `task ${task.category} ${task.priority}`;
     taskLi.getElementsByClassName('estimation')[0].innerText = task.estimation;
@@ -116,6 +128,9 @@ export class TasksListView {
     taskLi.getElementsByTagName('p')[0].innerText = task.taskDescription;
   }
 
+  setToDoRenderedState(state) {
+    this.isToDoRendered = state;
+  }
 
   addTabs() {
     this.tabs = new Tabs(
@@ -137,7 +152,7 @@ export class TasksListView {
             this.renderDoneEvent.notify(this.removeMode);
           }
         }
-      ], "toDoSwitcher"
+      ], 'toDoSwitcher'
     );
 
     this.selectAllTabs = new Tabs(
@@ -174,7 +189,7 @@ export class TasksListView {
             });
           }
         }
-      ], "selectDailyTasks"
-    )
+      ], 'selectDailyTasks', 'display-none'
+    );
   }
 }
