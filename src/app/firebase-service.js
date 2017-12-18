@@ -21,7 +21,9 @@ export class FirebaseManager {
 
   saveNewTask(task) {
     const tasksRef = this.dbRef.ref().child("tasks");
-    tasksRef.push().set(task);
+    const id = tasksRef.push().key;
+    this.dbRef.ref(`tasks/${id}`).set(task);
+    return id;
   }
 
   updateTask(id, newTask) {

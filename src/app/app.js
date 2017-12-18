@@ -33,7 +33,7 @@ const initApp = () => {
   const header = new Header(wrapper, router, eventBus);
   const modalWrapper = document.getElementsByClassName('wrapper')[0];
   const modalAdd = new ModalAdd(modalWrapper, firebaseManager);
-  const modalEdit = new ModalEdit(modalWrapper);
+  const modalEdit = new ModalEdit(modalWrapper, firebaseManager);
   const modalRemove = new ModalRemove(modalWrapper);
 
   // firebaseManager.saveNewTask({

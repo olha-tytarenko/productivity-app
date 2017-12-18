@@ -29,6 +29,7 @@ export class TasksListView {
     this.eventBus.registerEventHandler('showRemoveTasksMode', this.showRemoveMode.bind(this));
     this.eventBus.registerEventHandler('hideRemovedTasks', this.hideRemovedTasks.bind(this));
     this.eventBus.registerEventHandler('renderOneTask', this.renderOneTask.bind(this));
+    this.eventBus.registerEventHandler('renderEditedTask', this.renderEditedTask.bind(this));
   }
 
   renderToDo(tasks) {
@@ -40,7 +41,8 @@ export class TasksListView {
       }
     } else {
       this.addTabs(tasks.removeMode);
-      this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML() });
+      console.log(this);
+      this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML(), selectAllTabs: this.selectAllTabs.getTabsHTML() });
       this.globalTaskList.renderGlobalList.call(this.globalTaskList, tasks.removeMode);
       this.addListeners();
       this.isToDoRendered = true;
@@ -84,6 +86,7 @@ export class TasksListView {
   addListeners() {
     this.dailyTaskListHeading.addListeners();
     this.tabs.addListeners();
+    this.selectAllTabs.addListeners();
   }
 
   hideRemovedTasks(ids) {
@@ -94,11 +97,23 @@ export class TasksListView {
     this.eventBus.dispatch('hideEmptyGroup');
   }
 
-  renderOneTask(task) {
-    const tasks = new Tasks();
-    const tasksHTML = tasks.getTasksHTML({tasksList: [task]});
-    console.log(tasksHTML);
-    document.getElementsByClassName('task-list')[0].insertAdjacentHTML('beforeend', tasksHTML);
+  renderOneTask(id) {
+    const taskLi = Array.from(document.getElementsByClassName('task')).find((li) => li.dataset.id === id);
+    const newLi = taskLi.cloneNode(true);
+    newLi.classList.remove('display-none');
+    newLi.getElementsByClassName('icon-arrows-up')[0].classList.add('display-none');
+    document.getElementsByClassName('task-list')[0].insertAdjacentElement('beforeend', newLi);
+    taskLi.closest('ul').removeChild(taskLi);
+    this.eventBus.dispatch('addListenerForNewTask', id);
+  }
+
+  renderEditedTask(task) {
+    console.log(task);
+    const taskLi = Array.from(document.getElementsByClassName('task')).find((li) => li.dataset.id === task.id);
+    taskLi.className = `task ${task.category} ${task.priority}`;
+    taskLi.getElementsByClassName('estimation')[0].innerText = task.estimation;
+    taskLi.getElementsByTagName('h2')[0].innerText = task.heading;
+    taskLi.getElementsByTagName('p')[0].innerText = task.taskDescription;
   }
 
 
@@ -122,7 +137,44 @@ export class TasksListView {
             this.renderDoneEvent.notify(this.removeMode);
           }
         }
-      ]
+      ], "toDoSwitcher"
     );
+
+    this.selectAllTabs = new Tabs(
+      [
+        {
+          name: 'Select All',
+          id: 'selectAll',
+          handler: (e) => {
+            e.preventDefault();
+            const taskList = document.getElementsByClassName('task-list')[0];
+            const tasks = Array.from(taskList.getElementsByClassName('task'));
+            const labels = Array.from(taskList.getElementsByClassName('label-move-to-trash'));
+            labels.forEach((label, index) => {
+              const currentCheckbox = label.previousElementSibling;
+              currentCheckbox.checked = true;
+              this.eventBus.dispatch('incrementRemoveTaskQuantity');
+              this.eventBus.dispatch('saveCheckedTasks', tasks[index].dataset.id);
+            });
+          }
+        },
+        {
+          name: 'Deselect All',
+          id: 'deselectAll',
+          handler: (e) => {
+            e.preventDefault();
+            const taskList = document.getElementsByClassName('task-list')[0];
+            const tasks = Array.from(taskList.getElementsByClassName('task'));
+            const labels = Array.from(taskList.getElementsByClassName('label-move-to-trash'));
+            labels.forEach((label, index) => {
+              const currentCheckbox = label.previousElementSibling;
+              currentCheckbox.checked = false;
+              this.eventBus.dispatch('decrementRemoveTaskQuantity');
+              this.eventBus.dispatch('removeCheckedTask', tasks[index].dataset.id);
+            });
+          }
+        }
+      ], "selectDailyTasks"
+    )
   }
 }

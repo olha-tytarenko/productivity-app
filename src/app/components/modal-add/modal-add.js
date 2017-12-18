@@ -52,8 +52,6 @@ export class ModalAdd {
       const category = Array.from(document.querySelectorAll('[name="category"]')).filter(radioBtn => radioBtn.checked)[0].id;
       const priority = Array.from(document.querySelectorAll('[name="priority"]')).filter(radioBtn => radioBtn.checked)[0].id;
 
-      //console.log(categoryArray);
-
       const task = {
         day: day,
         month: month,
@@ -65,8 +63,9 @@ export class ModalAdd {
         estimation: estimation
       };
 
-      this.model.saveNewTask(task);
+      task.id = this.model.saveNewTask(task);
       this.eventBus.dispatch('renderNewTask', task);
+      this.remove();
     });
   }
 }

@@ -1,12 +1,13 @@
 const tabsTemplate = require('./tabs.hbs');
 
 export class Tabs {
-  constructor(tabs) {
+  constructor(tabs, id) {
     this.tabs = tabs;
+    this.id = id;
   }
 
   getTabsHTML() {
-    return tabsTemplate(this.tabs);
+    return tabsTemplate({tabs: this.tabs, id: this.id});
   }
 
   addListeners() {

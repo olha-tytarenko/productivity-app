@@ -21,6 +21,8 @@ export class GlobalTaskListView {
     this.eventBus = new EventBus();
     this.eventBus.registerEventHandler('render', this.render.bind(this));
     this.eventBus.registerEventHandler('hideEmptyGroup', this.hideEmptyGroup.bind(this));
+    this.eventBus.registerEventHandler('renderNewTask', this.renderNewTask.bind(this));
+    this.eventBus.registerEventHandler('addListenerForNewTask', this.addListenerForNewTask.bind(this));
   }
 
   render(removeMode, data) {
@@ -50,10 +52,14 @@ export class GlobalTaskListView {
         arrowSpan.className = 'icon-global-list-arrow-right';
         this.isGlobalListOpened = false;
         document.getElementsByClassName('global-tasks')[0].classList.add('display-none');
+        document.getElementById('categoryFilter').classList.add('display-none');
+        document.getElementById('selectGlobalList').classList.add('display-none');
       } else {
         this.isGlobalListOpened = true;
         arrowSpan.className = 'icon-global-list-arrow-down';
         document.getElementsByClassName('global-tasks')[0].classList.remove('display-none');
+        document.getElementById('categoryFilter').classList.remove('display-none');
+        document.getElementById('selectGlobalList').classList.remove('display-none');
       }
     });
     this.addListenersForTasks();
@@ -72,6 +78,18 @@ export class GlobalTaskListView {
           return;
         }
       });
+    });
+  }
+
+  addListenerForNewTask(id) {
+    const taskLi = Array.from(document.getElementsByClassName('task')).find((li) => li.dataset.id === id);
+    taskLi.addEventListener('click', (e) => {
+      const action = e.target.dataset.action;
+      if (action in this.taskHandlers) {
+        this.taskHandlers[action].call(this, e.currentTarget.dataset.id, e.target);
+      } else {
+        return;
+      }
     });
   }
 
@@ -117,20 +135,21 @@ export class GlobalTaskListView {
     }
   }
 
-  // renderNewTask(task) {
-  //   const taskGroup = document.querySelector(`.${task.category}-group ul`);
-  //   const taskHTML = this.task.getTasksHTML([task]);
-  //   taskGroup.insertAdjacentHTML('afterbegin', taskHTML);
-  //   this.addListenersForTasks();
-  // }
+  renderNewTask(task) {
+    const taskGroup = document.querySelector(`.${task.category}-group ul`);
+    const taskHTML = this.task.getTasksHTML({tasksList: [task]});
+    taskGroup.insertAdjacentHTML('afterbegin', taskHTML);
+    this.addListenerForNewTask(task.id);
+  }
 
-  edit() {
-
+  edit(id) {
+    this.eventBus.dispatch('renderModalEdit', id);
   }
 
   moveToToDo(id) {
     this.eventBus.dispatch('hideRemovedTasks', [id]);
     this.eventBus.dispatch('changeTaskStateToActive', id);
+    this.eventBus.dispatch('renderOneTask', id);
   }
 
   goToTimer() {

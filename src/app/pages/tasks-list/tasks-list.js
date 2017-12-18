@@ -59,7 +59,6 @@ export class TasksList {
   }
 
   saveCheckedTask(taskId) {
-
     let tasksToRemove = [];
     if (sessionStorage.getItem('tasksToRemove')) {
       tasksToRemove = JSON.parse(sessionStorage.getItem('tasksToRemove'));
@@ -92,8 +91,6 @@ export class TasksList {
       
       task.isActive = true;
       this.model.updateTask(id, task);
-      task.id = id;
-      this.eventBus.dispatch('renderOneTask', task);
     });
   }
 }
