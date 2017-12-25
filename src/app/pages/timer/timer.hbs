@@ -1,12 +1,18 @@
-<section class="timer-section">
-  <h2 class="task-name">1. Creating a New Design</h2>
-  <p class="task-description">Lorem ipsum dolor sit amet consectetur adipiscing</p>
+<section class="timer-section" data-id={{id}}>
+  <h2 class="task-name">{{heading}}</h2>
+  <p class="task-description">{{taskDescription}}</p>
   <div class="attempts">
-    <input type="checkbox" disabled><label></label>
-    <input type="checkbox" disabled><label></label>
-    <input type="checkbox" disabled><label></label>
+    <input type="checkbox" class="checkbox" disabled><label></label>
+    <input type="checkbox"  class="checkbox" disabled><label></label>
+    <input type="checkbox"  class="checkbox" disabled><label></label>
   </div>
-  <div class="timer"></div>
+  <div class="timer"><div class="process display-none"></div> <span class="display-none" id="completed">You <br/> Completed <br/> Task</span></div>
   <button class="start">Start</button>
+  <button class="start-pomodoro display-none">Start Pomodora</button>
+  <div class="btn-group display-none">
+    <button class="fail">Fail Pomodora</button>
+    <button class="finish">Finish Pomodora</button>
+  </div>
   <a href="" class="go-back icon-arrow-left"></a>
+  <a href="" class="go-next icon-arrow-right display-none"></a>
 </section>

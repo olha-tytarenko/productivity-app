@@ -11,12 +11,12 @@ import { ModalAdd } from './components/modal-add/modal-add';
 import { ModalEdit } from './components/modal-edit/modal-edit';
 import { ModalRemove } from './components/modal-remove/modal-remove';
 import { Router } from './router';
+import { TimerView } from './pages/timer/timer-view';
+import { TimerController } from './pages/timer/timer-controller';
 
 import { EventBus } from './event-bus';
 import { FirebaseManager } from './firebase-service';
 import { TasksListView } from './pages/tasks-list/tasks-list-view';
-import { GlobalTaskList } from './pages/global-task-list/global-task-list';
-import { GlobalTaskListView } from './pages/global-task-list/global-task-list-view';
 
 
 const initApp = () => {
@@ -35,6 +35,8 @@ const initApp = () => {
   const modalAdd = new ModalAdd(modalWrapper, firebaseManager);
   const modalEdit = new ModalEdit(modalWrapper, firebaseManager);
   const modalRemove = new ModalRemove(modalWrapper);
+  const timerView = new TimerView(contentWrapper);
+  const timerController = new TimerController(firebaseManager, timerView);
 
   // firebaseManager.saveNewTask({
   //   priority: 'urgent',

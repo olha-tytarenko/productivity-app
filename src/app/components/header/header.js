@@ -53,19 +53,23 @@ export class Header {
       this.showTrashButton();
       this.router.navigate('#tasks-list');
     });
+
     goToReportsBtn.addEventListener('click', (event) => {
       event.preventDefault();
       removeClasses([goToTaskListBtn, removeBtn, goToSettingsBtn], 'active');
       goToReportsBtn.classList.add('active');
       this.eventBus.dispatch('setToDoRenderedState', false);
+      this.eventBus.dispatch('closeGlobalList');
       this.hideTrashButton();
       this.router.navigate('#reports');
     });
+
     goToSettingsBtn.addEventListener('click', (event) => {
       event.preventDefault();
       removeClasses([goToTaskListBtn, goToReportsBtn, removeBtn], 'active');
       goToSettingsBtn.classList.add('active');
       this.eventBus.dispatch('setToDoRenderedState', false);
+      this.eventBus.dispatch('closeGlobalList');      
       this.hideTrashButton();
       this.router.navigate('#settings');
     });

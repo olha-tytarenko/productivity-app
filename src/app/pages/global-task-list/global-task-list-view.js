@@ -1,6 +1,5 @@
 import { Observer } from '../../observer';
 import { Tasks } from '../../components/tasks/tasks';
-import { workGroup, educationGroup, hobbyGroup, sportGroup, otherGroup } from './data';
 import { EventBus } from '../../event-bus';
 const globalTaskListTemplate = require('./global-task-list.hbs');
 
@@ -23,6 +22,7 @@ export class GlobalTaskListView {
     this.eventBus.registerEventHandler('hideEmptyGroup', this.hideEmptyGroup.bind(this));
     this.eventBus.registerEventHandler('renderNewTask', this.renderNewTask.bind(this));
     this.eventBus.registerEventHandler('addListenerForNewTask', this.addListenerForNewTask.bind(this));
+    this.eventBus.registerEventHandler('closeGlobalList', this.closeGlobalList.bind(this));
   }
 
   render(removeMode, data) {
@@ -59,7 +59,7 @@ export class GlobalTaskListView {
         arrowSpan.className = 'icon-global-list-arrow-down';
         document.getElementsByClassName('global-tasks')[0].classList.remove('display-none');
         document.getElementById('priorityFilter').classList.remove('display-none');
-        if (removeMode) {
+        if (document.getElementsByClassName('checkbox-move-to-trash').length) {
           document.getElementById('selectGlobalList').classList.remove('display-none');
         }
       }
@@ -85,17 +85,21 @@ export class GlobalTaskListView {
 
   selectDeselectCheckboxes(state) {
     const allTasks = this.getAllTasks();
-    
-    allTasks.forEach((task) => {
-      task.querySelector('.checkbox-move-to-trash').checked = state;
-      if (state) {
+    const checkboxes = allTasks.map(task => task.getElementsByClassName('checkbox-move-to-trash')[0]);
+
+    checkboxes.forEach((checkbox, index) => {
+      if (state && !checkbox.checked) {
+        checkbox.checked = state;
         this.eventBus.dispatch('incrementRemoveTaskQuantity');
-        this.eventBus.dispatch('saveCheckedTasks', task.dataset.id);
-      } else {
-        this.eventBus.dispatch('decrementRemoveTaskQuantity');
-        this.eventBus.dispatch('removeCheckedTask', task.dataset.id);
+        this.eventBus.dispatch('saveCheckedTasks', allTasks[index].dataset.id);
       }
-    });     
+
+      if (!state && checkbox.checked) {
+        checkbox.checked = state;
+        this.eventBus.dispatch('decrementRemoveTaskQuantity');
+        this.eventBus.dispatch('removeCheckedTask', allTasks[index].dataset.id);
+      }
+    });    
   }
 
   addListenersForFilter() {
@@ -211,17 +215,24 @@ export class GlobalTaskListView {
   }
 
   edit(id) {
+    this.eventBus.dispatch('changeRenderedState', false);
     this.eventBus.dispatch('renderModalEdit', id);
   }
 
   moveToToDo(id) {
     this.eventBus.dispatch('renderOneTask', id);
     this.eventBus.dispatch('changeTaskStateToActive', id);
-    this.eventBus.dispatch('hideRemovedTasks', [id]);
+    this.hideEmptyGroup();
   }
 
-  goToTimer() {
+  goToTimer(id) {
+    this.closeGlobalList();
+    this.eventBus.dispatch('renderTimer', id);
+    this.eventBus.dispatch('setToDoRenderedState', false);
+  }
 
+  closeGlobalList() {
+    this.isGlobalListOpened = false;
   }
 
   getAllTasks() {

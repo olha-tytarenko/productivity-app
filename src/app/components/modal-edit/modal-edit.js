@@ -53,7 +53,10 @@ export class ModalEdit {
     });
 
     const closeBtn = document.getElementById('closeModal');
-    closeBtn.addEventListener('click', () => this.remove() );
+    closeBtn.addEventListener('click', () => {
+      this.eventBus.dispatch('removeCheckedTask', document.getElementsByClassName('modal')[0].dataset.id);
+      this.remove();
+    } );
 
     const saveBtn = document.getElementById('save');
     saveBtn.addEventListener('click', () => {

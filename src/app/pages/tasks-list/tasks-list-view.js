@@ -8,6 +8,7 @@ import { EventBus } from '../../event-bus';
 import { Observer } from '../../observer';
 
 const taskListTemplate = require('./tasks-list.hbs');
+const dragFirstTaskTemplate = require('./drag-first-task.hbs');
 
 export class TasksListView {
   constructor(element, model) {
@@ -29,9 +30,11 @@ export class TasksListView {
     this.eventBus.registerEventHandler('renderOneTask', this.renderOneTask.bind(this));
     this.eventBus.registerEventHandler('renderEditedTask', this.renderEditedTask.bind(this));
     this.eventBus.registerEventHandler('setToDoRenderedState', this.setToDoRenderedState.bind(this));
+    this.eventBus.registerEventHandler('changeRenderedState', this.changeRenderedState.bind(this));
   }
 
   renderToDo(tasks) {
+    console.log(this.isToDoRendered);
     if (this.isToDoRendered) {
       if (tasks.removeMode) {
         this.showRemoveMode();
@@ -40,17 +43,24 @@ export class TasksListView {
       }
     } else {
       this.addTabs(tasks.removeMode);
-      this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML(), selectAllTabs: this.selectAllTabs.getTabsHTML()});
+
+      if (tasks.tasksList.length) { 
+        this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML(), selectAllTabs: this.selectAllTabs.getTabsHTML()});
+      } else {
+        this.element.innerHTML = dragFirstTaskTemplate({ heading: this.dailyTaskListHeading.getHTML(), tabs: this.tabs.getTabsHTML(), selectAllTabs: this.selectAllTabs.getTabsHTML()});
+      }
+
+      this.isToDoRendered = true;
       this.globalTaskList.renderGlobalList.call(this.globalTaskList, this.removeMode);
       this.addListeners();
-      this.isToDoRendered = true;
     }
   }
 
   renderDone(tasks) {
     this.addTabs(tasks.removeMode);
     this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML() });
-    this.addListeners();
+    
+    this.tabs.addListeners();
   }
 
   hideRemoveMode() {
@@ -86,8 +96,9 @@ export class TasksListView {
     document.getElementById('selectDailyTasks').classList.remove('display-none');
     document.getElementsByClassName('links-container')[0].classList.remove('right-alignment');
 
-    document.getElementById('selectGlobalList').classList.remove('display-none');
-    
+    if (!document.getElementsByClassName('global-tasks')[0].classList.contains('display-none')) {
+      document.getElementById('selectGlobalList').classList.remove('display-none');
+    }    
   }
 
   addListeners() {
@@ -108,14 +119,19 @@ export class TasksListView {
   }
 
   renderOneTask(id) {
-    const taskLi = Array.from(document.getElementsByClassName('task')).filter(li => li.dataset.id === id);
+    const taskLi = Array.from(document.getElementsByClassName('task')).filter(li => li.dataset.id === id)[0];
     const newLi = taskLi.cloneNode(true);
     newLi.classList.remove('display-none');
     newLi.getElementsByClassName('icon-arrows-up')[0].classList.add('display-none');
     const date = newLi.getElementsByClassName('date')[0];
     date.classList.remove('date-day');
     date.innerText = 'Today';
-    document.getElementsByClassName('task-list')[0].insertAdjacentElement('beforeend', newLi);
+    const taskList = document.getElementsByClassName('task-list')[0];
+    const message = document.getElementsByClassName('message')[0];
+    if (message) {
+      message.classList.add('display-none');
+    }
+    taskList.insertAdjacentElement('beforeend', newLi);
     taskLi.closest('ul').removeChild(taskLi);
     this.eventBus.dispatch('addListenerForNewTask', id);
   }
@@ -129,6 +145,10 @@ export class TasksListView {
   }
 
   setToDoRenderedState(state) {
+    this.isToDoRendered = state;
+  }
+
+  changeRenderedState(state) {
     this.isToDoRendered = state;
   }
 
@@ -150,6 +170,7 @@ export class TasksListView {
             e.preventDefault();
             this.isToDoRendered = false;
             this.renderDoneEvent.notify(this.removeMode);
+            this.eventBus.dispatch('closeGlobalList');  
           }
         }
       ], 'toDoSwitcher'
@@ -165,12 +186,16 @@ export class TasksListView {
             const taskList = document.getElementsByClassName('task-list')[0];
             const tasks = Array.from(taskList.getElementsByClassName('task'));
             const labels = Array.from(taskList.getElementsByClassName('label-move-to-trash'));
-            labels.forEach((label, index) => {
-              const currentCheckbox = label.previousElementSibling;
-              currentCheckbox.checked = true;
-              this.eventBus.dispatch('incrementRemoveTaskQuantity');
-              this.eventBus.dispatch('saveCheckedTasks', tasks[index].dataset.id);
-            });
+            const checkboxes = labels.map(label => label.previousElementSibling);
+            if (!checkboxes.every(checkbox => checkbox.checked)) {
+              checkboxes.forEach((checkbox, index) => {
+                if (!checkbox.checked) {
+                  checkbox.checked = true;
+                  this.eventBus.dispatch('incrementRemoveTaskQuantity');
+                  this.eventBus.dispatch('saveCheckedTasks', tasks[index].dataset.id);
+                }
+              });
+            }
           }
         },
         {
