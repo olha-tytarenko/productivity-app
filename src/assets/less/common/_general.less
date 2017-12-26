@@ -78,6 +78,13 @@ img {
   font-size: 1.75rem; //28px;
   color: @white;
   padding-top: 21px;
+
+  .mobile({
+    text-align: left;
+  position: absolute;
+  top: -55px;
+  left: 0;
+  });
 }
 
 .sub-heading {
@@ -86,6 +93,10 @@ img {
   font-weight: normal;
   color: @nepal;
   padding: 16px 0 81px;
+
+  .mobile({
+    padding: 80px 0 60px;
+  });
 }
 
 .tabs {
@@ -208,6 +219,10 @@ img {
   padding-top: 45px;
   padding-bottom: 80px;
   position: relative;
+
+  .laptop-md({
+    font-size: 2rem;
+  });
 
   span:before {
     font-size: 3.75rem; // 60px;

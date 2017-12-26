@@ -164,6 +164,8 @@
     font-family: @ptsans;
     font-weight: bold;
 
+    .mobile({ width: 80%; });
+
     &:hover {
       background-color: @dark-mountain-meadow;
     }
@@ -177,10 +179,22 @@
     font-family: @ptsans;
     font-weight: bold;
     font-size: 1.125rem;
+
+  }
+
+  .fail,
+  .finish {
+    .mobile({ width: 45%; });
+  }
+
+  .start-pomodoro {
+    .mobile({ width: 80%; });
   }
 
   .btn-group {
     max-width: 360px;
+
+    .mobile({ max-width: 90%});
 
     .fail {
       background-color: @tomato;

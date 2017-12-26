@@ -160,6 +160,16 @@
   justify-content: center;
   align-items: baseline;
   padding-bottom: 35px;
+
+  .mobile(
+  { position: absolute;
+  top: -55px;
+    .page-heading {
+      position: relative;
+      top: 0;
+    }
+  }
+  );
 }
 
 .add-new-task {
@@ -173,6 +183,10 @@
   justify-content: space-between;
   align-items: flex-end;
   padding-bottom: 25px;
+
+  .mobile({
+    padding-top: 30px;
+  });
 
   .global-list-link {
     padding: 40px 0 0;

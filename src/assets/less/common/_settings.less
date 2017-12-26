@@ -16,14 +16,26 @@
     width: 37.8%;
     padding-bottom: 56px;
 
+    .mobile({
+      width: 70%;
+    });
+
     .inline {
       display: flex;
       justify-content: space-between;
       width: 70%;
+
+      .laptop-md({
+        width: 100%;
+      });
     }
 
     &:nth-child(2n + 1) {
       padding-left: 115px;
+
+      .laptop-md({
+        padding-left: 0;
+      });
     }
   }
 }
@@ -34,6 +46,11 @@
   font-size: 0.875rem;
   color: @white;
   padding-right: 43px;
+
+  .laptop-md({
+    padding-right: 0;
+  });
+
 }
 
 .settings-criteria(@settings-decoration-color);
@@ -57,6 +74,15 @@
   display: flex;
   justify-content: space-between;
   width: 100px;
+
+  .laptop-md({
+    width: 85px;
+  });
+
+  .mobile({
+    width: 40%;
+  });
+
   p {
     font-family: @roboto-regular;
     text-align: center;
