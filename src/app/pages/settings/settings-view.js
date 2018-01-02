@@ -33,6 +33,13 @@ export class SettingsView {
   renderSettings() {
     document.title = 'Settings';
     this.element.innerHTML = pomodorosSettingsTemplate({tabs: this.tabs.getTabsHTML()});
+    const settings = JSON.parse(sessionStorage.getItem('settings'));
+    if (settings) {
+      document.getElementById('workTimeValue').innerText = settings.workTime;
+      document.getElementById('workIterationValue').innerText = settings.workIteration;
+      document.getElementById('shortBreakValue').innerText = settings.shortBreak;
+      document.getElementById('longBreakValue').innerText = settings.longBreak;
+    }
     renderGraph();
     this.addListeners();
   }
@@ -49,6 +56,20 @@ export class SettingsView {
     goToTask.addEventListener('click', (event) => {
       event.preventDefault();
       this.router.navigate('#tasks-list');
+    });
+
+    const saveSettingsBtn = document.getElementsByClassName('save-settings')[0];
+    saveSettingsBtn.addEventListener('click', () => {
+      const settings = {
+        workTime: parseInt(document.getElementById('workTimeValue').innerText),
+        workIteration: parseInt(document.getElementById('workIterationValue').innerText),
+        shortBreak: parseInt(document.getElementById('shortBreakValue').innerText),
+        longBreak: parseInt(document.getElementById('longBreakValue').innerText)
+      };
+
+      sessionStorage.setItem('settings', JSON.stringify(settings));
+
+      this.router.navigate('#task-list');
     });
   }
 }
@@ -117,9 +138,9 @@ function renderGraph() {
     const hours = `${Math.floor((totalTime * 2 + +longBreak.innerText) / 60)}h`;
     const minutes = ` ${(totalTime * 2 + +longBreak.innerText) % 60}m`;
     endCycleTime.innerText = hours + minutes;
-
     scaleItems.forEach((item, index) => {
       if ((index + 1) * 30 < (totalTime * 2 + +longBreak.innerText)) {
+        item.classList.remove('display-none');
         item.style.left = `calc(${((index + 1) * 30) * getPercentage()}% - ${parseInt(window.getComputedStyle(item).width) - 5}px)`;
       } else {
         item.classList.add('display-none');
@@ -133,62 +154,51 @@ function renderGraph() {
     firstCycleElem.innerText = `First cycle: ${Math.floor(firstCycleMin / 60)}h ${firstCycleMin % 60}m`;
   };
 
-  const workTimeRender = (action) => {
+  const workTimeRender = () => {
     workTimeDivs.forEach((div) => {
       div.style.width = `${+workTime.innerText * getPercentage()}%`;
     });
   };
 
 
-  const longBreakRender = (action) => {
+  const longBreakRender = () => {
     longBreakDiv.style.width = `${+longBreak.innerText * getPercentage()}%`;
   };
 
-  const shortBreakRender = (action) => {
+  const shortBreakRender = () => {
     shortBreakDivs.forEach((div) => {
       div.style.width = `${+shortBreak.innerText * getPercentage()}%`;
     });
   };
 
-  const renderAll = (action) => {
-    workTimeRender(action);
-    shortBreakRender(action);
-    longBreakRender(action);
+  const renderAll = () => {
+    workTimeRender();
+    shortBreakRender();
+    longBreakRender();
+    workIterationRender();
     firstCycle();
     renderScale();
   };
 
-  const workIterationRender = (action) => {
-    let workTimeDivsFiltered = [];
-    let shortBreakDivsFiltered = [];
+  const workIterationRender = () => {
 
-    if (action === 'decrease') {
-      workTimeDivsFiltered = workTimeDivs.filter((div) => {
-        return !div.classList.contains('display-none');
-      });
+    const blockCountToRemove = 5 - parseInt(document.getElementById('workIterationValue').innerText);
+    workTimeDivs.forEach(div => {
+      div.classList.remove('display-none');
+    });
 
-      shortBreakDivsFiltered = shortBreakDivs.filter((div) => {
-        return !div.classList.contains('display-none');
-      });
+    shortBreakDivs.forEach(div => {
+      div.classList.remove('display-none');
+    });
 
-    } else {
-      workTimeDivsFiltered = workTimeDivs.filter((div) => {
-        return div.classList.contains('display-none');
-      });
-
-      shortBreakDivsFiltered = shortBreakDivs.filter((div) => {
-        return div.classList.contains('display-none');
-      });
+    if (blockCountToRemove) {
+      for (let i = 0; i < blockCountToRemove; i++) {
+        workTimeDivs[i].classList.toggle('display-none');
+        workTimeDivs[workTimeDivs.length - 1 - i].classList.toggle('display-none');
+        shortBreakDivs[i].classList.toggle('display-none');
+        shortBreakDivs[shortBreakDivs.length - 1 - i].classList.toggle('display-none');
+      }
     }
-
-    workTimeDivsFiltered[0].classList.toggle('display-none');
-    workTimeDivsFiltered[workTimeDivsFiltered.length - 1].classList.toggle('display-none');
-    shortBreakDivsFiltered[0].classList.toggle('display-none');
-    shortBreakDivsFiltered[shortBreakDivsFiltered.length - 1].classList.toggle('display-none');
-
-
-    renderAll(action);
-    renderScale();
   };
 
   // VOTER OBJECTS
@@ -217,7 +227,7 @@ function renderGraph() {
     maxValue: 5,
     step: 1,
     element: document.getElementById('workIteration'),
-    render: workIterationRender
+    render: renderAll
   };
   const workIterationVoter = new Voter(workIterationVoterOptions);
 
@@ -230,5 +240,5 @@ function renderGraph() {
   };
   const shortBreakVoter = new Voter(shortBreakVoterOptions);
 
-  renderScale();
+  renderAll();
 }

@@ -6,12 +6,25 @@
     <input type="checkbox"  class="checkbox" disabled><label></label>
     <input type="checkbox"  class="checkbox" disabled><label></label>
   </div>
-  <div class="timer"><div class="process display-none"></div> <span class="display-none" id="completed">You <br/> Completed <br/> Task</span></div>
+  <div class="timer">
+    <div class="timer-wrapper display-none">
+      <div class="spinner pie"></div>
+      <div class="filler pie"></div>
+      <div class="mask"></div>
+    </div>
+    <span class="display-none" id="completed">
+      You <br/> Completed <br/> Task
+    </span>
+    <div class="time"><p class="break-mark display-none">BREAK</p><span class="time-left"></span><p class="min"></p></div>
+  </div>
+
   <button class="start">Start</button>
-  <button class="start-pomodoro display-none">Start Pomodora</button>
+
   <div class="btn-group display-none">
     <button class="fail">Fail Pomodora</button>
     <button class="finish">Finish Pomodora</button>
+    <button class="finish-task display-none">Finish Task</button>
+    <button class="start-pomodoro display-none">Start Pomodora</button>
   </div>
   <a href="" class="go-back icon-arrow-left"></a>
   <a href="" class="go-next icon-arrow-right display-none"></a>

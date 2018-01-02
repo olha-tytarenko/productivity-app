@@ -60,6 +60,30 @@
       line-height: 245px;
     }
 
+    .time {
+      font-family: @roboto-regular;
+      font-size: 6.25rem;
+      position: absolute;
+      font-weight: normal;
+      width: 100%;
+      top: 55%;
+      left: 50%;
+      z-index: 400;
+      line-height: 1;
+      transform: translate(-50%, -50%);
+      color: @white;
+      
+      .min {
+        font-size: 1.5rem;
+        text-align: center;
+      }
+
+      .break-mark {
+        font-size: 1rem;
+        text-align: center;
+      }
+    }
+
     .process {
       border-radius: 50%;
       width: 70%;
@@ -83,15 +107,7 @@
     position: relative;
 
     &:after {
-      content: "6";
-      line-height: 0;
-      font-family: @roboto-regular;
-      font-size: 6.25rem;
-      position: absolute;
-      font-weight: normal;
-      top: 45%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      content: "";
     }
 
     &:before {
@@ -248,5 +264,81 @@
 
   &:hover {
     background-color: @dark-mountain-meadow;
+  }
+}
+
+.timer-wrapper {
+  position: relative;
+  border-radius: 50%;
+  background-color: #2a3f50;
+  margin: 5px 0 0 5px;
+}
+
+.timer-wrapper,
+.timer-wrapper * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.timer-wrapper {
+  width: 240px;
+  height: 240px;
+}
+
+.timer-wrapper .pie {
+  width: 50%;
+  height: 100%;
+  transform-origin: 100% 50%;
+  position: absolute;
+  border: 25px solid @nepal;
+}
+
+.timer-wrapper .spinner {
+  border-radius: 120px 0 0 120px;
+  z-index: 200;
+  border-right: none;
+  animation: rota linear 1;
+  animation-fill-mode: forwards;
+
+}
+
+.timer-wrapper .filler {
+  border-radius: 0 120px 120px 0;
+  left: 50%;
+  opacity: 0;
+  z-index: 100;
+  border-left: none;
+  animation: opa steps(1, end) 1 reverse;
+  animation-fill-mode: forwards;
+}
+
+.timer-wrapper .mask {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  background: inherit;
+  opacity: 1;
+  z-index: 300;
+  animation: opa steps(1, end) 1;
+  animation-fill-mode: forwards;
+  border-radius: 120px 0 0 120px;
+}
+
+@keyframes rota {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes opa {
+  0% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
   }
 }
