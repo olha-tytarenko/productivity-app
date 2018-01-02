@@ -37,6 +37,7 @@ const initApp = () => {
   const modalRemove = new ModalRemove(modalWrapper);
   const timerView = new TimerView(contentWrapper);
   const timerController = new TimerController(firebaseManager, timerView);
+  sessionStorage.setItem('workIterationCount', '0');
 
   // firebaseManager.saveNewTask({
   //   priority: 'urgent',
