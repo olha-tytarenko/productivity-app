@@ -14,20 +14,27 @@
       <div class="filler pie"></div>
       <div class="mask"></div>
     </div>
-    <span class="display-none" id="completed">
-      You <br/> Completed <br/> Task
-    </span>
-    <div class="time display-none"><p class="break-mark display-none">BREAK</p><span class="time-left"></span><p class="min">min</p></div>
+    <div class="time display-none">
+      <p class="break-mark display-none">BREAK</p>
+      <span class="time-left"></span>
+      <p class="min">min</p>
+      <span class="completed-task display-none">You <br/> Completed <br/> Task</span>
+    </div>
   </div>
 
   <button class="start">Start</button>
+  <button class="start-pomodoro display-none" id="singleStartPomodoro">Start Pomodora</button>
 
-  <div class="btn-group display-none">
+  <div class="btn-group display-none" id="btnsTimerInProgress">
     <button class="fail">Fail Pomodora</button>
     <button class="finish">Finish Pomodora</button>
-    <button class="finish-task display-none">Finish Task</button>
-    <button class="start-pomodoro display-none">Start Pomodora</button>
   </div>
+
+  <div class="btn-group display-none" id="btnsBreakAfterTime">
+    <button class="start-pomodoro">Start Pomodora</button>
+    <button class="finish-task">Finish Task</button>
+  </div>
+
   <a href="" class="go-back icon-arrow-left"></a>
   <a href="" class="go-next icon-arrow-right display-none"></a>
 </section>

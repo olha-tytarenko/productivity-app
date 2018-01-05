@@ -15,12 +15,17 @@ export class ModalAdd {
 
   render() {
     this.element.insertAdjacentHTML('beforebegin', modalAddTemplate());
+    const checkboxes = Array.from(document.getElementsByClassName('checkbox'));
+    const settings = JSON.parse(sessionStorage.getItem('settings'));
+
+    checkboxes.filter((checkbox, index) => index < settings.workIteration).forEach(checkbox => checkbox.checked = true);
     this.addListeners();
   }
 
   remove() {
     const modal = document.getElementsByClassName('modal-overlay')[0];
     const parentModal = modal.parentNode;
+
     parentModal.removeChild(modal);
   }
 
@@ -38,9 +43,9 @@ export class ModalAdd {
     });
 
     const closeBtn = document.getElementById('closeModal');
-    closeBtn.addEventListener('click', () =>  this.remove()); 
-  
     const saveBtn = document.getElementById('save');
+
+    closeBtn.addEventListener('click', () =>  this.remove());
     saveBtn.addEventListener('click', () => {
       const estimation = checkboxes.reduce((acc, checkbox) => {
         return checkbox.checked ? acc + 1 : acc;

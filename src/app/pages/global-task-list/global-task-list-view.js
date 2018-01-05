@@ -121,8 +121,6 @@ export class GlobalTaskListView {
         event.target.classList.add('active');
         this.showGroup();
         this.hideEmptyGroup();
-      } else {
-        return;
       }
     });
   }
@@ -135,8 +133,6 @@ export class GlobalTaskListView {
         const action = e.target.dataset.action;
         if (action in this.taskHandlers) {
           this.taskHandlers[action].call(this, e.currentTarget.dataset.id, e.target);
-        } else {
-          return;
         }
       });
     });
@@ -153,11 +149,10 @@ export class GlobalTaskListView {
   addListenerForNewTask(id) {
     const taskLi = Array.from(document.getElementsByClassName('task')).find((li) => li.dataset.id === id);
     taskLi.addEventListener('click', (e) => {
+      e.preventDefault();
       const action = e.target.dataset.action;
       if (action in this.taskHandlers) {
         this.taskHandlers[action].call(this, e.currentTarget.dataset.id, e.target);
-      } else {
-        return;
       }
     });
   }

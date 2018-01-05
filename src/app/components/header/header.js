@@ -16,6 +16,7 @@ export class Header {
     this.eventBus.registerEventHandler('incrementRemoveTaskQuantity', this.incrementRemoveTaskQuantity.bind(this));
     this.eventBus.registerEventHandler('decrementRemoveTaskQuantity', this.decrementRemoveTaskQuantity.bind(this));
     this.eventBus.registerEventHandler('clearCheckedTasksQuantity', this.clearCheckedTasksQuantity.bind(this));
+    this.eventBus.registerEventHandler('showHideHeader', this.showHideHeader);
   }
 
   render() {
@@ -111,6 +112,10 @@ export class Header {
   showTrashButton() {
     document.getElementById('goToRemove').classList.remove('display-none');
   }
+
+  showHideHeader() {
+    document.getElementsByClassName('header-container')[0].classList.toggle('display-none');
+  }
 }
 
 window.addEventListener('load', () => {
@@ -120,12 +125,11 @@ window.addEventListener('load', () => {
   
   window.addEventListener('scroll', function() {
     const scrolled = window.pageYOffset || document.documentElement.scrollTop;
-    if (scrolled > 50) {
+    if (scrolled > 20) {
       header.classList.add('fixed-header');
       document.getElementsByClassName('add-new-task')[0].classList.remove('display-none');
       logo.classList.remove('display-none');
-    }
-    if (scrolled <= 50) {
+    } else {
       header.classList.remove('fixed-header');
       logo.classList.add('display-none');
       document.getElementsByClassName('add-new-task')[0].classList.add('display-none');
