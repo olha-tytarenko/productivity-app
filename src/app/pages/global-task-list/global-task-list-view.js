@@ -1,6 +1,8 @@
 import { Observer } from '../../observer';
 import { Tasks } from '../../components/tasks/tasks';
-import { EventBus } from '../../event-bus';
+import { eventBus } from '../../event-bus';
+import { getShortMonthName } from '../../helpers/date-formatting';
+
 const globalTaskListTemplate = require('./global-task-list.hbs');
 
 export class GlobalTaskListView {
@@ -9,7 +11,6 @@ export class GlobalTaskListView {
     this.task = new Tasks();
     this.renderEvent = new Observer(this);
     this.isGlobalListOpened = false;
-    this.eventBus = new EventBus();
     this.taskHandlers = {
       checkToRemove: this.checkToRemove,
       edit: this.edit,
@@ -17,12 +18,11 @@ export class GlobalTaskListView {
       goToTimer: this.goToTimer
     };
 
-    this.eventBus = new EventBus();
-    this.eventBus.registerEventHandler('render', this.render.bind(this));
-    this.eventBus.registerEventHandler('hideEmptyGroup', this.hideEmptyGroup.bind(this));
-    this.eventBus.registerEventHandler('renderNewTask', this.renderNewTask.bind(this));
-    this.eventBus.registerEventHandler('addListenerForNewTask', this.addListenerForNewTask.bind(this));
-    this.eventBus.registerEventHandler('closeGlobalList', this.closeGlobalList.bind(this));
+    eventBus.registerEventHandler('render', this.render.bind(this));
+    eventBus.registerEventHandler('hideEmptyGroup', this.hideEmptyGroup.bind(this));
+    eventBus.registerEventHandler('renderNewTask', this.renderNewTask.bind(this));
+    eventBus.registerEventHandler('addListenerForNewTask', this.addListenerForNewTask.bind(this));
+    eventBus.registerEventHandler('closeGlobalList', this.closeGlobalList.bind(this));
   }
 
   render(removeMode, data) {
@@ -90,14 +90,14 @@ export class GlobalTaskListView {
     checkboxes.forEach((checkbox, index) => {
       if (state && !checkbox.checked) {
         checkbox.checked = state;
-        this.eventBus.dispatch('incrementRemoveTaskQuantity');
-        this.eventBus.dispatch('saveCheckedTasks', allTasks[index].dataset.id);
+        eventBus.dispatch('incrementRemoveTaskQuantity');
+        eventBus.dispatch('saveCheckedTasks', allTasks[index].dataset.id);
       }
 
       if (!state && checkbox.checked) {
         checkbox.checked = state;
-        this.eventBus.dispatch('decrementRemoveTaskQuantity');
-        this.eventBus.dispatch('removeCheckedTask', allTasks[index].dataset.id);
+        eventBus.dispatch('decrementRemoveTaskQuantity');
+        eventBus.dispatch('removeCheckedTask', allTasks[index].dataset.id);
       }
     });    
   }
@@ -191,15 +191,17 @@ export class GlobalTaskListView {
     const currentCheckbox = label.previousElementSibling;
     currentCheckbox.checked = !currentCheckbox.checked;
     if (currentCheckbox.checked) {
-      this.eventBus.dispatch('incrementRemoveTaskQuantity');
-      this.eventBus.dispatch('saveCheckedTasks', id);
+      eventBus.dispatch('incrementRemoveTaskQuantity');
+      eventBus.dispatch('saveCheckedTasks', id);
     } else {
-      this.eventBus.dispatch('decrementRemoveTaskQuantity');
-      this.eventBus.dispatch('removeCheckedTask', id);
+      eventBus.dispatch('decrementRemoveTaskQuantity');
+      eventBus.dispatch('removeCheckedTask', id);
     }
   }
 
   renderNewTask(task) {
+    task.deadline.month = getShortMonthName(task.deadline.month);
+
     const taskGroup = document.querySelector(`.${task.category}-group ul`);
     const taskHTML = this.task.getTasksHTML({tasksList: [task]});
     taskGroup.insertAdjacentHTML('afterbegin', taskHTML);
@@ -210,20 +212,20 @@ export class GlobalTaskListView {
   }
 
   edit(id) {
-    this.eventBus.dispatch('changeRenderedState', false);
-    this.eventBus.dispatch('renderModalEdit', id);
+    eventBus.dispatch('changeRenderedState', false);
+    eventBus.dispatch('renderModalEdit', id);
   }
 
   moveToToDo(id) {
-    this.eventBus.dispatch('renderOneTask', id);
-    this.eventBus.dispatch('changeTaskStateToActive', id);
+    eventBus.dispatch('renderOneTask', id);
+    eventBus.dispatch('changeTaskStateToActive', id);
     this.hideEmptyGroup();
   }
 
   goToTimer(id) {
     this.closeGlobalList();
-    this.eventBus.dispatch('renderTimer', id);
-    this.eventBus.dispatch('setToDoRenderedState', false);
+    eventBus.dispatch('renderTimer', id);
+    eventBus.dispatch('setToDoRenderedState', false);
   }
 
   closeGlobalList() {

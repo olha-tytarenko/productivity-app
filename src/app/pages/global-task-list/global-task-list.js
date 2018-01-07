@@ -1,14 +1,9 @@
 import { Tasks } from '../../components/tasks/tasks';
 import { GlobalTask } from '../../components/global-task/global-task';
-import { workGroup, educationGroup, hobbyGroup, sportGroup, otherGroup } from './data';
-import { EventBus } from '../../event-bus';
-import { GlobalTaskListView } from './global-task-list-view';
-
-const globalTaskListTemplate = require('./global-task-list.hbs');
+import { getShortMonthName } from '../../helpers/date-formatting';
 
 export class GlobalTaskList {
   constructor(view, model) {
-    // console.log(view);
     this.model = model;
     this.view = view;
     this.view.renderEvent.attach((sender, data) => {
@@ -19,13 +14,11 @@ export class GlobalTaskList {
     this.task = new Tasks();
     this.globalTask = new GlobalTask();
     this.removeMode = false;
-    this.eventBus = new EventBus();
   }
 
 
   renderGlobalList(removeMode) {
     this.model.getAllTasks().then((data) => {
-      let doneTasks = [];
       let globalTasks = {
         workGroup: [],
         educationGroup: [],
@@ -36,6 +29,7 @@ export class GlobalTaskList {
       for (const key in data) {
         if (!data[key].isActive && !data[key].done) {
           data[key].id = key;
+          data[key].deadline.month = getShortMonthName(data[key].deadline.month);
           switch (data[key].category) {
           case 'work': globalTasks.workGroup.push(data[key]); break;
           case 'education': globalTasks.educationGroup.push(data[key]); break;

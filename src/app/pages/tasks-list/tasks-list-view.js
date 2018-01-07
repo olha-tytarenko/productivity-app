@@ -4,7 +4,7 @@ import { GlobalTaskListView } from '../../pages/global-task-list/global-task-lis
 import { DailyTaskListHeading } from '../../components/daily-task-list-heading/daily-task-list-heading';
 import { Tasks } from '../../components/tasks/tasks';
 import { Tabs } from '../../components/tabs/tabs';
-import { EventBus } from '../../event-bus';
+import { eventBus } from '../../event-bus';
 import { Observer } from '../../observer';
 
 const taskListTemplate = require('./tasks-list.hbs');
@@ -13,7 +13,6 @@ const dragFirstTaskTemplate = require('./drag-first-task.hbs');
 export class TasksListView {
   constructor(element, model) {
     this.taskListHTML = taskListTemplate();
-    this.eventBus = new EventBus();
 
     this.element = element;
     this.dailyTaskListHeading = new DailyTaskListHeading(this.element);
@@ -25,12 +24,12 @@ export class TasksListView {
 
     this.renderDoneEvent = new Observer(this);
     this.renderToDoEvent = new Observer(this);
-    this.eventBus.registerEventHandler('showRemoveTasksMode', this.showRemoveMode.bind(this));
-    this.eventBus.registerEventHandler('hideRemovedTasks', this.hideRemovedTasks.bind(this));
-    this.eventBus.registerEventHandler('renderOneTask', this.renderOneTask.bind(this));
-    this.eventBus.registerEventHandler('renderEditedTask', this.renderEditedTask.bind(this));
-    this.eventBus.registerEventHandler('setToDoRenderedState', this.setToDoRenderedState.bind(this));
-    this.eventBus.registerEventHandler('changeRenderedState', this.changeRenderedState.bind(this));
+    eventBus.registerEventHandler('showRemoveTasksMode', this.showRemoveMode.bind(this));
+    eventBus.registerEventHandler('hideRemovedTasks', this.hideRemovedTasks.bind(this));
+    eventBus.registerEventHandler('renderOneTask', this.renderOneTask.bind(this));
+    eventBus.registerEventHandler('renderEditedTask', this.renderEditedTask.bind(this));
+    eventBus.registerEventHandler('setToDoRenderedState', this.setToDoRenderedState.bind(this));
+    eventBus.registerEventHandler('changeRenderedState', this.changeRenderedState.bind(this));
   }
 
   renderToDo(tasks) {
@@ -114,8 +113,8 @@ export class TasksListView {
       const taskParent = task.closest('ul');
       taskParent.removeChild(task);
     });
-    this.eventBus.dispatch('clearCheckedTasksQuantity');
-    this.eventBus.dispatch('hideEmptyGroup');
+    eventBus.dispatch('clearCheckedTasksQuantity');
+    eventBus.dispatch('hideEmptyGroup');
   }
 
   renderOneTask(id) {
@@ -133,15 +132,20 @@ export class TasksListView {
     }
     taskList.insertAdjacentElement('beforeend', newLi);
     taskLi.closest('ul').removeChild(taskLi);
-    this.eventBus.dispatch('addListenerForNewTask', id);
+    eventBus.dispatch('addListenerForNewTask', id);
   }
 
   renderEditedTask(task) {
     const taskLi = Array.from(document.getElementsByClassName('task')).find((li) => li.dataset.id === task.id);
-    taskLi.className = `task ${task.category} ${task.priority}`;
-    taskLi.getElementsByClassName('estimation')[0].innerText = task.estimation;
-    taskLi.getElementsByTagName('h2')[0].innerText = task.heading;
-    taskLi.getElementsByTagName('p')[0].innerText = task.taskDescription;
+    if (task.category !== task.oldCategory && !task.isActive) {
+      taskLi.closest('ul').removeChild(taskLi);
+      eventBus.dispatch('renderNewTask', task);
+    } else {
+      taskLi.className = `task ${task.category} ${task.priority}`;
+      taskLi.getElementsByClassName('estimation')[0].innerText = task.estimation;
+      taskLi.getElementsByTagName('h2')[0].innerText = task.heading;
+      taskLi.getElementsByTagName('p')[0].innerText = task.taskDescription;
+    }
   }
 
   setToDoRenderedState(state) {
@@ -170,7 +174,7 @@ export class TasksListView {
             e.preventDefault();
             this.isToDoRendered = false;
             this.renderDoneEvent.notify(this.removeMode);
-            this.eventBus.dispatch('closeGlobalList');  
+            eventBus.dispatch('closeGlobalList');  
           }
         }
       ], 'toDoSwitcher'
@@ -191,8 +195,8 @@ export class TasksListView {
               checkboxes.forEach((checkbox, index) => {
                 if (!checkbox.checked) {
                   checkbox.checked = true;
-                  this.eventBus.dispatch('incrementRemoveTaskQuantity');
-                  this.eventBus.dispatch('saveCheckedTasks', tasks[index].dataset.id);
+                  eventBus.dispatch('incrementRemoveTaskQuantity');
+                  eventBus.dispatch('saveCheckedTasks', tasks[index].dataset.id);
                 }
               });
             }
@@ -209,8 +213,8 @@ export class TasksListView {
             labels.forEach((label, index) => {
               const currentCheckbox = label.previousElementSibling;
               currentCheckbox.checked = false;
-              this.eventBus.dispatch('decrementRemoveTaskQuantity');
-              this.eventBus.dispatch('removeCheckedTask', tasks[index].dataset.id);
+              eventBus.dispatch('decrementRemoveTaskQuantity');
+              eventBus.dispatch('removeCheckedTask', tasks[index].dataset.id);
             });
           }
         }

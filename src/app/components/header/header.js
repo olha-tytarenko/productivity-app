@@ -1,5 +1,6 @@
-const headerTemplate = require('./header.hbs');
+import { eventBus } from '../../event-bus';
 
+const headerTemplate = require('./header.hbs');
 
 const removeClasses = (elements, styleClass) => {
   elements.forEach((element) => {
@@ -9,14 +10,14 @@ const removeClasses = (elements, styleClass) => {
 
 
 export class Header {
-  constructor(element, router, eventBus) {
+  constructor(element, router) {
     this.element = element;
     this.router = router;
-    this.eventBus = eventBus;
-    this.eventBus.registerEventHandler('incrementRemoveTaskQuantity', this.incrementRemoveTaskQuantity.bind(this));
-    this.eventBus.registerEventHandler('decrementRemoveTaskQuantity', this.decrementRemoveTaskQuantity.bind(this));
-    this.eventBus.registerEventHandler('clearCheckedTasksQuantity', this.clearCheckedTasksQuantity.bind(this));
-    this.eventBus.registerEventHandler('showHideHeader', this.showHideHeader);
+
+    eventBus.registerEventHandler('incrementRemoveTaskQuantity', this.incrementRemoveTaskQuantity.bind(this));
+    eventBus.registerEventHandler('decrementRemoveTaskQuantity', this.decrementRemoveTaskQuantity.bind(this));
+    eventBus.registerEventHandler('clearCheckedTasksQuantity', this.clearCheckedTasksQuantity.bind(this));
+    eventBus.registerEventHandler('showHideHeader', this.showHideHeader);
   }
 
   render() {
@@ -32,23 +33,24 @@ export class Header {
     const addNewTask = document.getElementsByClassName('add-new-task')[0];
 
     addNewTask.addEventListener('click', () => {
-      this.eventBus.dispatch('renderModalAdd');
+      eventBus.dispatch('renderModalAdd');
     });
 
 
     removeBtn.addEventListener('click', (event) => {
       event.preventDefault();
       if (removeBtn.classList.contains('trash')) {
-        this.eventBus.dispatch('renderModalRemove');
+        eventBus.dispatch('renderModalRemove');
       } else {
         removeClasses([goToTaskListBtn, goToReportsBtn, goToSettingsBtn], 'active');
         removeBtn.classList.add('active');
-        this.eventBus.dispatch('showRemoveTasksMode');
+        eventBus.dispatch('showRemoveTasksMode');
       }
     });
 
     goToTaskListBtn.addEventListener('click', (event) => {
       event.preventDefault();
+
       removeClasses([removeBtn, goToReportsBtn, goToSettingsBtn], 'active');
       goToTaskListBtn.classList.add('active');
       this.showTrashButton();
@@ -57,10 +59,11 @@ export class Header {
 
     goToReportsBtn.addEventListener('click', (event) => {
       event.preventDefault();
+      
       removeClasses([goToTaskListBtn, removeBtn, goToSettingsBtn], 'active');
       goToReportsBtn.classList.add('active');
-      this.eventBus.dispatch('setToDoRenderedState', false);
-      this.eventBus.dispatch('closeGlobalList');
+      eventBus.dispatch('setToDoRenderedState', false);
+      eventBus.dispatch('closeGlobalList');
       this.hideTrashButton();
       this.router.navigate('#reports');
     });
@@ -69,8 +72,8 @@ export class Header {
       event.preventDefault();
       removeClasses([goToTaskListBtn, goToReportsBtn, removeBtn], 'active');
       goToSettingsBtn.classList.add('active');
-      this.eventBus.dispatch('setToDoRenderedState', false);
-      this.eventBus.dispatch('closeGlobalList');      
+      eventBus.dispatch('setToDoRenderedState', false);
+      eventBus.dispatch('closeGlobalList');      
       this.hideTrashButton();
       this.router.navigate('#settings');
     });
@@ -78,6 +81,7 @@ export class Header {
 
   incrementRemoveTaskQuantity() {
     const countSpan = document.getElementsByClassName('checked-tasks')[0];
+
     if(countSpan.innerText) {
       countSpan.innerText = +countSpan.innerText + 1;
     } else {
@@ -89,6 +93,7 @@ export class Header {
 
   decrementRemoveTaskQuantity() {
     const countSpan = document.getElementsByClassName('checked-tasks')[0];
+
     if(+countSpan.innerText > 1) {
       countSpan.innerText = +countSpan.innerText - 1;
     } else {
@@ -101,6 +106,7 @@ export class Header {
   clearCheckedTasksQuantity() {
     const countSpan = document.getElementsByClassName('checked-tasks')[0];
     const trashIconElement = document.getElementById('goToRemove');
+
     trashIconElement.classList.remove('trash');
     countSpan.innerText = '';
   }

@@ -1,6 +1,7 @@
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var webpack = require('webpack');
 
 module.exports = {
   entry: './src/app/app.js',
@@ -37,7 +38,7 @@ module.exports = {
           }
         }]
       },
-	  {
+	    {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
@@ -47,10 +48,14 @@ module.exports = {
           }
         }
       },
-	  { 
-		test: /\.hbs$/, 
-		loader: "handlebars-template-loader" 
-	  }
+	    { 
+        test: /\.hbs$/, 
+        loader: "handlebars-template-loader" 
+      },
+      {
+        test: /\.css$/,
+        loaders: ["style-loader","css-loader"]
+      },
     ]
   },
   plugins: [
@@ -59,7 +64,13 @@ module.exports = {
       'src/index.html',
       { from: 'src/static/', to: 'static/' },
       'src/assets/images'
-    ])
+    ]),
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery'",
+      "window.$": "jquery"
+    })
   ],
   devServer: {
     contentBase: './dist',

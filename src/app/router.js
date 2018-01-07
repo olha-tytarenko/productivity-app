@@ -13,11 +13,6 @@ export class Router {
 
   init(defaultRoute) {
     this.defaultRoute = defaultRoute;
-
-    // window.addEventListener('hashchange', (event) => {
-    //   const hash = location.hash;
-    //   // this.navigate(hash);
-    // });
   }
 
   add(route, handler) {

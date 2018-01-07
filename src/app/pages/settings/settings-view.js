@@ -1,4 +1,5 @@
 import { Tabs } from '../../components/tabs/tabs';
+import { NotificationMessage } from '../../components/notification-message/notification-message';
 
 const pomodorosSettingsTemplate = require('./pomodoros-settings.hbs');
 const settingsCategoriesTemplate = require('./settings-categories.hbs');
@@ -53,12 +54,14 @@ export class SettingsView {
     this.tabs.addListeners();
 
     const goToTask = document.getElementsByClassName('go-to-task')[0];
+    const saveSettingsBtn = document.getElementsByClassName('save-settings')[0];
+    const notification = new NotificationMessage();
+
     goToTask.addEventListener('click', (event) => {
       event.preventDefault();
       this.router.navigate('#tasks-list');
     });
 
-    const saveSettingsBtn = document.getElementsByClassName('save-settings')[0];
     saveSettingsBtn.addEventListener('click', () => {
       const settings = {
         workTime: parseInt(document.getElementById('workTimeValue').innerText),
@@ -68,7 +71,7 @@ export class SettingsView {
       };
 
       sessionStorage.setItem('settings', JSON.stringify(settings));
-
+      notification.showMessage({type: 'success', message: 'Settings successfully saved'});
       this.router.navigate('#task-list');
     });
   }

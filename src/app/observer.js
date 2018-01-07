@@ -10,7 +10,6 @@ export class Observer {
 
   notify(args) {
     this.listeners.forEach(listener => {
-      // console.log(listener);
       listener(this.sender, args);
     });
   }

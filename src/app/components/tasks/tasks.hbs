@@ -1,57 +1,24 @@
-{{#if removeMode}}
-  {{#each tasksList}}
-    <li class="task {{priority}} {{category}} {{done}}" data-id={{id}}>
-      <div class="border">
-        <input type="checkbox" class="checkbox-move-to-trash">
-        <label class="icon-trash label-move-to-trash"  data-action="checkToRemove"></label>
-      </div>
-      <div class="task-description">
-        <h2>{{heading}} </h2>
-        <p>{{taskDescription}}</p>
-      </div>
-      {{#unless done}}
-        {{#if isActive}}
-        <button class="edit-task icon-edit" data-action="edit"></button>
-        {{/if}}
-      {{/unless}}
-      {{#unless isActive}}
-        {{#unless done}}
-        <div class="task-controls">
-          <button class="edit-task icon-arrows-up" data-action="moveToToDo"></button>
-          <button class="edit-task icon-edit" data-action="edit"></button>
-        </div>
-        {{/unless}}
-      {{/unless}}
-      <div class="go-to-timer"><a class="icon-tomato" href="" data-action="goToTimer"><span class="estimation">{{estimation}}</span></a></div>
-    </li>
-  {{/each}}
-{{else}}
-  {{#each tasksList}}
-    <li class="task {{priority}} {{category}} {{done}}" data-id={{id}}>
-      <div class="border">
-        <input type="checkbox" class="checkbox-none">
-        <label class="icon-trash label-move-to-trash display-none" data-action="checkToRemove"></label>
-      </div>
-      {{#if isActive}}<span class="date">Today</span>{{else}}
-        <span class="date-day date">{{day}}<span class="date-month">{{month}}</span></span>{{/if}}
-      <div class="task-description">
-        <h2>{{heading}} </h2>
-        <p>{{taskDescription}}</p>
-      </div>
-      {{#unless done}}
-        {{#if isActive}}
-        <button class="edit-task icon-edit" data-action="edit"></button>
-        {{/if}}
-      {{/unless}}
-      {{#unless isActive}}
-        {{#unless done}}
-        <div class="task-controls">
-          <button class="edit-task icon-arrows-up" data-action="moveToToDo"></button>
-          <button class="edit-task icon-edit" data-action="edit"></button>
-        </div>
-        {{/unless}}
-      {{/unless}}
-      <div class="go-to-timer"><a class="icon-tomato" href="" data-action="goToTimer"><span class="estimation">{{estimation}}</span></a></div>
-    </li>
-  {{/each}}
-{{/if}}
+ {{#each tasksList}}
+<li class="task {{priority}} {{category}} {{done}}" data-id={{id}}>
+  <div class="border">
+    <input type="checkbox" class="checkbox-none">
+    <label class="icon-trash label-move-to-trash display-none" data-action="checkToRemove"></label>
+  </div>
+  {{#if done}}
+  <span class="date-day date">{{doneDate.day}}<span class="date-month">{{doneDate.month}}</span></span>
+  {{else}} {{#if isActive}}<span class="date">Today</span>{{else}}
+  <span class="date-day date">{{deadline.day}}<span class="date-month">{{deadline.month}}</span></span>{{/if}} {{/if}}
+  <div class="task-description">
+    <h2>{{heading}} </h2>
+    <p>{{taskDescription}}</p>
+  </div>
+  {{#unless done}} {{#if isActive}}
+  <button class="edit-task icon-edit" data-action="edit"></button> {{/if}} {{/unless}} {{#unless isActive}} {{#unless done}}
+  <div class="task-controls">
+    <button class="edit-task icon-arrows-up" data-action="moveToToDo"></button>
+    <button class="edit-task icon-edit" data-action="edit"></button>
+  </div>
+  {{/unless}} {{/unless}}
+  <div class="go-to-timer"><a class="icon-tomato" href="" data-action="goToTimer"><span class="estimation">{{estimation}}</span></a></div>
+</li>
+{{/each}}

@@ -1,4 +1,5 @@
-import { EventBus } from '../../event-bus';
+import { eventBus } from '../../event-bus';
+import { getShortMonthName } from '../../helpers/date-formatting';
 
 const taskListTemplate = require('./tasks-list.hbs');
 
@@ -8,11 +9,10 @@ export class TasksList {
     this.model = model;
     this.view = view;
 
-    this.eventBus = new EventBus();
-    this.eventBus.registerEventHandler('saveCheckedTasks', this.saveCheckedTask.bind(this));
-    this.eventBus.registerEventHandler('removeCheckedTask', this.removeCheckedTask.bind(this));
-    this.eventBus.registerEventHandler('removeTasksFromDB', this.removeTasksFromDB.bind(this));
-    this.eventBus.registerEventHandler('changeTaskStateToActive', this.changeTaskStateToActive.bind(this));
+    eventBus.registerEventHandler('saveCheckedTasks', this.saveCheckedTask.bind(this));
+    eventBus.registerEventHandler('removeCheckedTask', this.removeCheckedTask.bind(this));
+    eventBus.registerEventHandler('removeTasksFromDB', this.removeTasksFromDB.bind(this));
+    eventBus.registerEventHandler('changeTaskStateToActive', this.changeTaskStateToActive.bind(this));
 
     this.view.renderDoneEvent.attach((sender, data) => {
       this.renderDone(data);
@@ -35,6 +35,7 @@ export class TasksList {
       for (const key in data) {
         if(data[key].done) {
           data[key].id = key;
+          data[key].doneDate.month = getShortMonthName(data[key].doneDate.month);
           doneTasks.push(data[key]);
         }
       }
@@ -83,7 +84,7 @@ export class TasksList {
     });
 
     sessionStorage.setItem('tasksToRemove', '[]');
-    this.eventBus.dispatch('hideRemovedTasks', tasksId);
+    eventBus.dispatch('hideRemovedTasks', tasksId);
   }
 
   changeTaskStateToActive(id) {

@@ -45,6 +45,19 @@
   }
 }
 
+.create-classes-for-border(@list) {
+  .iter(length(@list));
+  .iter(@i) when (@i > 0) {
+    .iter(@i - 1);
+    @pair: extract(@list, @i);
+    @key: extract(@pair, 1);
+    @value: extract(@pair, 2);
+    .@{key}-border {
+      border: 7px solid @value;
+    }
+  }
+}
+
 .create-classes-for-priority(@list, @list-active) {
   .iter(length(@list));
   .iter(@i) when (@i > 0) {

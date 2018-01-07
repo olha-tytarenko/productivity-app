@@ -36,8 +36,6 @@ export class FirebaseManager {
 
   getTaskById(id) {
     return this.dbRef.ref().child(`tasks/${id}`).once('value').then((snapshot) => {
-      // const task = snapshot.val();
-      // task.id = id;
       return snapshot.val();
     });
   }
