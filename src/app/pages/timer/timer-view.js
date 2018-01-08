@@ -6,12 +6,13 @@ import $ from 'jquery';
 const timerTemplate = require('./timer.hbs');
 
 export class TimerView {
-  constructor(element) {
+  constructor(element, router) {
     this.element = element;
     this.changeTaskStateEvent = new Observer(this);
     this.changeTimeLeft = null;
     this.timeout = null;
     this.task = {};
+    this.router = router;
   }
 
   render(task) {
@@ -24,6 +25,9 @@ export class TimerView {
       checkbox.nextSibling.classList.add('display-none');
     });
 
+    $('.go-back').tooltip();
+    $('.go-next').tooltip();
+    
     this.addListeners();
   }
 
@@ -36,6 +40,20 @@ export class TimerView {
     const pomodoros = Array.from(document.getElementsByClassName('checkbox'));
     const singleStartPomodoro = document.getElementById('singleStartPomodoro');
     const btnsTimerInProgress = document.getElementById('btnsTimerInProgress');
+    const goToTaskList = document.getElementsByClassName('go-back')[0];
+    const goToReports = document.getElementsByClassName('go-next')[0];
+
+    goToTaskList.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      this.router.navigate('#tasks-list');
+    });
+
+    goToReports.addEventListener('click', (event) => {
+      event.preventDefault();
+
+      this.router.navigate('#reports');
+    });
     
     startBtn.addEventListener('click', () => {
       const goBackArrow = document.getElementsByClassName('go-back')[0];

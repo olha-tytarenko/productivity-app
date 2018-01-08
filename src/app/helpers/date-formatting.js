@@ -4,6 +4,14 @@ export const getStringMonth = (monthNumber) => {
   return months[monthNumber];
 };
 
+export const getMonthFromString = (monthName) => {
+  const date = Date.parse(monthName + ' 1, 2018');
+  if (!isNaN(date)) {
+    return new Date(date).getMonth() + 1;
+  }
+  return -1;
+};
+
 export const getShortMonthName = (monthName) => {
   const months = {
     january: 'Jan',

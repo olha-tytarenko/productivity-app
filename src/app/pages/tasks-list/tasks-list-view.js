@@ -7,6 +7,8 @@ import { Tabs } from '../../components/tabs/tabs';
 import { eventBus } from '../../event-bus';
 import { Observer } from '../../observer';
 
+require('../../tooltip.js');
+
 const taskListTemplate = require('./tasks-list.hbs');
 const dragFirstTaskTemplate = require('./drag-first-task.hbs');
 
@@ -33,7 +35,6 @@ export class TasksListView {
   }
 
   renderToDo(tasks) {
-    console.log(this.isToDoRendered);
     if (this.isToDoRendered) {
       if (tasks.removeMode) {
         this.showRemoveMode();
@@ -51,6 +52,7 @@ export class TasksListView {
 
       this.isToDoRendered = true;
       this.globalTaskList.renderGlobalList.call(this.globalTaskList, this.removeMode);
+
       this.addListeners();
     }
   }
@@ -132,6 +134,8 @@ export class TasksListView {
     }
     taskList.insertAdjacentElement('beforeend', newLi);
     taskLi.closest('ul').removeChild(taskLi);
+    $('.edit-task').tooltip();
+    $('.icon-tomato').tooltip();
     eventBus.dispatch('addListenerForNewTask', id);
   }
 

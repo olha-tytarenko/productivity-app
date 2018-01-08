@@ -1,4 +1,5 @@
 import { eventBus } from '../../event-bus';
+require('../../tooltip.js');
 
 const headerTemplate = require('./header.hbs');
 
@@ -22,6 +23,11 @@ export class Header {
 
   render() {
     this.element.innerHTML = headerTemplate();
+
+    $('#goToRemove').tooltip();
+    $('#goToTaskList').tooltip();
+    $('#goToReports').tooltip();
+    $('#goToSettings').tooltip();
     this.addListeners();
   }
 
@@ -35,7 +41,6 @@ export class Header {
     addNewTask.addEventListener('click', () => {
       eventBus.dispatch('renderModalAdd');
     });
-
 
     removeBtn.addEventListener('click', (event) => {
       event.preventDefault();

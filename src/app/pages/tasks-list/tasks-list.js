@@ -31,7 +31,7 @@ export class TasksList {
 
   renderDone(removeMode) {
     this.model.getAllTasks().then((data) => {
-      let doneTasks = [];
+      const doneTasks = [];
       for (const key in data) {
         if(data[key].done) {
           data[key].id = key;
@@ -46,7 +46,7 @@ export class TasksList {
 
   renderToDo(removeMode) {
     this.model.getAllTasks().then((data) => {
-      let tasksToDo = [];
+      const tasksToDo = [];
       for (const key in data) {
         if(!data[key].done && data[key].isActive) {
           data[key].id = key;

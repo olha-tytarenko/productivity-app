@@ -13,12 +13,12 @@
     <p>{{taskDescription}}</p>
   </div>
   {{#unless done}} {{#if isActive}}
-  <button class="edit-task icon-edit" data-action="edit"></button> {{/if}} {{/unless}} {{#unless isActive}} {{#unless done}}
+  <button class="edit-task icon-edit" data-action="edit" data-tooltip="Edit task"></button> {{/if}} {{/unless}} {{#unless isActive}} {{#unless done}}
   <div class="task-controls">
-    <button class="edit-task icon-arrows-up" data-action="moveToToDo"></button>
-    <button class="edit-task icon-edit" data-action="edit"></button>
+    <button class="edit-task icon-arrows-up" data-action="moveToToDo" data-tooltip="Move to Active"></button>
+    <button class="edit-task icon-edit" data-action="edit" data-tooltip="Edit task"></button>
   </div>
   {{/unless}} {{/unless}}
-  <div class="go-to-timer"><a class="icon-tomato" href="" data-action="goToTimer"><span class="estimation">{{estimation}}</span></a></div>
+  <div class="go-to-timer"><a class="icon-tomato" href="" data-action="goToTimer" data-tooltip="Go to Timer"><span class="estimation">{{estimation}}</span></a></div>
 </li>
 {{/each}}

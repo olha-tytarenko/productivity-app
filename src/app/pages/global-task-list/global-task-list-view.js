@@ -2,6 +2,7 @@ import { Observer } from '../../observer';
 import { Tasks } from '../../components/tasks/tasks';
 import { eventBus } from '../../event-bus';
 import { getShortMonthName } from '../../helpers/date-formatting';
+require('../../tooltip.js');
 
 const globalTaskListTemplate = require('./global-task-list.hbs');
 
@@ -39,6 +40,10 @@ export class GlobalTaskListView {
     if (!this.isGlobalListOpened) {
       document.getElementsByClassName('global-tasks')[0].classList.add('display-none');
     } 
+
+    $('.global-list-link').tooltip();
+    $('.edit-task').tooltip();
+    $('.icon-tomato').tooltip();
 
     this.addListeners(removeMode);
   }
@@ -103,12 +108,13 @@ export class GlobalTaskListView {
   }
 
   addListenersForFilter() {
-    const allTasks = this.getAllTasks();
-
     const filter = document.getElementById('priorityFilter');
 
     filter.addEventListener('click', (event) => {
       event.preventDefault();
+
+      const allTasks = this.getAllTasks();
+
       if (event.target.id === 'allFilter') {
         allTasks.forEach(task => task.classList.remove('display-none'));
         event.target.classList.add('active');
@@ -207,6 +213,9 @@ export class GlobalTaskListView {
     taskGroup.insertAdjacentHTML('afterbegin', taskHTML);
     this.addListenerForNewTask(task.id);
 
+    $('.edit-task').tooltip();
+    $('.icon-tomato').tooltip();
+
     this.showGroup();
     this.hideEmptyGroup();
   }
@@ -233,11 +242,8 @@ export class GlobalTaskListView {
   }
 
   getAllTasks() {
-    const workGroup = Array.from(document.querySelectorAll('.work-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));
-    const educationGroup = Array.from(document.querySelectorAll('.education-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));
-    const hobbyGroup = Array.from(document.querySelectorAll('.hobby-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));
-    const otherGroup = Array.from(document.querySelectorAll('.other-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));
-    const sportGroup = Array.from(document.querySelectorAll('.sport-group .task-list .task')).filter((task) => !task.classList.contains('display-none'));   
-    return workGroup.concat(educationGroup, hobbyGroup, otherGroup, sportGroup);
+    const globalTasksSection = document.getElementsByClassName('global-tasks')[0];
+    
+    return Array.from(globalTasksSection.getElementsByClassName('task'));
   }
 }
