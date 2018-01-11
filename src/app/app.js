@@ -1,20 +1,20 @@
 /* root component starts here */
 require('assets/less/main.less'); // include general styles
 
-import { Settings } from './pages/settings/settings-controller';
-import { TasksList } from './pages/tasks-list/tasks-list';
-import { ReportsView } from './pages/reports/reports';
-import { ReportsController } from './pages/reports/reports-controller';
-import { FirstEntrance } from './pages/first-entrance/first-entrance';
-import { Header } from './components/header/header';
-import { ModalAdd } from './components/modal-add/modal-add';
+import { Settings } from './pages/settings/index';
+import { TasksList } from './pages/tasks-list/index';
+import { ReportsView } from './pages/reports/index';
+import { ReportsController } from './pages/reports/index';
+import { FirstEntrance } from './pages/first-entrance/index';
+import { Header } from './components/header/index';
+import { ModalAdd } from './components/modal-add/index';
 import { ModalEdit } from './components/modal-edit/modal-edit';
 import { ModalRemove } from './components/modal-remove/modal-remove';
 import { Router } from './router';
-import { TimerView } from './pages/timer/timer-view';
-import { TimerController } from './pages/timer/timer-controller';
+import { TimerView } from './pages/timer/index';
+import { TimerController } from './pages/timer/index';
 import { FirebaseManager } from './firebase-service';
-import { TasksListView } from './pages/tasks-list/tasks-list-view';
+import { TasksListView } from './pages/tasks-list/index';
 
 
 const initApp = () => {

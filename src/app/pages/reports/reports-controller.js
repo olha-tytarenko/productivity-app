@@ -93,24 +93,23 @@ export class ReportsController {
   showWeeklyTasksReport(type) {
     this.model.getAllTasks().then((data) => {
       const allDoneTasks = [];
+      const endDate = new Date();
+      const currentWeekTasks = [];
 
       for (const key in data) {
         if(data[key].done) {
           allDoneTasks.push(data[key]);
         }
       }
-      
-      const endDate = new Date();
+
       endDate.setHours(0, 0, 0, 0);
-      const currentWeekTasks = [];
       allDoneTasks.forEach((task) => {
         const monthDay = getMonthFromString(task.doneDate.month);
         const taskDate = new Date(`${task.doneDate.year}-${monthDay}-${task.doneDate.day}`);
-
         const dayQuantity = ((new Date).getDay() - 1) === -1 ? 6 : ((new Date).getDay() - 1);
-
         const msecInDays = 24 * dayQuantity * 60 * 60 * 1000;
         const startDate = new Date(endDate.getTime() - msecInDays);
+
         if (taskDate <= endDate && taskDate >= startDate) {
           task.dayInWeek = (taskDate.getDay() - 1) === -1 ? 6 : (taskDate.getDay() - 1);
           currentWeekTasks.push(task);
