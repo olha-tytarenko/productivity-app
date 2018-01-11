@@ -25,10 +25,6 @@ export class TasksList {
     this.router.add('#tasks-list', this.view.renderToDoEvent.notify.bind(this.view.renderToDoEvent));
   }
 
-  addNewTask(task) {
-    this.model.addNewTask(task);
-  }
-
   renderDone(removeMode) {
     this.model.getAllTasks().then((data) => {
       const doneTasks = [];
@@ -89,9 +85,9 @@ export class TasksList {
 
   changeTaskStateToActive(id) {
     this.model.getTaskById(id).then((task) => {
-      
-      task.isActive = true;
       this.model.updateTask(id, task);
+      task.isActive = true;
+      console.log('here');
     });
   }
 }

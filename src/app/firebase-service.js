@@ -1,3 +1,5 @@
+const firebase = require('firebase');
+
 const config = {
   apiKey: "AIzaSyAWO75gD9lecCQEcBIzhDKoZDfKNAdkbf8",
   authDomain: "pomodoros-88924.firebaseapp.com",
