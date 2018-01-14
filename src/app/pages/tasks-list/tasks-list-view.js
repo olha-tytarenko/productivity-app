@@ -11,6 +11,7 @@ require('../../tooltip.js');
 
 const taskListTemplate = require('./tasks-list.hbs');
 const dragFirstTaskTemplate = require('./drag-first-task.hbs');
+const addFirstTaskTemplate = require('./add-first-task.hbs');
 
 export class TasksListView {
   constructor(element, model) {
@@ -40,6 +41,7 @@ export class TasksListView {
         this.showRemoveMode();
       } else {
         this.hideRemoveMode();
+        // eventBus.dispatch('clearCheckedTasksQuantity');
       }
     } else {
       this.addTabs(tasks.removeMode);
@@ -52,15 +54,19 @@ export class TasksListView {
 
       this.isToDoRendered = true;
       this.globalTaskList.renderGlobalList.call(this.globalTaskList, this.removeMode);
-
+      document.getElementById('toDo').classList.add('active');
+      document.getElementById('done').classList.remove('active'); 
+      $('#addNewTask').tooltip();
       this.addListeners();
     }
   }
 
   renderDone(tasks) {
     this.addTabs(tasks.removeMode);
+
     this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML() });
-    
+    document.getElementById('toDo').classList.remove('active');
+    document.getElementById('done').classList.add('active');
     this.tabs.addListeners();
   }
 
@@ -85,10 +91,23 @@ export class TasksListView {
     const checkboxes = Array.from(document.getElementsByClassName('checkbox-none'));
     const trashLabels = Array.from(document.getElementsByClassName('label-move-to-trash'));
     const dateLabels = Array.from(document.getElementsByClassName('date'));
+    const selectedTasksToRemove = JSON.parse(sessionStorage.getItem('tasksToRemove'));
+
     checkboxes.forEach((checkbox) => {
       checkbox.classList.add('checkbox-move-to-trash');
       checkbox.classList.remove('checkbox-none');
     });
+
+    if (selectedTasksToRemove.length) {
+      const tasks = Array.from(document.getElementsByClassName('task'));
+      const tasksToRemove = tasks.filter((task) => {
+        return ~selectedTasksToRemove.indexOf(task.dataset.id);
+      });
+
+      tasksToRemove.forEach((task) => {
+        task.getElementsByClassName('checkbox-move-to-trash')[0].checked = true;
+      });
+    }
 
     trashLabels.forEach(label => label.classList.remove('display-none'));
     dateLabels.forEach(label => label.classList.add('display-none'));
@@ -99,7 +118,8 @@ export class TasksListView {
 
     if (!document.getElementsByClassName('global-tasks')[0].classList.contains('display-none')) {
       document.getElementById('selectGlobalList').classList.remove('display-none');
-    }    
+    }
+
   }
 
   addListeners() {
@@ -117,6 +137,12 @@ export class TasksListView {
     });
     eventBus.dispatch('clearCheckedTasksQuantity');
     eventBus.dispatch('hideEmptyGroup');
+  }
+
+  renderAddFirstTask() {
+    this.element.innerHTML =  this.dailyTaskListHeading.getHTML();
+    this.element.innerHTML += addFirstTaskTemplate();
+    this.dailyTaskListHeading.addListeners();
   }
 
   renderOneTask(id) {
@@ -169,6 +195,8 @@ export class TasksListView {
           handler: (e) => {
             e.preventDefault();
             this.renderToDoEvent.notify(this.removeMode);
+            document.getElementById('toDo').classList.add('active');
+            document.getElementById('done').classList.remove('active');
           }
         },
         {
@@ -178,6 +206,7 @@ export class TasksListView {
             e.preventDefault();
             this.isToDoRendered = false;
             this.renderDoneEvent.notify(this.removeMode);
+           
             eventBus.dispatch('closeGlobalList');  
           }
         }

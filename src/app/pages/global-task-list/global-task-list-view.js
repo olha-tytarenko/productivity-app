@@ -2,6 +2,7 @@ import { Observer } from '../../observer';
 import { Tasks } from '../../components/tasks/tasks';
 import { eventBus } from '../../event-bus';
 import { getShortMonthName } from '../../helpers/date-formatting';
+import { notification } from '../../components/notification-message/notification-message';
 require('../../tooltip.js');
 
 const globalTaskListTemplate = require('./global-task-list.hbs');
@@ -44,6 +45,7 @@ export class GlobalTaskListView {
     $('.global-list-link').tooltip();
     $('.edit-task').tooltip();
     $('.icon-tomato').tooltip();
+    // $('.label-move-to-trash').tooltip();
 
     this.addListeners(removeMode);
   }
@@ -117,6 +119,7 @@ export class GlobalTaskListView {
 
       if (event.target.id === 'allFilter') {
         allTasks.forEach(task => task.classList.remove('display-none'));
+        Array.from(filter.getElementsByTagName('a')).forEach(a => a.classList.remove('active'));
         event.target.classList.add('active');
         this.showGroup();
         this.hideEmptyGroup();
@@ -200,24 +203,30 @@ export class GlobalTaskListView {
       eventBus.dispatch('incrementRemoveTaskQuantity');
       eventBus.dispatch('saveCheckedTasks', id);
     } else {
+      label.dataset.tooltip = 'Select to remove';
       eventBus.dispatch('decrementRemoveTaskQuantity');
       eventBus.dispatch('removeCheckedTask', id);
     }
   }
 
   renderNewTask(task) {
-    task.deadline.month = getShortMonthName(task.deadline.month);
+    if (document.getElementsByClassName('global-list-link').length) {
+      task.deadline.month = getShortMonthName(task.deadline.month);
 
-    const taskGroup = document.querySelector(`.${task.category}-group ul`);
-    const taskHTML = this.task.getTasksHTML({tasksList: [task]});
-    taskGroup.insertAdjacentHTML('afterbegin', taskHTML);
-    this.addListenerForNewTask(task.id);
-
-    $('.edit-task').tooltip();
-    $('.icon-tomato').tooltip();
-
-    this.showGroup();
-    this.hideEmptyGroup();
+      const taskGroup = document.querySelector(`.${task.category}-group ul`);
+      const taskHTML = this.task.getTasksHTML({tasksList: [task]});
+      taskGroup.insertAdjacentHTML('afterbegin', taskHTML);
+      this.addListenerForNewTask(task.id);
+  
+      $('.edit-task').tooltip();
+      $('.icon-tomato').tooltip();
+  
+      document.getElementsByClassName('global-list-link')[0].classList.remove('display-none');
+      this.showGroup();
+      this.hideEmptyGroup();
+    } else {
+      eventBus.dispatch('renderToDo');
+    }
   }
 
   edit(id) {
@@ -226,9 +235,16 @@ export class GlobalTaskListView {
   }
 
   moveToToDo(id) {
-    eventBus.dispatch('renderOneTask', id);
-    eventBus.dispatch('changeTaskStateToActive', id);
-    this.hideEmptyGroup();
+    const dailyTasksSection = document.getElementsByClassName('daily-tasks')[0];
+    const dailyTasks = dailyTasksSection.getElementsByClassName('task');
+
+    if (dailyTasks.length > 4) {
+      notification.showMessage({type: 'warning', message: 'You can drag to daily tasks list only 5 tasks'});
+    } else {
+      eventBus.dispatch('renderOneTask', id);
+      eventBus.dispatch('changeTaskStateToActive', id);
+      this.hideEmptyGroup();
+    }
   }
 
   goToTimer(id) {

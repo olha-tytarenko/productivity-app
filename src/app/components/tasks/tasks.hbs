@@ -2,7 +2,7 @@
 <li class="task {{priority}} {{category}} {{done}}" data-id={{id}}>
   <div class="border">
     <input type="checkbox" class="checkbox-none">
-    <label class="icon-trash label-move-to-trash display-none" data-action="checkToRemove"></label>
+    <label class="icon-trash label-move-to-trash display-none" data-action="checkToRemove" data-tooltip="Select to remove"></label>
   </div>
   {{#if done}}
   <span class="date-day date">{{doneDate.day}}<span class="date-month">{{doneDate.month}}</span></span>

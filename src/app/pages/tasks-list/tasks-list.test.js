@@ -1,8 +1,8 @@
-import {TasksList} from './index';
-import {FirebaseManager} from '../../firebase-service';
+import { TasksList } from './index';
+import { firebaseManager } from '../../firebase-service';
 
 describe('TasksList', () => {
-  const model = new FirebaseManager();
+
   const view = {
     renderDoneEvent: {
       attach: () => {},
@@ -18,7 +18,7 @@ describe('TasksList', () => {
   const router = {
     add: () => {}
   };
-  const controller = new TasksList(view, model, router);
+  const controller = new TasksList(view, firebaseManager, router);
 
   beforeEach(() => {
     let store = {};

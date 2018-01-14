@@ -13,6 +13,7 @@ export class TasksList {
     eventBus.registerEventHandler('removeCheckedTask', this.removeCheckedTask.bind(this));
     eventBus.registerEventHandler('removeTasksFromDB', this.removeTasksFromDB.bind(this));
     eventBus.registerEventHandler('changeTaskStateToActive', this.changeTaskStateToActive.bind(this));
+    eventBus.registerEventHandler('renderToDo', this.renderToDo.bind(this));
 
     this.view.renderDoneEvent.attach((sender, data) => {
       this.renderDone(data);
@@ -42,16 +43,21 @@ export class TasksList {
 
   renderToDo(removeMode) {
     this.model.getAllTasks().then((data) => {
-      const tasksToDo = [];
-      for (const key in data) {
-        if(!data[key].done && data[key].isActive) {
-          data[key].id = key;
-          tasksToDo.push(data[key]);
-        }
-      }
 
-      const tasks = {removeMode: removeMode, tasksList: tasksToDo};
-      this.view.renderToDo(tasks);
+      if (data) {
+        const tasksToDo = [];
+        for (const key in data) {
+          if(!data[key].done && data[key].isActive) {
+            data[key].id = key;
+            tasksToDo.push(data[key]);
+          }
+        }
+  
+        const tasks = {removeMode: removeMode, tasksList: tasksToDo};
+        this.view.renderToDo(tasks);
+      } else {
+        this.view.renderAddFirstTask();
+      }
     });
   }
 
@@ -85,9 +91,8 @@ export class TasksList {
 
   changeTaskStateToActive(id) {
     this.model.getTaskById(id).then((task) => {
-      this.model.updateTask(id, task);
       task.isActive = true;
-      console.log('here');
+      this.model.updateTask(id, task);
     });
   }
 }

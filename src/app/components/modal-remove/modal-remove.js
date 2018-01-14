@@ -1,4 +1,4 @@
-import { EventBus } from '../../event-bus';
+import { EventBus, eventBus } from '../../event-bus';
 const modalRemoveTemplate = require('./modal-remove.hbs');
 
 export class ModalRemove {
@@ -13,13 +13,13 @@ export class ModalRemove {
     return modalRemoveTemplate();
   }
 
-  render() {
-    this.element.insertAdjacentHTML('beforebegin', modalRemoveTemplate());
+  render(id) {
+    this.element.insertAdjacentHTML('beforebegin', modalRemoveTemplate({id: id}));
     this.addListeners();
   }
 
   remove() {
-    const modal = document.getElementsByClassName('modal-overlay')[0];
+    const modal = document.getElementsByClassName('remove-modal')[0];
     const parentModal = modal.parentNode;
     parentModal.removeChild(modal);
   }

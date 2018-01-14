@@ -16,7 +16,11 @@ export class Router {
   }
 
   add(route, handler) {
-    this.routes[route] = handler;
+    if (handler instanceof Function) {
+      this.routes[route] = handler;
+    } else {
+      throw new Error('Handler should be a function');
+    }
   }
 
   remove(route) {

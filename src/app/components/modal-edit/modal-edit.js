@@ -127,7 +127,7 @@ export class ModalEdit {
     const trashBtn = document.getElementById('trash');
     trashBtn.addEventListener('click', () => {
       this.eventBus.dispatch('renderModalRemove');
-      this.remove();
+      // this.remove();
     });
   }
 

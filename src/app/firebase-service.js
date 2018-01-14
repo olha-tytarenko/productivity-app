@@ -9,7 +9,7 @@ const config = {
   messagingSenderId: "5621581487"
 };
 
-export class FirebaseManager {
+class FirebaseManager {
   constructor() {
     firebase.initializeApp(config);
     this.dbRef = firebase.database();
@@ -42,3 +42,5 @@ export class FirebaseManager {
     });
   }
 }
+
+export const firebaseManager = new FirebaseManager();

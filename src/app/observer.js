@@ -9,8 +9,12 @@ export class Observer {
   }
 
   notify(args) {
-    this.listeners.forEach(listener => {
-      listener(this.sender, args);
-    });
+    if (this.listeners.length) {
+      this.listeners.forEach(listener => {
+        listener(this.sender, args);
+      });
+    } else {
+      throw new Error('No listeners');
+    }
   }
 }

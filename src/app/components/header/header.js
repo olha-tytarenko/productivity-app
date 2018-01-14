@@ -28,6 +28,7 @@ export class Header {
     $('#goToTaskList').tooltip();
     $('#goToReports').tooltip();
     $('#goToSettings').tooltip();
+    $('.add-new-task-btn-header').tooltip();
     this.addListeners();
   }
 
@@ -44,7 +45,7 @@ export class Header {
 
     removeBtn.addEventListener('click', (event) => {
       event.preventDefault();
-      if (removeBtn.classList.contains('trash')) {
+      if (removeBtn.classList.contains('trash') && removeBtn.classList.contains('active')) {
         eventBus.dispatch('renderModalRemove');
       } else {
         removeClasses([goToTaskListBtn, goToReportsBtn, goToSettingsBtn], 'active');
@@ -93,6 +94,7 @@ export class Header {
       const trashIconElement = document.getElementById('goToRemove');
       trashIconElement.classList.add('trash');
       countSpan.innerText = 1;
+      document.getElementById('goToRemove').dataset.tooltip = 'Remove selected tasks';
     }
   }
 
@@ -105,6 +107,7 @@ export class Header {
       const trashIconElement = document.getElementById('goToRemove');
       trashIconElement.classList.remove('trash');
       countSpan.innerText = '';
+      document.getElementById('goToRemove').dataset.tooltip = 'Remove mode';
     }
   }
 
@@ -114,6 +117,7 @@ export class Header {
 
     trashIconElement.classList.remove('trash');
     countSpan.innerText = '';
+    document.getElementById('goToRemove').dataset.tooltip = 'Remove mode';
   }
 
   hideTrashButton() {
