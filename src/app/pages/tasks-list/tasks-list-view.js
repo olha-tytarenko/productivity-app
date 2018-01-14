@@ -6,6 +6,7 @@ import { Tasks } from '../../components/tasks/tasks';
 import { Tabs } from '../../components/tabs/tabs';
 import { eventBus } from '../../event-bus';
 import { Observer } from '../../observer';
+import { notification } from '../../components/notification-message/notification-message';
 
 require('../../tooltip.js');
 
@@ -137,6 +138,7 @@ export class TasksListView {
     });
     eventBus.dispatch('clearCheckedTasksQuantity');
     eventBus.dispatch('hideEmptyGroup');
+    notification.showMessage({type:'success', message:'Task(s) was successfully removed'});
   }
 
   renderAddFirstTask() {

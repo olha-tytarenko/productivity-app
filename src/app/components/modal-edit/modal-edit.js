@@ -10,6 +10,7 @@ export class ModalEdit {
     this.model = model;
     this.eventBus = new EventBus();
     this.eventBus.registerEventHandler('renderModalEdit', this.render.bind(this));
+    this.eventBus.registerEventHandler('removeModalEdit', this.remove.bind(this));
   }
 
   getModalHTML() {
@@ -30,15 +31,16 @@ export class ModalEdit {
       Array.from(document.querySelectorAll('[name="priority"]')).filter(radioBtn => radioBtn.id === task.priority)[0].checked = true;
 
       addDatepicker();
-      this.eventBus.dispatch('saveCheckedTasks', id);
       this.addListeners();
     });
   }
 
   remove() {
     const modal = document.getElementsByClassName('modal-overlay')[0];
-    const parentModal = modal.parentNode;
-    parentModal.removeChild(modal);
+    if (modal) {
+      const parentModal = modal.parentNode;
+      parentModal.removeChild(modal);
+    }
   }
 
   addListeners() {
@@ -72,7 +74,7 @@ export class ModalEdit {
     });
 
     closeBtn.addEventListener('click', () => {
-      this.eventBus.dispatch('removeCheckedTask', document.getElementsByClassName('modal')[0].dataset.id);
+      // this.eventBus.dispatch('removeCheckedTask', document.getElementsByClassName('modal')[0].dataset.id);
       this.remove();
     } );
 
@@ -126,8 +128,8 @@ export class ModalEdit {
 
     const trashBtn = document.getElementById('trash');
     trashBtn.addEventListener('click', () => {
+      this.eventBus.dispatch('saveCheckedTasks', document.getElementsByClassName('modal')[0].dataset.id);
       this.eventBus.dispatch('renderModalRemove');
-      // this.remove();
     });
   }
 

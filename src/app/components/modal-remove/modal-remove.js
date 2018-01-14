@@ -13,8 +13,8 @@ export class ModalRemove {
     return modalRemoveTemplate();
   }
 
-  render(id) {
-    this.element.insertAdjacentHTML('beforebegin', modalRemoveTemplate({id: id}));
+  render() {
+    this.element.insertAdjacentHTML('beforebegin', modalRemoveTemplate());
     this.addListeners();
   }
 
@@ -27,13 +27,22 @@ export class ModalRemove {
   addListeners() {
     const closeBtns = Array.from(document.getElementsByClassName('close-modal'));
     closeBtns.forEach((btn) => {
-      btn.addEventListener('click', () => this.remove());
+      btn.addEventListener('click', () => {
+        const id = document.getElementsByClassName('modal')[0].dataset.id;
+        if (id) {
+          const tasksToRemove = JSON.parse(sessionStorage.getItem('tasksToRemove'));
+          tasksToRemove.splice(tasksToRemove.indexOf(id), 1);
+          sessionStorage.setItem('tasksToRemove', JSON.stringify(tasksToRemove));
+        }
+        this.remove();
+      });
     });
 
     const removeBtn = document.getElementById('remove');
     removeBtn.addEventListener('click', () => {
       this.remove();
       this.eventBus.dispatch('removeTasksFromDB');
+      this.eventBus.dispatch('removeModalEdit');
     });
   }
 }

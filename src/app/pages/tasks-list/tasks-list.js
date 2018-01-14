@@ -81,12 +81,24 @@ export class TasksList {
 
   removeTasksFromDB() {
     const tasksId = JSON.parse(sessionStorage.getItem('tasksToRemove'));
-    tasksId.forEach((id) => {
-      this.model.removeTask(id);
+    let duplicate;
+    tasksId.forEach((id, index) => {
+      if (tasksId.lastIndexOf(id) !== index) {
+        duplicate = id;
+      }
     });
-
-    sessionStorage.setItem('tasksToRemove', '[]');
-    eventBus.dispatch('hideRemovedTasks', tasksId);
+    
+    if (!duplicate) {
+      tasksId.forEach(id => this.model.removeTask(id));
+      sessionStorage.setItem('tasksToRemove', '[]');
+      eventBus.dispatch('hideRemovedTasks', tasksId);
+    } else {
+      eventBus.dispatch('hideRemovedTasks', [duplicate]);
+      this.model.removeTask(duplicate);
+      tasksId.splice(tasksId.indexOf(duplicate), 1);
+      tasksId.splice(tasksId.lastIndexOf(duplicate, 1));
+      sessionStorage.setItem('tasksToRemove', JSON.stringify(tasksId));
+    }
   }
 
   changeTaskStateToActive(id) {

@@ -112,12 +112,17 @@ export class Header {
   }
 
   clearCheckedTasksQuantity() {
-    const countSpan = document.getElementsByClassName('checked-tasks')[0];
-    const trashIconElement = document.getElementById('goToRemove');
-
-    trashIconElement.classList.remove('trash');
-    countSpan.innerText = '';
-    document.getElementById('goToRemove').dataset.tooltip = 'Remove mode';
+    const tasksId = JSON.parse(sessionStorage.getItem('tasksToRemove'));
+    if (tasksId.length) {
+      this.decrementRemoveTaskQuantity();
+    } else {
+      const countSpan = document.getElementsByClassName('checked-tasks')[0];
+      const trashIconElement = document.getElementById('goToRemove');
+  
+      trashIconElement.classList.remove('trash');
+      countSpan.innerText = '';
+      document.getElementById('goToRemove').dataset.tooltip = 'Remove mode';
+    }
   }
 
   hideTrashButton() {
