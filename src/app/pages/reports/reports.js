@@ -1,8 +1,9 @@
 import { Observer } from '../../observer';
+import { eventBus } from '../../event-bus';
 import $ from 'jquery';
+import reportsTemplate from './reports.hbs';
+import Highcharts from 'highcharts';
 
-const reportsTemplate = require('./reports.hbs');
-const Highcharts = require('highcharts');
 require('highcharts/modules/exporting')(Highcharts);
 
 
@@ -114,6 +115,7 @@ export class ReportsView {
     this.element.innerHTML = reportsTemplate();
     $('.go-back').tooltip();
     this.renderSelectedReport('pomodoros');
+    eventBus.dispatch('setReportsActive');
     this.addListeners();
   }
 

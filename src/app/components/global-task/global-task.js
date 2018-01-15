@@ -1,4 +1,4 @@
-const taskTemplate = require('./global-task.hbs');
+import taskTemplate from './global-task.hbs';
 
 export class GlobalTask {
   constructor() { }

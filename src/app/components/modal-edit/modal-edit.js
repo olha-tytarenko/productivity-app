@@ -1,8 +1,7 @@
 import { EventBus } from '../../event-bus';
 import { notification } from '../notification-message/notification-message';
 import addDatepicker from '../../datepicker';
-
-const modalEditTemplate = require('./modal-edit.hbs');
+import modalEditTemplate from './modal-edit.hbs';
 
 export class ModalEdit {
   constructor(element, model) {
@@ -74,7 +73,6 @@ export class ModalEdit {
     });
 
     closeBtn.addEventListener('click', () => {
-      // this.eventBus.dispatch('removeCheckedTask', document.getElementsByClassName('modal')[0].dataset.id);
       this.remove();
     } );
 

@@ -1,8 +1,8 @@
 import { Tabs } from '../../components/tabs/tabs';
 import { NotificationMessage } from '../../components/notification-message/notification-message';
-
-const pomodorosSettingsTemplate = require('./pomodoros-settings.hbs');
-const settingsCategoriesTemplate = require('./settings-categories.hbs');
+import { eventBus } from '../../event-bus';
+import pomodorosSettingsTemplate from './pomodoros-settings.hbs';
+import settingsCategoriesTemplate from './settings-categories.hbs';
 
 export class SettingsView {
   constructor(element, router) {
@@ -41,6 +41,7 @@ export class SettingsView {
       document.getElementById('shortBreakValue').innerText = settings.shortBreak;
       document.getElementById('longBreakValue').innerText = settings.longBreak;
     }
+    eventBus.dispatch('setSettingsActive');
     renderGraph();
     this.addListeners();
   }
@@ -112,20 +113,15 @@ class Voter {
   }
 }
 
-// VARIABLES
-
 function renderGraph() {
 
   const workTime = document.getElementById('workTimeValue');
   const workIteration = document.getElementById('workIterationValue');
   const shortBreak = document.getElementById('shortBreakValue');
   const longBreak = document.getElementById('longBreakValue');
-
   const workTimeDivs = Array.from(document.getElementsByClassName('work-time-div'));
   const longBreakDiv = document.getElementsByClassName('long-break-div')[0];
   const shortBreakDivs = Array.from(document.getElementsByClassName('short-break-div'));
-
-  // FUNCTIONS
 
   const getPercentage = () => {
     const totalTime = (+workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1)) * 2 + +longBreak.innerText;
@@ -136,10 +132,10 @@ function renderGraph() {
   const renderScale = () => {
     const scaleItems = Array.from(document.getElementsByClassName('scale-item'));
     const totalTime = +workTime.innerText * +workIteration.innerText + +shortBreak.innerText * (+workIteration.innerText - 1);
-
     const endCycleTime = document.getElementsByClassName('end-cycle')[0];
     const hours = `${Math.floor((totalTime * 2 + +longBreak.innerText) / 60)}h`;
     const minutes = ` ${(totalTime * 2 + +longBreak.innerText) % 60}m`;
+
     endCycleTime.innerText = hours + minutes;
     scaleItems.forEach((item, index) => {
       if ((index + 1) * 30 < (totalTime * 2 + +longBreak.innerText)) {
@@ -204,8 +200,6 @@ function renderGraph() {
     }
   };
 
-  // VOTER OBJECTS
-
   const workTimeVoterOptions = {
     minValue: 15,
     maxValue: 25,
@@ -213,7 +207,6 @@ function renderGraph() {
     element: document.getElementById('workTime'),
     render: renderAll
   };
-  const workTimeVoter = new Voter(workTimeVoterOptions);
 
   const longBreakVoterOptions = {
     minValue: 15,
@@ -222,8 +215,6 @@ function renderGraph() {
     element: document.getElementById('longBreak'),
     render: renderAll
   };
-  const longBreakVoter = new Voter(longBreakVoterOptions);
-
 
   const workIterationVoterOptions = {
     minValue: 2,
@@ -232,7 +223,6 @@ function renderGraph() {
     element: document.getElementById('workIteration'),
     render: renderAll
   };
-  const workIterationVoter = new Voter(workIterationVoterOptions);
 
   const shortBreakVoterOptions = {
     minValue: 3,
@@ -241,7 +231,11 @@ function renderGraph() {
     element: document.getElementById('shortBreak'),
     render: renderAll
   };
-  const shortBreakVoter = new Voter(shortBreakVoterOptions);
+
+  new Voter(workTimeVoterOptions);
+  new Voter(longBreakVoterOptions);
+  new Voter(workIterationVoterOptions);
+  new Voter(shortBreakVoterOptions);
 
   renderAll();
 }

@@ -24,5 +24,22 @@
             "error",
             "always"
         ]
+    },
+    "globals": {
+        "$": true,
+        "jQuery": true,
+        "window": true,
+        "firebase": true,
+        "amd": true,
+        "document": true,
+        "jasmine": true,
+        "describe": true,
+        "it": true,
+        "spyOn": true,
+        "expect": true,
+        "beforeEach": true,
+        "localStorage": true,
+        "sessionStorage": true,
+        "require": true
     }
 }

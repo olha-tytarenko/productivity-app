@@ -1,4 +1,4 @@
-const notificationMessageTemplate = require('./notification-message.hbs');
+import notificationMessageTemplate from './notification-message.hbs';
 
 export class NotificationMessage {
   constructor() { }

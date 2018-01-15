@@ -6,7 +6,8 @@
     "Andrii Dieiev"
   ],
   "scripts": {
-    "start": "webpack-dev-server --open"
+    "start": "webpack-dev-server --open",
+    "test": "karma start"
   },
   "dependencies": {
     "firebase": "^4.8.1",

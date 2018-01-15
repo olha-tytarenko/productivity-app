@@ -1,5 +1,6 @@
 import { Observer } from './observer';
 import { Router } from './router';
+import { firebaseManager } from './firebase-service';
 
 describe('Observer', () => {
   let observer ;

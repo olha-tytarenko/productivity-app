@@ -1,5 +1,4 @@
-/* root component starts here */
-require('assets/less/main.less'); // include general styles
+require('assets/less/main.less');
 
 import { Settings } from './pages/settings/index';
 import { TasksList } from './pages/tasks-list/index';
@@ -39,13 +38,14 @@ const initApp = () => {
   const timerController = new TimerController(firebaseManager, timerView);
 
   sessionStorage.setItem('workIterationCount', '0');
+  sessionStorage.setItem('currentWorkIteration', '0');
   sessionStorage.setItem('settings', JSON.stringify({workTime:25,workIteration:5,shortBreak:5,longBreak:30}));
   sessionStorage.setItem('tasksToRemove', '[]');
   header.render();
   router.init('#tasks-list');
 
   if (window.sessionStorage.getItem('isUserExist')) {
-    router.navigate('#tasks-list');
+    router.navigate(location.hash || '#task-list');
   } else {
     firstEntrance.render();
     window.sessionStorage.setItem('isUserExist', true);

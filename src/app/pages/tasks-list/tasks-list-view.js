@@ -1,18 +1,16 @@
-
-import { GlobalTaskList } from '../../pages/global-task-list/global-task-list';
-import { GlobalTaskListView } from '../../pages/global-task-list/global-task-list-view';
-import { DailyTaskListHeading } from '../../components/daily-task-list-heading/daily-task-list-heading';
-import { Tasks } from '../../components/tasks/tasks';
-import { Tabs } from '../../components/tabs/tabs';
-import { eventBus } from '../../event-bus';
-import { Observer } from '../../observer';
-import { notification } from '../../components/notification-message/notification-message';
+import {GlobalTaskList} from '../../pages/global-task-list/global-task-list';
+import {GlobalTaskListView} from '../../pages/global-task-list/global-task-list-view';
+import {DailyTaskListHeading} from '../../components/daily-task-list-heading/daily-task-list-heading';
+import {Tasks} from '../../components/tasks/tasks';
+import {Tabs} from '../../components/tabs/tabs';
+import {eventBus} from '../../event-bus';
+import {Observer} from '../../observer';
+import {notification} from '../../components/notification-message/notification-message';
+import taskListTemplate from './tasks-list.hbs';
+import dragFirstTaskTemplate from './drag-first-task.hbs';
+import addFirstTaskTemplate from './add-first-task.hbs';
 
 require('../../tooltip.js');
-
-const taskListTemplate = require('./tasks-list.hbs');
-const dragFirstTaskTemplate = require('./drag-first-task.hbs');
-const addFirstTaskTemplate = require('./add-first-task.hbs');
 
 export class TasksListView {
   constructor(element, model) {
@@ -37,38 +35,62 @@ export class TasksListView {
   }
 
   renderToDo(tasks) {
-    if (this.isToDoRendered) {
-      if (tasks.removeMode) {
-        this.showRemoveMode();
-      } else {
-        this.hideRemoveMode();
-        // eventBus.dispatch('clearCheckedTasksQuantity');
-      }
-    } else {
+    if (!this.isToDoRendered) {
       this.addTabs(tasks.removeMode);
 
-      if (tasks.tasksList.length) { 
-        this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML(), selectAllTabs: this.selectAllTabs.getTabsHTML()});
+      if (tasks.tasksList.length) {
+        this.element.innerHTML = taskListTemplate({
+          heading: this.dailyTaskListHeading.getHTML(),
+          tasks: this.task.getTasksHTML(tasks),
+          tabs: this.tabs.getTabsHTML(),
+          selectAllTabs: this.selectAllTabs.getTabsHTML()
+        });
       } else {
-        this.element.innerHTML = dragFirstTaskTemplate({ heading: this.dailyTaskListHeading.getHTML(), tabs: this.tabs.getTabsHTML(), selectAllTabs: this.selectAllTabs.getTabsHTML()});
+        this.element.innerHTML = dragFirstTaskTemplate({
+          heading: this.dailyTaskListHeading.getHTML(),
+          tabs: this.tabs.getTabsHTML(),
+          selectAllTabs: this.selectAllTabs.getTabsHTML()
+        });
       }
 
       this.isToDoRendered = true;
+      this.removeMode = tasks.removeMode;
       this.globalTaskList.renderGlobalList.call(this.globalTaskList, this.removeMode);
       document.getElementById('toDo').classList.add('active');
-      document.getElementById('done').classList.remove('active'); 
+      document.getElementById('done').classList.remove('active');
       $('#addNewTask').tooltip();
       this.addListeners();
     }
+
+    if (tasks.removeMode) {
+      this.showRemoveMode();
+    } else {
+      this.hideRemoveMode();
+    }
+
+    eventBus.dispatch('setTasksActive');
   }
 
   renderDone(tasks) {
     this.addTabs(tasks.removeMode);
 
-    this.element.innerHTML = taskListTemplate({ heading: this.dailyTaskListHeading.getHTML(), tasks: this.task.getTasksHTML(tasks), tabs: this.tabs.getTabsHTML() });
+    this.element.innerHTML = taskListTemplate({
+      heading: this.dailyTaskListHeading.getHTML(),
+      tasks: this.task.getTasksHTML(tasks),
+      tabs: this.tabs.getTabsHTML(),
+      selectAllTabs: this.selectAllTabs.getTabsHTML()
+    });
+    if (tasks.removeMode) {
+      this.showRemoveMode();
+    } else {
+      this.hideRemoveMode();
+    }
+
     document.getElementById('toDo').classList.remove('active');
     document.getElementById('done').classList.add('active');
     this.tabs.addListeners();
+    this.selectAllTabs.addListeners();
+    this.allListenersToDoneList();
   }
 
   hideRemoveMode() {
@@ -84,11 +106,15 @@ export class TasksListView {
     trashLabels.forEach(label => label.classList.add('display-none'));
     document.getElementsByClassName('links-container')[0].classList.add('right-alignment');
     document.getElementById('selectDailyTasks').classList.add('display-none');
-    document.getElementById('selectGlobalList').classList.add('display-none');
+    if (document.getElementById('selectGlobalList')) {
+      document.getElementById('selectGlobalList').classList.add('display-none');
+    }
     this.removeMode = false;
   }
 
   showRemoveMode() {
+    this.removeMode = true;
+
     const checkboxes = Array.from(document.getElementsByClassName('checkbox-none'));
     const trashLabels = Array.from(document.getElementsByClassName('label-move-to-trash'));
     const dateLabels = Array.from(document.getElementsByClassName('date'));
@@ -112,12 +138,11 @@ export class TasksListView {
 
     trashLabels.forEach(label => label.classList.remove('display-none'));
     dateLabels.forEach(label => label.classList.add('display-none'));
-    this.removeMode = true;
 
     document.getElementById('selectDailyTasks').classList.remove('display-none');
     document.getElementsByClassName('links-container')[0].classList.remove('right-alignment');
 
-    if (!document.getElementsByClassName('global-tasks')[0].classList.contains('display-none')) {
+    if (document.getElementsByClassName('global-tasks').length && !document.getElementsByClassName('global-tasks')[0].classList.contains('display-none')) {
       document.getElementById('selectGlobalList').classList.remove('display-none');
     }
 
@@ -138,11 +163,11 @@ export class TasksListView {
     });
     eventBus.dispatch('clearCheckedTasksQuantity');
     eventBus.dispatch('hideEmptyGroup');
-    notification.showMessage({type:'success', message:'Task(s) was successfully removed'});
+    notification.showMessage({type: 'success', message: 'Task(s) was successfully removed'});
   }
 
   renderAddFirstTask() {
-    this.element.innerHTML =  this.dailyTaskListHeading.getHTML();
+    this.element.innerHTML = this.dailyTaskListHeading.getHTML();
     this.element.innerHTML += addFirstTaskTemplate();
     this.dailyTaskListHeading.addListeners();
   }
@@ -169,6 +194,7 @@ export class TasksListView {
 
   renderEditedTask(task) {
     const taskLi = Array.from(document.getElementsByClassName('task')).find((li) => li.dataset.id === task.id);
+
     if (task.category !== task.oldCategory && !task.isActive) {
       taskLi.closest('ul').removeChild(taskLi);
       eventBus.dispatch('renderNewTask', task);
@@ -188,6 +214,34 @@ export class TasksListView {
     this.isToDoRendered = state;
   }
 
+  allListenersToDoneList() {
+    const goToTimerLinks = Array.from(document.getElementsByClassName('icon-tomato'));
+
+    goToTimerLinks.forEach((link) => {
+      link.addEventListener('click', event => event.preventDefault());
+    });
+
+    if (this.removeMode) {
+      const labelsMoveToTrash = Array.from(document.getElementsByClassName('label-move-to-trash'));
+
+      labelsMoveToTrash.forEach((label) => {
+        label.addEventListener('click', () => {
+          const id = label.closest('li').dataset.id;
+          const currentCheckbox = label.previousElementSibling;
+
+          currentCheckbox.checked = !currentCheckbox.checked;
+          if (currentCheckbox.checked) {
+            eventBus.dispatch('incrementRemoveTaskQuantity');
+            eventBus.dispatch('saveCheckedTasks', id);
+          } else {
+            eventBus.dispatch('decrementRemoveTaskQuantity');
+            eventBus.dispatch('removeCheckedTask', id);
+          }
+        });
+      });
+    }
+  }
+
   addTabs() {
     this.tabs = new Tabs(
       [
@@ -197,8 +251,6 @@ export class TasksListView {
           handler: (e) => {
             e.preventDefault();
             this.renderToDoEvent.notify(this.removeMode);
-            document.getElementById('toDo').classList.add('active');
-            document.getElementById('done').classList.remove('active');
           }
         },
         {
@@ -208,8 +260,8 @@ export class TasksListView {
             e.preventDefault();
             this.isToDoRendered = false;
             this.renderDoneEvent.notify(this.removeMode);
-           
-            eventBus.dispatch('closeGlobalList');  
+
+            eventBus.dispatch('closeGlobalList');
           }
         }
       ], 'toDoSwitcher'

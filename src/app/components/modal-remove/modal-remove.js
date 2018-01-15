@@ -1,5 +1,5 @@
 import { EventBus, eventBus } from '../../event-bus';
-const modalRemoveTemplate = require('./modal-remove.hbs');
+import modalRemoveTemplate from './modal-remove.hbs';
 
 export class ModalRemove {
   constructor(element, model) {

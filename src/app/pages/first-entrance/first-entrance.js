@@ -1,14 +1,13 @@
 import { DailyTaskListHeading } from '../../components/daily-task-list-heading/daily-task-list-heading';
 import { Router } from '../../router';
+import firstEntranceTemplate from './first-entrance.hbs';
 
-const firstEntranceTemplate = require('./first-entrance.hbs');
 const router = new Router();
 
 export class FirstEntrance {
   constructor(element) {
     this.element = element;
     this.dailyTaskListHeading = new DailyTaskListHeading(this.element);
-    // router.add('/', this.render.bind(this));
   }
 
   render() {

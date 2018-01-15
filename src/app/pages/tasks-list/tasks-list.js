@@ -1,8 +1,6 @@
 import { eventBus } from '../../event-bus';
 import { getShortMonthName } from '../../helpers/date-formatting';
 
-const taskListTemplate = require('./tasks-list.hbs');
-
 export class TasksList {
   constructor(view, model, router) {
     this.router = router;

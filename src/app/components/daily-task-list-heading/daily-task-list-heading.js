@@ -1,9 +1,5 @@
-import { ModalAdd } from '../modal-add/modal-add';
 import { EventBus } from '../../event-bus';
-
-const dailyTaskListHeading = require('./daily-task-list-heading.hbs');
-
-
+import dailyTaskListHeading from './daily-task-list-heading.hbs';
 
 export class DailyTaskListHeading {
   constructor(element) {

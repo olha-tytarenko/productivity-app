@@ -1,4 +1,4 @@
-const taskTemplate = require('./tasks.hbs');
+import taskTemplate from './tasks.hbs';
 
 export class Tasks {
   constructor() { }

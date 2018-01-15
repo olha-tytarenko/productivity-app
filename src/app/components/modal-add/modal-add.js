@@ -1,8 +1,7 @@
 import { eventBus } from '../../event-bus';
 import { notification } from '../notification-message/notification-message';
 import addDatepicker from '../../datepicker';
-
-const modalAddTemplate = require('./modal-add.hbs');
+import modalAddTemplate from './modal-add.hbs';
 
 export class ModalAdd {
   constructor(element, model) {

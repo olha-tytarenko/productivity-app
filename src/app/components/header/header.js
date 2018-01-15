@@ -1,7 +1,7 @@
 import { eventBus } from '../../event-bus';
+import headerTemplate from './header.hbs';
 require('../../tooltip.js');
 
-const headerTemplate = require('./header.hbs');
 
 const removeClasses = (elements, styleClass) => {
   elements.forEach((element) => {
@@ -19,6 +19,9 @@ export class Header {
     eventBus.registerEventHandler('decrementRemoveTaskQuantity', this.decrementRemoveTaskQuantity.bind(this));
     eventBus.registerEventHandler('clearCheckedTasksQuantity', this.clearCheckedTasksQuantity.bind(this));
     eventBus.registerEventHandler('showHideHeader', this.showHideHeader);
+    eventBus.registerEventHandler('setSettingsActive', this.setSettingsActive.bind(this));
+    eventBus.registerEventHandler('setReportsActive', this.setReportsActive.bind(this));
+    eventBus.registerEventHandler('setTasksActive', this.setTasksActive.bind(this));
   }
 
   render() {
@@ -29,6 +32,7 @@ export class Header {
     $('#goToReports').tooltip();
     $('#goToSettings').tooltip();
     $('.add-new-task-btn-header').tooltip();
+    $('.checked-tasks').tooltip();
     this.addListeners();
   }
 
@@ -127,6 +131,41 @@ export class Header {
 
   hideTrashButton() {
     document.getElementById('goToRemove').classList.add('display-none');
+  }
+
+  setSettingsActive() {
+    const removeBtn = document.getElementById('goToRemove');
+    const goToTaskListBtn = document.getElementById('goToTaskList');
+    const goToReportsBtn = document.getElementById('goToReports');
+    const goToSettingsBtn = document.getElementById('goToSettings');
+
+    removeClasses([goToTaskListBtn, goToReportsBtn, removeBtn], 'active');
+    goToSettingsBtn.classList.add('active');
+
+    this.hideTrashButton();
+  }
+
+  setReportsActive() {
+    const removeBtn = document.getElementById('goToRemove');
+    const goToTaskListBtn = document.getElementById('goToTaskList');
+    const goToReportsBtn = document.getElementById('goToReports');
+    const goToSettingsBtn = document.getElementById('goToSettings');
+
+    removeClasses([goToTaskListBtn, goToSettingsBtn, removeBtn], 'active');
+    goToReportsBtn.classList.add('active');
+
+    this.hideTrashButton();
+  }
+
+  setTasksActive() {
+    const removeBtn = document.getElementById('goToRemove');
+    const goToTaskListBtn = document.getElementById('goToTaskList');
+    const goToReportsBtn = document.getElementById('goToReports');
+    const goToSettingsBtn = document.getElementById('goToSettings');
+
+    removeClasses([goToReportsBtn, goToSettingsBtn, removeBtn], 'active');
+    goToTaskListBtn.classList.add('active');
+    removeBtn.classList.remove('display-none');
   }
 
   showTrashButton() {

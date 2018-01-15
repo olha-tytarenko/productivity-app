@@ -2,8 +2,7 @@ import {Observer} from '../../observer';
 import { eventBus } from '../../event-bus';
 import { NotificationMessage } from '../../components/notification-message/notification-message';
 import $ from 'jquery';
-
-const timerTemplate = require('./timer.hbs');
+import timerTemplate from './timer.hbs';
 
 export class TimerView {
   constructor(element, router) {
@@ -181,7 +180,7 @@ export class TimerView {
       btnsBreakAfterTime.classList.remove('display-none');
     }
 
-    if (workIterationCount === settings.workIteration) {
+    if (workIterationCount % settings.workIteration === 0) {
       duration = settings.longBreak;
     } else {
       duration = settings.shortBreak;
@@ -206,9 +205,10 @@ export class TimerView {
 
   workIteration() {
     const workIterationCount = +sessionStorage.getItem('workIterationCount');
+    const currentWorkIteration = +sessionStorage.getItem('currentWorkIteration');
     const settings = JSON.parse(sessionStorage.getItem('settings'));
 
-    if (workIterationCount < this.task.estimation) {
+    if (currentWorkIteration < this.task.estimation) {
       const startBtn = document.getElementsByClassName('start')[0];
       const timerBlock = document.getElementsByClassName('timer')[0];
       const btnsTimerInProgress = document.getElementById('btnsTimerInProgress');
@@ -223,7 +223,8 @@ export class TimerView {
       timerWrapper.classList.remove('display-none');
       timeDiv.classList.remove('display-none');
       sessionStorage.setItem('workIterationCount', workIterationCount + 1);
-      if (workIterationCount < this.task.estimation) {
+      sessionStorage.setItem('currentWorkIteration', currentWorkIteration + 1);
+      if (currentWorkIteration < this.task.estimation) {
         this.startTimer(settings.workTime, 'break');
       }
     }
@@ -273,6 +274,7 @@ export class TimerView {
     document.getElementsByClassName('completed-task')[0].classList.remove('display-none');
     clearInterval(this.changeTimeLeft);
     clearTimeout(this.timeout);
+    sessionStorage.setItem('currentWorkIteration', '0');
     eventBus.dispatch('showHideHeader');
     this.completeAnimation();
     this.showNotification();

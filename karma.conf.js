@@ -28,7 +28,7 @@ module.exports = function (config) {
               options: { esModules: true }
             },
             enforce: 'post',
-            exclude: /node_modules|test|\.spec\.js$|^app.js$|view|tabs|first-entrance|daily-task-list-heading|notification-message|header|modal/
+            exclude: /node_modules|test|\.spec\.js$|^app.js$|view|tabs|first-entrance|daily-task-list-heading|notification-message|header|modal|global-task.js|tasks.js|settings|reports.js/
           }]
       },
       devtool: 'inline-source-map'

@@ -1,4 +1,4 @@
-const tabsTemplate = require('./tabs.hbs');
+import tabsTemplate from './tabs.hbs';
 
 export class Tabs {
   constructor(tabs, id, className) {

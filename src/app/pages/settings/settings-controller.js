@@ -1,8 +1,4 @@
 import { SettingsView } from './settings-view';
-import { Tabs } from '../../components/tabs/tabs';
-
-const pomodorosSettingsTemplate = require('./pomodoros-settings.hbs');
-const settingsCategoriesTemplate = require('./settings-categories.hbs');
 
 export class Settings {
   constructor(element, router) {

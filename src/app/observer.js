@@ -1,4 +1,5 @@
 export class Observer {
+
   constructor(sender) {
     this.senders = sender;
     this.listeners = [];
@@ -11,7 +12,7 @@ export class Observer {
   notify(args) {
     if (this.listeners.length) {
       this.listeners.forEach(listener => {
-        listener(this.sender, args);
+        listener(this.senders, args);
       });
     } else {
       throw new Error('No listeners');
