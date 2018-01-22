@@ -1,9 +1,9 @@
 import { eventBus } from '../../event-bus';
-import { getShortMonthName } from '../../helpers/date-formatting';
+import { getShortMonthName, getStringMonth } from '../../helpers/date-formatting';
+import { router } from '../../router';
 
 export class TasksList {
-  constructor(view, model, router) {
-    this.router = router;
+  constructor(view, model) {
     this.model = model;
     this.view = view;
 
@@ -21,7 +21,7 @@ export class TasksList {
       this.renderToDo(data);
     });
 
-    this.router.add('#tasks-list', this.view.renderToDoEvent.notify.bind(this.view.renderToDoEvent));
+    router.add('#tasks-list', this.view.renderToDoEvent.notify.bind(this.view.renderToDoEvent));
   }
 
   renderDone(removeMode) {
@@ -44,15 +44,33 @@ export class TasksList {
 
       if (data) {
         const tasksToDo = [];
+        let isCompletedTodayTaskExist = false;
+
         for (const key in data) {
           if(!data[key].done && data[key].isActive) {
             data[key].id = key;
             tasksToDo.push(data[key]);
+          } else if (data[key].done) {
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = getStringMonth(currentDate.getMonth());
+            const day = currentDate.getUTCDate();
+
+            if (data[key].doneDate.day === day && data[key].doneDate.month === month && data[key].doneDate.year === year) {
+              isCompletedTodayTaskExist = true;
+            }
           }
         }
-  
-        const tasks = {removeMode: removeMode, tasksList: tasksToDo};
-        this.view.renderToDo(tasks);
+
+
+
+
+        if (isCompletedTodayTaskExist && !tasksToDo.length) {
+          this.view.renderExcellentMessage(removeMode);
+        } else {
+          const tasks = {removeMode: removeMode, tasksList: tasksToDo};
+          this.view.renderToDo(tasks);
+        }
       } else {
         this.view.renderAddFirstTask();
       }

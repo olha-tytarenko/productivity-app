@@ -20,12 +20,12 @@ const initApp = () => {
   const router = new Router();
   const wrapper = document.getElementsByClassName('header')[0];
   const contentWrapper = document.getElementsByClassName('main-container')[0];
-  const settings = new Settings(contentWrapper, router);
+  const settings = new Settings(contentWrapper);
 
   const taskListView = new TasksListView(contentWrapper, firebaseManager);
-  const taskList = new TasksList(taskListView, firebaseManager, router);
+  const taskList = new TasksList(taskListView, firebaseManager);
 
-  const reportsView = new ReportsView(contentWrapper, router);
+  const reportsView = new ReportsView(contentWrapper);
   const reportsController = new ReportsController(reportsView, firebaseManager);
   
   const firstEntrance = new FirstEntrance(contentWrapper);
@@ -34,7 +34,7 @@ const initApp = () => {
   const modalAdd = new ModalAdd(modalWrapper, firebaseManager);
   const modalEdit = new ModalEdit(modalWrapper, firebaseManager);
   const modalRemove = new ModalRemove(modalWrapper);
-  const timerView = new TimerView(contentWrapper, router);
+  const timerView = new TimerView(contentWrapper);
   const timerController = new TimerController(firebaseManager, timerView);
 
   sessionStorage.setItem('workIterationCount', '0');

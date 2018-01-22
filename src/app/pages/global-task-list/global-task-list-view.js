@@ -4,6 +4,7 @@ import { eventBus } from '../../event-bus';
 import { getShortMonthName } from '../../helpers/date-formatting';
 import { notification } from '../../components/notification-message/notification-message';
 import globalTaskListTemplate from './global-task-list.hbs';
+import { router } from '../../router';
 
 require('../../tooltip.js');
 
@@ -228,7 +229,7 @@ export class GlobalTaskListView {
       this.showGroup();
       this.hideEmptyGroup();
 
-      if (document.getElementsByClassName('checkbox-move-to-trash')) {
+      if (document.getElementById('goToRemove').classList.contains('active')) {
         eventBus.dispatch('showRemoveTasksMode');
       }
     } else {
@@ -253,10 +254,16 @@ export class GlobalTaskListView {
     }
   }
 
-  goToTimer(id) {
-    this.closeGlobalList();
-    eventBus.dispatch('renderTimer', id);
-    eventBus.dispatch('setToDoRenderedState', false);
+  goToTimer(id, target) {
+    if (target.closest('section').classList.contains('global-tasks')) {
+      notification.showMessage({type: 'warning', message: 'Move to daily list'});
+
+    } else {
+      this.closeGlobalList();
+      sessionStorage.setItem('taskInProgress', id);
+      router.navigate('#timer');
+      eventBus.dispatch('setToDoRenderedState', false);
+    }
   }
 
   closeGlobalList() {

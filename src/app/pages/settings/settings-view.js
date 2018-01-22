@@ -1,13 +1,13 @@
 import { Tabs } from '../../components/tabs/tabs';
 import { NotificationMessage } from '../../components/notification-message/notification-message';
 import { eventBus } from '../../event-bus';
+import { router } from '../../router';
 import pomodorosSettingsTemplate from './pomodoros-settings.hbs';
 import settingsCategoriesTemplate from './settings-categories.hbs';
 
 export class SettingsView {
-  constructor(element, router) {
+  constructor(element) {
     this.element = element;
-    this.router = router;
     this.tabs = new Tabs(
       [
         {
@@ -32,7 +32,6 @@ export class SettingsView {
 
 
   renderSettings() {
-    document.title = 'Settings';
     this.element.innerHTML = pomodorosSettingsTemplate({tabs: this.tabs.getTabsHTML()});
     const settings = JSON.parse(sessionStorage.getItem('settings'));
     if (settings) {
@@ -60,7 +59,8 @@ export class SettingsView {
 
     goToTask.addEventListener('click', (event) => {
       event.preventDefault();
-      this.router.navigate('#tasks-list');
+      eventBus.dispatch('setTasksActive');
+      router.navigate('#tasks-list');
     });
 
     saveSettingsBtn.addEventListener('click', () => {
@@ -73,7 +73,8 @@ export class SettingsView {
 
       sessionStorage.setItem('settings', JSON.stringify(settings));
       notification.showMessage({type: 'success', message: 'Settings successfully saved'});
-      this.router.navigate('#task-list');
+      eventBus.dispatch('setTasksActive');
+      router.navigate('#task-list');
     });
   }
 }

@@ -9,6 +9,7 @@ import {notification} from '../../components/notification-message/notification-m
 import taskListTemplate from './tasks-list.hbs';
 import dragFirstTaskTemplate from './drag-first-task.hbs';
 import addFirstTaskTemplate from './add-first-task.hbs';
+import excellentMessageTemplate from './excellent-message.hbs';
 
 require('../../tooltip.js');
 
@@ -53,13 +54,7 @@ export class TasksListView {
         });
       }
 
-      this.isToDoRendered = true;
-      this.removeMode = tasks.removeMode;
-      this.globalTaskList.renderGlobalList.call(this.globalTaskList, this.removeMode);
-      document.getElementById('toDo').classList.add('active');
-      document.getElementById('done').classList.remove('active');
-      $('#addNewTask').tooltip();
-      this.addListeners();
+      this.initializeToDoList();
     }
 
     if (tasks.removeMode) {
@@ -67,8 +62,27 @@ export class TasksListView {
     } else {
       this.hideRemoveMode();
     }
+  }
 
-    eventBus.dispatch('setTasksActive');
+  renderExcellentMessage(removeMode) {
+    this.addTabs(removeMode);
+    this.element.innerHTML = excellentMessageTemplate({
+      heading: this.dailyTaskListHeading.getHTML(),
+      tabs: this.tabs.getTabsHTML(),
+      selectAllTabs: this.selectAllTabs.getTabsHTML()
+    });
+
+    this.initializeToDoList();
+  }
+
+  initializeToDoList(removeMode) {
+    this.isToDoRendered = true;
+    this.removeMode = removeMode;
+    this.globalTaskList.renderGlobalList.call(this.globalTaskList, this.removeMode);
+    document.getElementById('toDo').classList.add('active');
+    document.getElementById('done').classList.remove('active');
+    $('#addNewTask').tooltip();
+    this.addListeners();
   }
 
   renderDone(tasks) {
@@ -90,7 +104,7 @@ export class TasksListView {
     document.getElementById('done').classList.add('active');
     this.tabs.addListeners();
     this.selectAllTabs.addListeners();
-    this.allListenersToDoneList();
+    this.addListenersToDoneList();
   }
 
   hideRemoveMode() {
@@ -146,6 +160,10 @@ export class TasksListView {
       document.getElementById('selectGlobalList').classList.remove('display-none');
     }
 
+    if (document.getElementsByClassName('done').length) {
+      this.addListenersToTrashButtonsDoneList();
+    }
+
   }
 
   addListeners() {
@@ -179,6 +197,7 @@ export class TasksListView {
     newLi.getElementsByClassName('icon-arrows-up')[0].classList.add('display-none');
     const date = newLi.getElementsByClassName('date')[0];
     date.classList.remove('date-day');
+    date.classList.remove('overdue');
     date.innerText = 'Today';
     const taskList = document.getElementsByClassName('task-list')[0];
     const message = document.getElementsByClassName('message')[0];
@@ -214,32 +233,32 @@ export class TasksListView {
     this.isToDoRendered = state;
   }
 
-  allListenersToDoneList() {
+  addListenersToDoneList() {
     const goToTimerLinks = Array.from(document.getElementsByClassName('icon-tomato'));
 
     goToTimerLinks.forEach((link) => {
       link.addEventListener('click', event => event.preventDefault());
     });
+  }
 
-    if (this.removeMode) {
-      const labelsMoveToTrash = Array.from(document.getElementsByClassName('label-move-to-trash'));
+  addListenersToTrashButtonsDoneList() {
+    const labelsMoveToTrash = Array.from(document.getElementsByClassName('label-move-to-trash'));
 
-      labelsMoveToTrash.forEach((label) => {
-        label.addEventListener('click', () => {
-          const id = label.closest('li').dataset.id;
-          const currentCheckbox = label.previousElementSibling;
+    labelsMoveToTrash.forEach((label) => {
+      label.addEventListener('click', () => {
+        const id = label.closest('li').dataset.id;
+        const currentCheckbox = label.previousElementSibling;
 
-          currentCheckbox.checked = !currentCheckbox.checked;
-          if (currentCheckbox.checked) {
-            eventBus.dispatch('incrementRemoveTaskQuantity');
-            eventBus.dispatch('saveCheckedTasks', id);
-          } else {
-            eventBus.dispatch('decrementRemoveTaskQuantity');
-            eventBus.dispatch('removeCheckedTask', id);
-          }
-        });
+        currentCheckbox.checked = !currentCheckbox.checked;
+        if (currentCheckbox.checked) {
+          eventBus.dispatch('incrementRemoveTaskQuantity');
+          eventBus.dispatch('saveCheckedTasks', id);
+        } else {
+          eventBus.dispatch('decrementRemoveTaskQuantity');
+          eventBus.dispatch('removeCheckedTask', id);
+        }
       });
-    }
+    });
   }
 
   addTabs() {

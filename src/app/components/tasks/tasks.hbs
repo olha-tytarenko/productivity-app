@@ -7,7 +7,7 @@
   {{#if done}}
   <span class="date-day date">{{doneDate.day}}<span class="date-month">{{doneDate.month}}</span></span>
   {{else}} {{#if isActive}}<span class="date">Today</span>{{else}}
-  <span class="date-day date">{{deadline.day}}<span class="date-month">{{deadline.month}}</span></span>{{/if}} {{/if}}
+  <span class="date-day date {{overdue}}">{{deadline.day}}<span class="date-month">{{deadline.month}}</span></span>{{/if}} {{/if}}
   <div class="task-description">
     <h2>{{heading}} </h2>
     <p>{{taskDescription}}</p>

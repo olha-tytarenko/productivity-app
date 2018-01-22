@@ -28,8 +28,17 @@ export class GlobalTaskList {
       };
       for (const key in data) {
         if (!data[key].isActive && !data[key].done) {
+          const todayDate = new Date();
+          const deadline = new Date();
+
+          deadline.setTime(Date.parse(`${data[key].deadline.day} ${data[key].deadline.month} ${data[key].deadline.year} 23:59`));
+          if (deadline < todayDate) {
+            data[key].overdue = 'overdue';
+          }
+
           data[key].id = key;
           data[key].deadline.month = getShortMonthName(data[key].deadline.month);
+
           switch (data[key].category) {
           case 'work': globalTasks.workGroup.push(data[key]); break;
           case 'education': globalTasks.educationGroup.push(data[key]); break;

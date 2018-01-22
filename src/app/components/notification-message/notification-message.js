@@ -1,17 +1,22 @@
 import notificationMessageTemplate from './notification-message.hbs';
 
 export class NotificationMessage {
-  constructor() { }
+  constructor() {
+    this.timerId = null;
+  }
 
   showMessage(options) {
     const wrapper = document.getElementsByClassName('wrapper')[0];
-    const indent = parseFloat(window.getComputedStyle(wrapper, null).getPropertyValue('padding-right')) + 
+    const indent = parseFloat(window.getComputedStyle(wrapper, null).getPropertyValue('padding-right')) +
     parseFloat(window.getComputedStyle(wrapper, null).getPropertyValue('margin-right'));
-    
+
+    this.removeNotificationMessage();
+    clearTimeout(this.timerId);
+
     document.body.insertAdjacentHTML('afterbegin', notificationMessageTemplate(options));
     document.getElementsByClassName('notification-message')[0].style.right = `${indent}px`;
     
-    setTimeout(this.removeNotificationMessage, 5000);
+    this.timerId = setTimeout(this.removeNotificationMessage, 5000);
     this.addListeners();
   }
 

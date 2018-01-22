@@ -21,6 +21,7 @@ export class ModalAdd {
 
     addDatepicker();
     checkboxes.filter((checkbox, index) => index < settings.workIteration).forEach(checkbox => checkbox.checked = true);
+
     this.addListeners();
   }
 

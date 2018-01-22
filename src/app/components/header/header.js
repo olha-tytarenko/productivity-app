@@ -1,4 +1,5 @@
 import { eventBus } from '../../event-bus';
+import { router } from '../../router';
 import headerTemplate from './header.hbs';
 require('../../tooltip.js');
 
@@ -11,9 +12,8 @@ const removeClasses = (elements, styleClass) => {
 
 
 export class Header {
-  constructor(element, router) {
+  constructor(element) {
     this.element = element;
-    this.router = router;
 
     eventBus.registerEventHandler('incrementRemoveTaskQuantity', this.incrementRemoveTaskQuantity.bind(this));
     eventBus.registerEventHandler('decrementRemoveTaskQuantity', this.decrementRemoveTaskQuantity.bind(this));
@@ -64,7 +64,7 @@ export class Header {
       removeClasses([removeBtn, goToReportsBtn, goToSettingsBtn], 'active');
       goToTaskListBtn.classList.add('active');
       this.showTrashButton();
-      this.router.navigate('#tasks-list');
+      router.navigate('#tasks-list');
     });
 
     goToReportsBtn.addEventListener('click', (event) => {
@@ -75,7 +75,7 @@ export class Header {
       eventBus.dispatch('setToDoRenderedState', false);
       eventBus.dispatch('closeGlobalList');
       this.hideTrashButton();
-      this.router.navigate('#reports');
+      router.navigate('#reports');
     });
 
     goToSettingsBtn.addEventListener('click', (event) => {
@@ -85,7 +85,7 @@ export class Header {
       eventBus.dispatch('setToDoRenderedState', false);
       eventBus.dispatch('closeGlobalList');      
       this.hideTrashButton();
-      this.router.navigate('#settings');
+      router.navigate('#settings');
     });
   }
 
@@ -184,7 +184,7 @@ window.addEventListener('load', () => {
   
   window.addEventListener('scroll', function() {
     const scrolled = window.pageYOffset || document.documentElement.scrollTop;
-    if (scrolled > 20) {
+    if (scrolled > 50) {
       header.classList.add('fixed-header');
       document.getElementsByClassName('add-new-task')[0].classList.remove('display-none');
       logo.classList.remove('display-none');

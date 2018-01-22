@@ -1,5 +1,6 @@
 import { eventBus } from '../../event-bus';
 import { getStringMonth } from '../../helpers/date-formatting';
+import { router } from '../../router';
 
 export class TimerController {
   constructor(model, view) {
@@ -7,13 +8,16 @@ export class TimerController {
     this.view = view;
 
     eventBus.registerEventHandler('renderTimer', this.render.bind(this));
+    router.add('#timer', this.render.bind(this));
+
     this.view.changeTaskStateEvent.attach((sender, id) => {
       this.changeTaskState(id);
     });
   }
 
 
-  render(taskId) {
+  render() {
+    const taskId = sessionStorage.getItem('taskInProgress');
     this.model.getTaskById(taskId).then(task => {
       task.id = taskId;
       this.view.render(task);

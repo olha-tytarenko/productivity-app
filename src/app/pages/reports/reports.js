@@ -1,5 +1,6 @@
 import { Observer } from '../../observer';
 import { eventBus } from '../../event-bus';
+import { router } from '../../router';
 import $ from 'jquery';
 import reportsTemplate from './reports.hbs';
 import Highcharts from 'highcharts';
@@ -101,10 +102,9 @@ const chartConfigObject = {
 };
 
 export class ReportsView {
-  constructor(element, router) {
+  constructor(element) {
     this.element = element;
-    this.router = router;
-    this.router.add('#reports', this.render.bind(this));
+    router.add('#reports', this.render.bind(this));
 
     this.renderDailyReportEvent = new Observer(this);
     this.renderWeeklyReportEvent = new Observer(this);
@@ -130,7 +130,8 @@ export class ReportsView {
     goToGlobalListBtn.addEventListener('click', (event) => {
       event.preventDefault();
 
-      this.router.navigate('#tasks-list');
+      eventBus.dispatch('setTasksActive');
+      router.navigate('#tasks-list');
     });
 
     dailyReportBtn.addEventListener('click', (event) => {
