@@ -62,9 +62,6 @@ export class TasksList {
           }
         }
 
-
-
-
         if (isCompletedTodayTaskExist && !tasksToDo.length) {
           this.view.renderExcellentMessage(removeMode);
         } else {

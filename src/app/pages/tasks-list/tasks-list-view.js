@@ -54,7 +54,7 @@ export class TasksListView {
         });
       }
 
-      this.initializeToDoList();
+      this.initializeToDoList(tasks.removeMode);
     }
 
     if (tasks.removeMode) {
@@ -72,7 +72,7 @@ export class TasksListView {
       selectAllTabs: this.selectAllTabs.getTabsHTML()
     });
 
-    this.initializeToDoList();
+    this.initializeToDoList(removeMode);
   }
 
   initializeToDoList(removeMode) {

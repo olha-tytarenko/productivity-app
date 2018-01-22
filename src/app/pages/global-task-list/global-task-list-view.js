@@ -46,7 +46,6 @@ export class GlobalTaskListView {
     $('.global-list-link').tooltip();
     $('.edit-task').tooltip();
     $('.icon-tomato').tooltip();
-
     if (removeMode) {
       eventBus.dispatch('showRemoveTasksMode');
     }
