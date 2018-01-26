@@ -10,6 +10,7 @@ import taskListTemplate from './tasks-list.hbs';
 import dragFirstTaskTemplate from './drag-first-task.hbs';
 import addFirstTaskTemplate from './add-first-task.hbs';
 import excellentMessageTemplate from './excellent-message.hbs';
+import { getShortMonthName } from '../../helpers/date-formatting';
 
 require('../../tooltip.js');
 
@@ -222,6 +223,9 @@ export class TasksListView {
       taskLi.getElementsByClassName('estimation')[0].innerText = task.estimation;
       taskLi.getElementsByTagName('h2')[0].innerText = task.heading;
       taskLi.getElementsByTagName('p')[0].innerText = task.taskDescription;
+      const date = taskLi.getElementsByClassName('date-day')[0];
+      date.innerHTML = `${task.deadline.day}<span class="date-month">${getShortMonthName(task.deadline.month)}</span>`;
+      date.classList.remove('overdue');
     }
   }
 

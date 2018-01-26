@@ -1,6 +1,6 @@
-import { eventBus } from '../../event-bus';
-import { getShortMonthName, getStringMonth } from '../../helpers/date-formatting';
-import { router } from '../../router';
+import {eventBus} from '../../event-bus';
+import {getShortMonthName, getStringMonth} from '../../helpers/date-formatting';
+import {router} from '../../router';
 
 export class TasksList {
   constructor(view, model) {
@@ -28,7 +28,7 @@ export class TasksList {
     this.model.getAllTasks().then((data) => {
       const doneTasks = [];
       for (const key in data) {
-        if(data[key].done) {
+        if (data[key].done) {
           data[key].id = key;
           data[key].doneDate.month = getShortMonthName(data[key].doneDate.month);
           doneTasks.push(data[key]);
@@ -47,7 +47,7 @@ export class TasksList {
         let isCompletedTodayTaskExist = false;
 
         for (const key in data) {
-          if(!data[key].done && data[key].isActive) {
+          if (!data[key].done && data[key].isActive) {
             data[key].id = key;
             tasksToDo.push(data[key]);
           } else if (data[key].done) {
@@ -59,6 +59,7 @@ export class TasksList {
             if (data[key].doneDate.day === day && data[key].doneDate.month === month && data[key].doneDate.year === year) {
               isCompletedTodayTaskExist = true;
             }
+
           }
         }
 
@@ -89,7 +90,7 @@ export class TasksList {
       return id !== taskId;
     });
 
-    sessionStorage.setItem('tasksToRemove', JSON.stringify(tasksToRemove));    
+    sessionStorage.setItem('tasksToRemove', JSON.stringify(tasksToRemove));
   }
 
   removeTasksFromDB() {
@@ -100,7 +101,7 @@ export class TasksList {
         duplicate = id;
       }
     });
-    
+
     if (!duplicate) {
       tasksId.forEach(id => this.model.removeTask(id));
       sessionStorage.setItem('tasksToRemove', '[]');

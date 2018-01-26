@@ -186,7 +186,9 @@ window.addEventListener('load', () => {
     const scrolled = window.pageYOffset || document.documentElement.scrollTop;
     if (scrolled > 50) {
       header.classList.add('fixed-header');
-      document.getElementsByClassName('add-new-task')[0].classList.remove('display-none');
+      if (!document.getElementsByClassName('settings').length) {
+        document.getElementsByClassName('add-new-task')[0].classList.remove('display-none');
+      }
       logo.classList.remove('display-none');
     } else {
       header.classList.remove('fixed-header');
